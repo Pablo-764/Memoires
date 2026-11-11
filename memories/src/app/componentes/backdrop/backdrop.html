@@ -1,0 +1,23 @@
+<div class="bd-dots"></div>
+<div class="bd-dots bd-lit"></div>
+<div class="bd-glow"></div>
+
+@for (s of shapes; track $index) {
+  <div
+    #shape
+    class="bd-shape"
+    [style.left]="s.x"
+    [style.top]="s.y"
+    [style.width]="s.size"
+    [style.--depth]="s.depth"
+    [style.--tone]="'var(--color-' + s.tone + ')'"
+    [style.--turn]="s.turn + 'deg'"
+  >
+    <div class="bd-drift" [style.animation-duration]="s.drift + 's'" [style.animation-delay]="s.delay + 's'">
+      <span class="bd-ink bd-echo" [attr.data-shape]="s.kind"></span>
+      <span class="bd-ink" [attr.data-shape]="s.kind"></span>
+    </div>
+  </div>
+}
+
+<div class="bd-grain"></div>

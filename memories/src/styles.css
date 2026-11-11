@@ -1,22 +1,25 @@
 @import "tailwindcss";
 
-@import "@fontsource/instrument-serif/400.css";
+@import "@fontsource-variable/syne";
 
-@import "@fontsource/instrument-serif/400-italic.css";
+@import "@fontsource-variable/fraunces/full-italic.css";
 
-@import "@fontsource-variable/onest";
+@import "@fontsource-variable/space-grotesk";
 
 /* Sistema de diseño de mémoires
-   - Títulos en Instrument Serif: delicada, editorial, con cursiva para el nombre.
-   - Texto en Onest: geométrica y cálida, muy legible en pantallas pequeñas.
+   - Títulos en Syne ExtraBold: ancha, geométrica y con rasgos raros; da la voz atrevida.
+   - Palabras destacadas en la cursiva de Fraunces con "wonk": contraste serif dentro del título.
+   - Texto en Space Grotesk: grotesca con detalles excéntricos pero muy legible.
+   Las tres son libres (SIL OFL) y están en ffonts.net; aquí se instalan desde Fontsource.
    - Paleta "porcelana y noche": azul porcelana de día, azul medianoche de noche.
    - Cada intención conserva su color en ambos modos. */
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-display: "Instrument Serif", ui-serif, Georgia, serif;
-  --font-sans: "Onest Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Syne Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Fraunces Variable", ui-serif, Georgia, serif;
+  --font-sans: "Space Grotesk Variable", ui-sans-serif, system-ui, sans-serif;
 
   --color-ink: #12202e;
   --color-ink-soft: #3e4957;
@@ -109,14 +112,14 @@
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
-  /* Instrument Serif tiene un solo peso: nunca simular negritas */
+  /* Syne en su peso más fuerte, apretada; las cursivas cambian a Fraunces */
   :where(h1, h2, h3, h4):not(.font-sans),
   .font-display {
     font-family: var(--font-display);
-    font-weight: 400 !important;
+    font-weight: 750 !important;
     font-synthesis: none;
-    letter-spacing: -0.012em;
-    line-height: 1.05;
+    letter-spacing: -0.04em;
+    line-height: 1;
     text-wrap: balance;
   }
   p {
@@ -132,6 +135,16 @@
   }
 }
 
+/* Fuera de capas para ganarle a la utilidad font-display de Tailwind */
+:where(h1, h2, h3, h4, .font-display) :where(em, i),
+.font-display.italic {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 560 !important;
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+  letter-spacing: -0.02em;
+}
+
 @layer components {
   .btn {
     display: inline-flex;
@@ -144,7 +157,7 @@
     font-weight: 600;
     font-size: 0.95rem;
     touch-action: manipulation;
-    transition: transform 160ms var(--ease-out), background-color 180ms ease, color 180ms ease, box-shadow 180ms ease;
+    transition: transform 160ms var(--ease-out), translate 260ms var(--ease-out), background-color 180ms ease, color 180ms ease, box-shadow 180ms ease, background-position 0s;
     user-select: none;
   }
   .btn:active:not(:disabled) {
@@ -173,7 +186,7 @@
     color: var(--color-on-accent);
   }
   @media (hover: hover) and (pointer: fine) {
-    .btn-primary:hover:not(:disabled) { background: var(--color-accent-hover); }
+    .btn-primary:hover:not(:disabled) { background-color: var(--color-accent-hover); }
     .btn-primary:hover:not(:disabled, :active) { transform: translateY(-1px); box-shadow: var(--shadow-lift); }
     .btn-ghost:hover:not(:disabled) { box-shadow: inset 0 0 0 1.5px var(--color-ink-mute); }
     .btn-soft:hover:not(:disabled) { box-shadow: inset 0 0 0 1px var(--color-line-strong); }
@@ -504,7 +517,7 @@ html.vt-list::view-transition-new(*) { animation-duration: 300ms; }
 .reveal-armed {
   opacity: 0;
   translate: 0 22px;
-  transition: opacity 640ms var(--ease-out), translate 640ms var(--ease-out), transform 260ms var(--ease-out), box-shadow 260ms ease;
+  transition: opacity 640ms var(--ease-out), translate 640ms var(--ease-out), transform 260ms var(--ease-out), box-shadow 260ms ease, --spot 420ms ease;
   transition-delay: calc(var(--i, 0) * 80ms);
 }
 
@@ -524,7 +537,7 @@ html.vt-list::view-transition-new(*) { animation-duration: 300ms; }
 /* La sección nocturna se abre hasta ocupar todo el ancho */
 
 /* ---------- Interacción ---------- */
-.lift { transition: transform 260ms var(--ease-out), box-shadow 260ms ease; }
+.lift { transition: transform 260ms var(--ease-out), box-shadow 260ms ease, --spot 420ms ease; }
 
 .photo-zoom { transition: transform 700ms var(--ease-out); }
 
@@ -759,7 +772,7 @@ html[data-vt-kind="pop"]::view-transition-new(page) { animation: pop-page-in 560
   border-radius: 18px;
   text-align: left;
   box-shadow: inset 0 0 0 1.5px var(--color-line);
-  transition: transform 200ms var(--ease-out), box-shadow 220ms ease, background-color 220ms ease;
+  transition: transform 200ms var(--ease-out), box-shadow 220ms ease, background-color 220ms ease, --spot 420ms ease;
 }
 
 .size-tile:active { transform: scale(0.97); }
@@ -940,3 +953,108 @@ html[data-vt-kind="pop"]::view-transition-new(page) { animation: pop-page-in 560
   .group-echo.is-ready { transition: opacity 160ms ease, background-color 160ms ease; }
 }
 
+
+/* ---------- Interacciones al pasar el cursor ---------- */
+@property --spot {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+/* Tarjetas: una luz suave sigue al cursor y el borde se marca */
+:where(.card, .size-tile, .spot) {
+  --spot: 0;
+  background-image: radial-gradient(
+    380px circle at var(--cx, 50%) var(--cy, 0%),
+    color-mix(in oklab, var(--color-hobby) calc(var(--spot) * 9%), transparent),
+    transparent 70%
+  );
+  transition: --spot 420ms ease, transform 260ms var(--ease-out), box-shadow 260ms ease, background-color 220ms ease;
+}
+
+/* Botón principal: un destello cruza la tinta */
+.btn-primary {
+  background-image: linear-gradient(110deg, transparent 38%, rgb(255 255 255 / 0.28) 50%, transparent 62%);
+  background-size: 260% 100%;
+  background-position: 130% 0;
+  background-repeat: no-repeat;
+}
+
+.btn app-icon {
+  transition: transform 320ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.intent-tab::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--tab-tone, var(--color-ink)) 11%, transparent);
+  opacity: 0;
+  scale: 0.7 0.5;
+  transition: opacity 220ms ease, scale 380ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+}
+
+.intent-tab[data-tone="romance"] { --tab-tone: var(--color-romance); }
+
+.intent-tab[data-tone="friend"] { --tab-tone: var(--color-friend); }
+
+.intent-tab[data-tone="plan"] { --tab-tone: var(--color-plan); }
+
+.intent-tab[data-tone="hobby"] { --tab-tone: var(--color-hobby); }
+
+app-avatar {
+  transition: transform 380ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .card:hover,
+  .size-tile:hover,
+  .spot:hover { --spot: 1; }
+
+  .card:hover:not(.lift) { box-shadow: inset 0 0 0 1px var(--color-line-strong); }
+
+  .btn-primary:hover:not(:disabled) {
+    background-position: -30% 0;
+    transition: transform 160ms var(--ease-out), translate 260ms var(--ease-out), background-color 180ms ease, box-shadow 180ms ease, background-position 900ms var(--ease-out);
+  }
+
+  .btn:hover:not(:disabled) app-icon { transform: rotate(-9deg) scale(1.14); }
+
+  button[appchip]:hover:not([aria-pressed="true"]) {
+    transform: translateY(-2px);
+    box-shadow: inset 0 0 0 1.5px var(--color-ink-mute), 0 8px 18px -12px rgb(16 32 46 / 0.4);
+  }
+
+  .intent-tab:not(.is-on):hover::before { opacity: 1; scale: 1; }
+
+  .intent-tab:not(.is-on):hover app-icon { transform: rotate(-10deg) scale(1.15); }
+
+  .intent-tab app-icon { transition: transform 340ms cubic-bezier(0.34, 1.56, 0.64, 1), color 240ms ease; }
+
+  .size-tile:hover:not([aria-pressed="true"]) { transform: translateY(-2px); box-shadow: inset 0 0 0 1.5px var(--color-ink-mute); }
+
+  .size-tile:hover .size-dots span { transform: translateY(-2px); }
+
+  a:hover > app-avatar,
+  button:hover > app-avatar,
+  .card:hover app-avatar,
+  app-avatar:hover { transform: rotate(-4deg) scale(1.06); }
+
+  /* Enlaces del menú: el icono se asoma y el texto se recorre */
+  nav a:not([aria-current="page"]) app-icon { transition: transform 320ms cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+  nav a:not([aria-current="page"]):hover app-icon { transform: translateX(2px) rotate(-10deg) scale(1.12); }
+
+  nav a > span:not([aria-hidden]) { transition: translate 260ms var(--ease-out); }
+
+  nav a:not([aria-current="page"]):hover > span:not([aria-hidden]) { translate: 3px 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn app-icon,
+  app-avatar,
+  .intent-tab::before { transition: opacity 160ms ease; }
+}

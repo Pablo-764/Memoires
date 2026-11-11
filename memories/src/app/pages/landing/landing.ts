@@ -1,4 +1,4 @@
-import { Component, DestroyRef, ElementRef, afterNextRender, afterRenderEffect, computed, inject, signal, viewChild } from '@angular/core'
+import { Component, DestroyRef, ElementRef, afterNextRender, afterRenderEffect, computed, effect, inject, signal, viewChild } from '@angular/core'
 import { Router, RouterLink } from '@angular/router'
 import { AppStore } from '../../servicios/app-store'
 import { PEOPLE } from '../../datos/mock'
@@ -38,7 +38,7 @@ export class Landing {
   protected readonly sample = computed(() => PEOPLE.filter((p) => p.intents.includes(this.intent()) && p.city === 'Guadalajara'))
   protected readonly featured = computed(() => this.sample().slice(0, 1))
   protected readonly accent = computed(() => `var(--color-${COLOR_KEY[this.intent()]})`)
-  protected readonly wash = computed(() => `color-mix(in oklab, var(--color-${COLOR_KEY[this.intent()]}-soft) 62%, var(--color-mist))`)
+  protected readonly wash = computed(() => `color-mix(in oklab, var(--color-${COLOR_KEY[this.intent()]}-soft) 58%, transparent)`)
   protected readonly pillColor = computed(() => `var(--color-${COLOR_KEY[this.intent()]})`)
 
   protected readonly plainWords = ['Di', 'qué', 'buscas.', 'Conoce', 'a', 'quien', 'busca']
@@ -67,6 +67,10 @@ export class Landing {
   protected readonly cta = (t: Tier) => (t === 'free' ? 'Crear cuenta' : 'Empezar')
 
   constructor() {
+    // El halo del fondo toma la tinta de la intención elegida
+    effect(() => this.store.backdropTone.set(this.intent()))
+    inject(DestroyRef).onDestroy(() => this.store.backdropTone.set(null))
+
     afterRenderEffect(() => {
       this.intent()
       this.placePill()
