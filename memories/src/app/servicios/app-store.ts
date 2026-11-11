@@ -185,6 +185,8 @@ export class AppStore {
   readonly lastMatch = signal<string | null>(null)
   readonly typing = signal<string | null>(null)
   readonly ambient = signal<string | null>(null)
+  // Tinta del halo del fondo; si es null se usa la intención preferida
+  readonly backdropTone = signal<Intent | null>(null)
 
   readonly homeUrl = computed(() => (this.state().loggedIn && this.state().onboarded ? '/app/descubre' : '/'))
 
