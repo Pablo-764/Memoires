@@ -1,0 +1,102 @@
+.word {
+  display: inline-block;
+  overflow-x: visible;
+  overflow-y: clip;
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+  vertical-align: bottom;
+}
+
+.word > * {
+  display: inline-block;
+  animation: word-up 860ms var(--ease-out) backwards;
+  animation-delay: calc(140ms + var(--i) * 52ms);
+}
+
+@keyframes word-up { from { transform: translateY(115%); } }
+
+.intent-ink { transition: color 420ms var(--ease-in-out); }
+
+.intent-pill { transition: background-color 320ms ease; }
+
+.hero-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  clip-path: inset(100% 0 0 0);
+  transform: scale(1.08);
+}
+
+.float-card {
+  z-index: 3;
+  animation: float-in 620ms var(--ease-out) 300ms backwards;
+}
+
+@keyframes float-in { from { opacity: 0; transform: translateY(18px) scale(0.96); } }
+
+.step { position: relative; }
+
+.step::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1px;
+  background: var(--color-line);
+  transform-origin: left;
+  transition: transform 900ms var(--ease-in-out);
+}
+
+.chip-in {
+  transition: opacity 420ms var(--ease-out), scale 520ms var(--ease-out);
+  transition-delay: calc(240ms + var(--i, 0) * 70ms);
+}
+
+.meet-left,
+.meet-right { transition: translate 860ms var(--ease-out) 220ms, rotate 860ms var(--ease-out) 220ms; }
+
+@supports (animation-timeline: view()) {
+  .night-open {
+    animation: night-open linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 60%;
+  }
+}
+
+@keyframes night-open {
+  from { clip-path: inset(0 5% 0 5% round 40px 40px 0 0); }
+  to { clip-path: inset(0 0 0 0 round 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .word > *,
+  .night-open { animation: none; }
+  .float-card {
+    animation: fade-in 200ms ease backwards;
+    animation-delay: 0ms;
+  }
+  .hero-photo { transform: none; }
+}
+
+.intent-pill.is-ready {
+  transition: transform 460ms var(--ease-out), width 460ms var(--ease-out), height 460ms var(--ease-out), background-color 320ms ease;
+}
+
+.hero-photo.is-previous {
+  z-index: 1;
+  clip-path: inset(0);
+  transform: scale(1);
+}
+
+.hero-photo.is-active {
+  z-index: 2;
+  clip-path: inset(0);
+  transform: scale(1);
+  transition: clip-path 720ms var(--ease-in-out), transform 980ms var(--ease-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-photo.is-active { transition: opacity 240ms ease; }
+}

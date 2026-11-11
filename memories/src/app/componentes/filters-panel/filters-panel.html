@@ -1,0 +1,88 @@
+<div class="drawer-scrim" (click)="closed.emit()"></div>
+<aside class="drawer-panel" role="dialog" aria-modal="true" aria-label="Afinar sugerencias">
+  <div class="flex items-center justify-between">
+    <h2 class="text-[2.2rem]">Afinar</h2>
+    <button class="btn size-10 min-h-0 p-0 text-ink-mute" aria-label="Cerrar" (click)="closed.emit()"><app-icon name="x" [size]="20" /></button>
+  </div>
+  <p class="mt-1 text-sm text-ink-mute">Siempre en tu ciudad, para que puedan verse en persona.</p>
+
+  <section class="tune-row">
+    <div class="tune-head">
+      <h3>Edad</h3>
+      @if (allowed().has('age')) {
+        <span class="font-display text-2xl tabular-nums">{{ filters().ageMin }} a {{ filters().ageMax }}</span>
+      } @else {
+        <button class="tune-lock" (click)="upgrade()"><app-icon name="lock" [size]="14" /> {{ tierFor('age') }}</button>
+      }
+    </div>
+    <div class="range-double" [class.is-locked]="!allowed().has('age')">
+      <span class="range-fill" [style.left.%]="trackLeft()" [style.right.%]="trackRight()"></span>
+      <input type="range" min="18" max="60" aria-label="Edad mínima" [disabled]="!allowed().has('age')" [ngModel]="filters().ageMin" (ngModelChange)="setAgeMin($event)" />
+      <input type="range" min="18" max="60" aria-label="Edad máxima" [disabled]="!allowed().has('age')" [ngModel]="filters().ageMax" (ngModelChange)="setAgeMax($event)" />
+    </div>
+  </section>
+
+  <section class="tune-row">
+    <div class="tune-head">
+      <h3>Intereses en común</h3>
+      @if (!allowed().has('interests')) {
+        <button class="tune-lock" (click)="upgrade()"><app-icon name="lock" [size]="14" /> {{ tierFor('interests') }}</button>
+      }
+    </div>
+    <div class="seg" [class.is-locked]="!allowed().has('interests')" [appPillGroup]="filters().minShared">
+      <span class="group-pill seg-pill" aria-hidden="true"></span>
+      @for (n of sharedOptions; track n) {
+        <button type="button" [attr.aria-pressed]="filters().minShared === n" [disabled]="!allowed().has('interests')" (click)="set({ minShared: n })">{{ n === 0 ? 'Cualquiera' : n + ' o más' }}</button>
+      }
+    </div>
+  </section>
+
+  <section class="tune-row">
+    <div class="tune-head">
+      <h3>Disponibilidad</h3>
+      @if (!allowed().has('availability')) {
+        <button class="tune-lock" (click)="upgrade()"><app-icon name="lock" [size]="14" /> {{ tierFor('availability') }}</button>
+      }
+    </div>
+    <div class="seg" [class.is-locked]="!allowed().has('availability')" [appPillGroup]="filters().availability">
+      <span class="group-pill seg-pill" aria-hidden="true"></span>
+      @for (a of availability; track a) {
+        <button type="button" [attr.aria-pressed]="filters().availability === a" [disabled]="!allowed().has('availability')" (click)="set({ availability: a })">{{ a === 'any' ? 'Cualquiera' : a }}</button>
+      }
+    </div>
+  </section>
+
+  <section class="tune-row">
+    <div class="tune-head">
+      <h3>Idioma</h3>
+      @if (!allowed().has('languages')) {
+        <button class="tune-lock" (click)="upgrade()"><app-icon name="lock" [size]="14" /> {{ tierFor('languages') }}</button>
+      }
+    </div>
+    <div class="seg" [class.is-locked]="!allowed().has('languages')" [appPillGroup]="filters().language">
+      <span class="group-pill seg-pill" aria-hidden="true"></span>
+      @for (l of languages; track l) {
+        <button type="button" [attr.aria-pressed]="filters().language === l" [disabled]="!allowed().has('languages')" (click)="set({ language: l })">{{ l === 'any' ? 'Todos' : l }}</button>
+      }
+    </div>
+  </section>
+
+  <section class="tune-row">
+    <div class="tune-head">
+      <h3>{{ labels.verified }}</h3>
+      @if (allowed().has('verified')) {
+        <label class="switch">
+          <input type="checkbox" aria-label="Solo perfiles verificados" [ngModel]="filters().verifiedOnly" (ngModelChange)="set({ verifiedOnly: $event })" />
+          <span></span>
+        </label>
+      } @else {
+        <button class="tune-lock" (click)="upgrade()"><app-icon name="lock" [size]="14" /> {{ tierFor('verified') }}</button>
+      }
+    </div>
+  </section>
+
+  <div class="mt-auto flex gap-2 pt-6">
+    <button class="btn btn-ghost flex-1" (click)="reset()">Limpiar</button>
+    <button class="btn btn-primary min-h-12 flex-[2]" (click)="closed.emit()">Ver personas</button>
+  </div>
+</aside>

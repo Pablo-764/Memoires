@@ -1,0 +1,98 @@
+<ng-template #join let-p>
+  @if (p.hostId !== 'me') {
+    <button class="btn" [class]="isJoined(p) ? 'btn-ghost' : 'btn-primary'" [disabled]="isFull(p) || !!barrier(p)" (click)="toggle(p, $event)">
+      @for (label of [isFull(p) ? 'Lleno' : barrier(p) ?? (isJoined(p) ? 'Salir del plan' : 'Unirme')]; track label) {
+        <span class="swap-in">{{ label }}</span>
+      }
+    </button>
+  } @else {
+    <span class="text-sm font-semibold text-plan">Tu plan</span>
+  }
+</ng-template>
+
+<div class="flex flex-wrap items-end justify-between gap-4">
+  <h1 class="text-[clamp(3rem,6vw,4.6rem)]">Planes en {{ store.me().city }}</h1>
+  <button class="btn btn-primary" (click)="creating.set(true)"><app-icon name="calendar-plus" [size]="18" /> Crear plan</button>
+</div>
+
+<div class="mt-6 flex flex-wrap items-end gap-x-6 gap-y-2">
+<div class="shape-bar" [appPillGroup]="filter()" role="group" aria-label="Filtrar planes">
+  <span class="group-echo" aria-hidden="true"></span>
+      <span class="group-pill shape-marker" aria-hidden="true"></span>
+  <button type="button" data-shape="arch" data-tone="accent" class="intent-tab" [class.is-on]="filter() === 'all'" [attr.aria-pressed]="filter() === 'all'" (click)="setFilter('all')">Todos</button>
+  @for (i of filterOptions; track i) {
+    <button type="button" class="intent-tab" [attr.data-shape]="shapes[i]" [attr.data-tone]="i" [class.is-on]="filter() === i" [attr.aria-pressed]="filter() === i" (click)="setFilter(i)">{{ intents[i].short }}</button>
+  }
+</div>
+
+<div class="shape-bar" [appPillGroup]="sizeFilter()" role="group" aria-label="Filtrar por tamaño de grupo">
+  <span class="group-echo" aria-hidden="true"></span>
+      <span class="group-pill shape-marker" aria-hidden="true"></span>
+  <button type="button" data-shape="arch" data-tone="accent" class="intent-tab" [class.is-on]="sizeFilter() === 'all'" [attr.aria-pressed]="sizeFilter() === 'all'" (click)="setSizeFilter('all')">Cualquier tamaño</button>
+  @for (k of sizes; track k) {
+    <button type="button" class="intent-tab" [attr.data-shape]="sizeLook[k].shape" [attr.data-tone]="sizeLook[k].tone" [class.is-on]="sizeFilter() === k" [attr.aria-pressed]="sizeFilter() === k" (click)="setSizeFilter(k)">{{ sizeInfo[k].label }}</button>
+  }
+</div>
+</div>
+
+<ul class="stagger mt-6 grid gap-4 md:grid-cols-2">
+  @for (p of visible(); track p.id; let first = $first) {
+    <li class="lift overflow-hidden rounded-[28px]" [class]="first ? 'relative md:col-span-2' : 'card flex flex-col'" data-vt [style.--vt]="'plan-' + p.id">
+      <div class="overflow-hidden" [class]="first ? 'h-[26rem]' : ''" [style.background]="p.photo ? null : 'var(--color-' + p.intent + '-soft)'">
+        @if (p.photo; as photo) {
+          <img [src]="photo.src" [alt]="photo.alt" width="900" height="500" loading="lazy" class="photo-zoom w-full object-cover" [class]="first ? 'h-full' : 'aspect-[16/8]'" />
+        } @else if (!first) {
+          <div class="aspect-[16/8]"></div>
+        }
+      </div>
+      @if (first) {
+        <div class="plan-feature">
+          <div class="flex items-center gap-3">
+            <app-intent-badge [intent]="p.intent" size="md" />
+            <span class="text-sm text-white/80">{{ p.when }}. {{ sizeLabel(p) }}. {{ audienceLabel(p) }}.</span>
+          </div>
+          <h2 class="mt-3 max-w-[18ch] text-[clamp(2.4rem,5vw,3.8rem)] text-white">{{ p.title }}</h2>
+          <p class="mt-2 max-w-[52ch] text-white/85">{{ p.description }}</p>
+          <div class="mt-5 flex flex-wrap items-center justify-between gap-3">
+            <p class="text-sm text-white/80">{{ p.place }}. {{ p.attendees.length }} de {{ p.capacity }} lugares ocupados.</p>
+            <ng-container [ngTemplateOutlet]="join" [ngTemplateOutletContext]="{ $implicit: p }" />
+          </div>
+        </div>
+      } @else {
+        <div class="flex flex-1 flex-col p-5">
+          <div class="flex items-start justify-between gap-3">
+            <h2 class="text-[1.85rem]">{{ p.title }}</h2>
+            <app-intent-badge [intent]="p.intent" />
+          </div>
+          <p class="mt-2 text-ink-soft">{{ p.description }}</p>
+          <dl class="mt-4 grid gap-1.5 text-sm text-ink-soft">
+            <div class="flex items-center gap-2"><app-icon name="clock" [size]="16" class="text-ink-mute" /><dt class="sr-only">Cuándo</dt><dd>{{ p.when }}</dd></div>
+            <div class="flex items-center gap-2"><app-icon name="map-pin" [size]="16" class="text-ink-mute" /><dt class="sr-only">Dónde</dt><dd>{{ p.place }}</dd></div>
+            <div class="flex items-center gap-2"><app-icon name="users" [size]="16" class="text-ink-mute" /><dt class="sr-only">Lugares</dt><dd>{{ sizeLabel(p) }}: {{ p.attendees.length }} de {{ p.capacity }} lugares ocupados</dd></div>
+            <div class="flex items-center gap-2"><app-icon name="handshake" [size]="16" class="text-ink-mute" /><dt class="sr-only">Con quién</dt><dd>{{ audienceLabel(p) }}</dd></div>
+          </dl>
+          <div class="mt-5 flex items-center justify-between gap-3">
+            <div class="flex items-center">
+              @for (a of p.attendees.slice(0, 5); track a; let i = $index) {
+                @let person = attendee(a);
+                <app-avatar [name]="person?.name ?? (store.me().name || 'Tú')" [hue]="person?.hue ?? 260" [size]="32" [photo]="a === 'me' ? store.me().photo : undefined" class="pop ring-2 ring-surface" [class.-ml-2]="i > 0" />
+              }
+              <span class="ml-2 text-sm text-ink-mute">Organiza
+                @if (host(p); as h) {
+                  <a [routerLink]="['/app/persona', h.id]" class="link-soft font-semibold text-hobby">{{ h.name }}</a>
+                } @else {
+                  tú
+                }
+              </span>
+            </div>
+            <ng-container [ngTemplateOutlet]="join" [ngTemplateOutletContext]="{ $implicit: p }" />
+          </div>
+        </div>
+      }
+    </li>
+  }
+</ul>
+
+@if (creating()) {
+  <app-create-plan-dialog (closed)="creating.set(false)" />
+}

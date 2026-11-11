@@ -1,0 +1,45 @@
+<h3 class="text-[1.7rem]">Para {{ label() }}</h3>
+
+@if (groups()) {
+  <fieldset class="mt-3">
+    <legend class="label">¿Con cuántas personas?</legend>
+    <div class="grid gap-2 sm:grid-cols-3">
+      @for (k of sizeOrder; track k) {
+        <button type="button" class="size-tile" [attr.aria-pressed]="value().sizes.includes(k)" (click)="toggleSize(k)">
+          <span class="size-dots">
+            @for (d of dots(k); track $index) {
+              <span [style.--i]="$index"></span>
+            }
+          </span>
+          <span class="font-display text-[1.45rem] leading-none">{{ sizeInfo[k].label }}</span>
+          <span class="text-xs text-ink-mute">{{ sizeInfo[k].hint }}</span>
+        </button>
+      }
+    </div>
+  </fieldset>
+  <fieldset class="mt-4">
+    <legend class="label">¿Con qué tipo de personas?</legend>
+    <div class="grid gap-2 sm:grid-cols-2">
+      @for (a of peopleOrder; track a) {
+        <button type="button" class="size-tile" [attr.aria-pressed]="value().people === a" (click)="value.set({ sizes: value().sizes, genders: value().genders, people: a })">
+          <span class="font-semibold">{{ peopleInfo[a].label }}</span>
+          <span class="text-xs text-ink-mute">{{ peopleInfo[a].hint }}</span>
+        </button>
+      }
+    </div>
+  </fieldset>
+}
+
+@if (gender()) {
+  <fieldset class="mt-4">
+    <legend class="label">¿Qué género te interesa conocer?</legend>
+    <div class="grid gap-2 sm:grid-cols-3">
+      @for (g of genderOrder; track g) {
+        <button type="button" class="size-tile" [attr.aria-pressed]="value().genders.includes(g)" (click)="toggleGender(g)">
+          <span class="font-semibold">{{ genderInfo[g].seek }}</span>
+        </button>
+      }
+    </div>
+    <p class="mt-1.5 text-xs text-ink-mute">Sin marcar ninguno, te mostramos a todas las personas.</p>
+  </fieldset>
+}

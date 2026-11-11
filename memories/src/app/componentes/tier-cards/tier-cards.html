@@ -1,0 +1,37 @@
+<div class="grid gap-4 md:grid-cols-3">
+  @for (t of order; track t; let n = $index) {
+    @let info = tiers[t];
+    @let isLuc = t === 'lucidite';
+    <article appReveal class="lift relative flex flex-col rounded-[26px] p-6" [class]="isLuc ? 'night-glow text-white' : 'card'" [style.--i]="n">
+      <h3 class="text-[1.85rem]" [class.italic]="isLuc">{{ info.name }}</h3>
+      <p class="mt-1 text-sm" [class]="isLuc ? 'text-white/75' : 'text-ink-mute'">{{ info.summary }}</p>
+      <p class="mt-5 flex items-baseline gap-1.5">
+        <span class="font-display text-4xl tabular-nums">{{ info.priceUsd === 0 ? 'Gratis' : '$' + info.priceUsd }}</span>
+        @if (info.priceUsd > 0) {
+          <span class="text-sm" [class]="isLuc ? 'text-white/75' : 'text-ink-mute'">USD al mes ({{ mxn.format(info.priceMxn) }})</span>
+        }
+      </p>
+      <ul class="mt-5 flex flex-1 flex-col gap-2.5 text-sm">
+        @for (f of rows(t); track f.text) {
+          <li class="flex gap-2.5">
+            <app-icon
+              [name]="f.ok ? 'check' : 'minus'"
+              [size]="17"
+              class="mt-0.5"
+              [class]="f.ok ? (isLuc ? 'text-white' : 'text-plan') : 'text-ink-mute'"
+            />
+            <span [class]="isLuc ? 'text-white/90' : 'text-ink-soft'">{{ f.text }}</span>
+          </li>
+        }
+      </ul>
+      <button
+        class="btn mt-6 w-full"
+        [class]="isLuc ? 'bg-white text-[#0f2a44]' : t === 'free' ? 'btn-ghost' : 'btn-primary'"
+        [disabled]="current() === t"
+        (click)="choose.emit(t)"
+      >
+        {{ current() === t ? 'Tu plan actual' : ctaLabel()(t) }}
+      </button>
+    </article>
+  }
+</div>

@@ -1,0 +1,35 @@
+<section class="night-glow enter rounded-[32px] p-7 md:p-10">
+  <p class="text-sm text-white/65">Tu plan actual</p>
+  <h1 class="mt-1 text-[clamp(3.4rem,8vw,6rem)]" [class.italic]="store.tier() === 'lucidite'">{{ info().name }}</h1>
+  <p class="mt-2 max-w-[56ch] text-white/75">Los precios incluyen IVA y puedes cancelar cuando quieras desde esta misma página.</p>
+  <div class="meter-on-night mt-7 grid gap-5 sm:grid-cols-2">
+    <app-meter [used]="store.matchesUsed()" [total]="info().weeklyMatches" label="Matches esta semana" />
+    <app-meter [used]="store.wordsUsed()" [total]="info().weeklyWords" label="Palabras esta semana" />
+  </div>
+</section>
+
+<div class="mt-8">
+  <app-tier-cards [current]="store.tier()" [ctaLabel]="cta" (choose)="choose($event)" />
+</div>
+
+@if (checkout(); as c) {
+  <app-modal [title]="'Suscribirte a ' + tiers[c].name" (closed)="closeCheckout()">
+    <div class="flex items-baseline justify-between rounded-2xl bg-mist p-4">
+      <span class="font-medium">{{ tiers[c].name }}, cobro mensual</span>
+      <span class="font-display text-2xl tabular-nums">${{ tiers[c].priceUsd }} USD</span>
+    </div>
+    <p class="mt-3 text-sm text-ink-mute">Equivale a {{ mxn.format(tiers[c].priceMxn) }} con IVA incluido. Se renueva cada mes; cancelas en cualquier momento.</p>
+    <div class="mt-6 flex flex-col gap-3">
+      <button class="btn min-h-12 bg-[#ffc439] text-[#1f1a33]" [disabled]="!!paying()" (click)="pay('paypal', c)">
+        {{ paying() === 'paypal' ? 'Conectando con PayPal…' : 'Pagar con PayPal' }}
+      </button>
+      <button class="btn min-h-12 bg-black text-white" [disabled]="!!paying()" (click)="pay('gpay', c)">
+        {{ paying() === 'gpay' ? 'Conectando con Google Pay…' : 'Pagar con Google Pay' }}
+      </button>
+    </div>
+    <p class="mt-4 flex items-start gap-2 text-xs text-ink-mute">
+      <app-icon name="shield-check" [size]="16" />
+      mémoires nunca ve ni guarda los datos de tu tarjeta: el pago se realiza en PayPal o Google Pay. En esta demostración no se cobra nada.
+    </p>
+  </app-modal>
+}

@@ -1,12 +1,15 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, inject } from '@angular/core'
+import { RouterOutlet } from '@angular/router'
+import { ThemeService } from './servicios/theme'
+import { Toaster } from './componentes/toaster/toaster'
 
 @Component({
-  imports: [RouterOutlet],
   selector: 'app-root',
+  imports: [RouterOutlet, Toaster],
   styleUrl: './app.css',
   templateUrl: './app.html',
 })
 export class App {
-  protected readonly title = signal('memories');
+  // Se instancia aquí para que el tema siga al sistema desde el arranque
+  private readonly theme = inject(ThemeService)
 }

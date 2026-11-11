@@ -1,0 +1,5 @@
+@for (m of [theme.mode()]; track m) {
+  <span class="theme-icon grid place-items-center">
+    <app-icon [name]="m === 'dark' ? 'sun' : 'moon'" [size]="19" />
+  </span>
+}

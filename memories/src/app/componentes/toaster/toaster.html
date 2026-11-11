@@ -1,0 +1,12 @@
+<div class="pointer-events-none fixed inset-x-0 bottom-28 z-[60] flex flex-col items-center gap-2 px-4 md:bottom-6" aria-live="polite">
+  @for (t of store.toasts(); track t.id) {
+    <button
+      animate.leave="toast-out"
+      class="rise-in pointer-events-auto rounded-full px-5 py-3 text-sm font-medium text-on-accent shadow-(--shadow-float)"
+      [class]="t.tone === 'danger' ? 'bg-danger' : t.tone === 'ok' ? 'bg-plan' : 'bg-accent'"
+      (click)="store.dismissToast(t.id)"
+    >
+      {{ t.text }}
+    </button>
+  }
+</div>

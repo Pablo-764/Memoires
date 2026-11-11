@@ -1,0 +1,17 @@
+<div class="mb-1.5 flex items-baseline justify-between gap-3 text-sm">
+  <span class="font-medium text-ink-soft">{{ label() }}</span>
+  <span class="tabular-nums text-ink-mute">{{ leftLabel() }}</span>
+</div>
+<div
+  class="h-2 overflow-hidden rounded-full bg-line"
+  role="progressbar"
+  [attr.aria-label]="label()"
+  [attr.aria-valuenow]="unlimited() ? null : used()"
+  [attr.aria-valuemax]="unlimited() ? null : total()"
+>
+  <div
+    class="bar-grow h-full origin-left rounded-full"
+    [class]="unlimited() ? 'bg-plan' : pct() > 85 ? 'bg-romance' : 'bg-accent'"
+    [style.transform]="'scaleX(' + pct() / 100 + ')'"
+  ></div>
+</div>

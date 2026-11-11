@@ -1,0 +1,27 @@
+<div
+  role="radiogroup"
+  aria-label="Tema"
+  class="relative grid rounded-full p-1 text-sm font-semibold"
+  [class]="onNight() ? 'bg-white/8' : 'bg-raised shadow-[inset_0_0_0_1px_var(--color-line)]'"
+  [style.grid-template-columns]="'repeat(' + options().length + ', 1fr)'"
+>
+  <span
+    aria-hidden="true"
+    class="absolute inset-y-1 left-1 rounded-full transition-transform duration-300 ease-(--ease-out)"
+    [class]="onNight() ? 'bg-white/14' : 'bg-surface shadow-(--shadow-lift)'"
+    [style.width]="'calc((100% - 0.5rem) / ' + options().length + ')'"
+    [style.transform]="'translateX(' + index() * 100 + '%)'"
+  ></span>
+  @for (o of options(); track o.value) {
+    <button
+      type="button"
+      role="radio"
+      [attr.aria-checked]="current() === o.value"
+      class="relative z-10 rounded-full px-2 py-1.5 transition-colors duration-200"
+      [class]="optionClass(o.value)"
+      (click)="theme.set(o.value, { x: $event.clientX, y: $event.clientY })"
+    >
+      {{ o.label }}
+    </button>
+  }
+</div>

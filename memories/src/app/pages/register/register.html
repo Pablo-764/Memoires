@@ -1,0 +1,31 @@
+<app-auth-frame title="Crea tu cuenta" subtitle="Es gratis. En el siguiente paso eliges qué buscas.">
+  <form class="flex flex-col gap-4" (ngSubmit)="submit()">
+    <app-field for="name" label="Nombre" [error]="errors()['name']">
+      <input id="name" name="name" class="field" autocomplete="given-name" [(ngModel)]="name" [attr.aria-invalid]="!!errors()['name']" />
+    </app-field>
+    <app-field for="email" label="Correo electrónico" [error]="errors()['email']">
+      <input id="email" name="email" class="field" type="email" autocomplete="email" spellcheck="false" [(ngModel)]="email" [attr.aria-invalid]="!!errors()['email']" />
+    </app-field>
+    <app-field for="password" label="Contraseña" [error]="errors()['password']">
+      <input id="password" name="password" class="field" type="password" autocomplete="new-password" [(ngModel)]="password" [attr.aria-invalid]="!!errors()['password']" />
+    </app-field>
+    <app-field for="birth" label="Fecha de nacimiento" [error]="errors()['birth']">
+      <input id="birth" name="birth" class="field" type="date" [(ngModel)]="birth" [attr.aria-invalid]="!!errors()['birth']" />
+    </app-field>
+    <label class="flex gap-3 text-sm text-ink-soft">
+      <input type="checkbox" name="privacy" class="mt-0.5 size-5 accent-ink" [(ngModel)]="privacy" />
+      <span>Acepto el <a routerLink="/privacidad" class="font-semibold text-ink underline underline-offset-4">aviso de privacidad</a> y los términos de uso.</span>
+    </label>
+    @if (errors()['privacy']) {
+      <p class="error-in -mt-2 text-sm font-medium text-danger">{{ errors()['privacy'] }}</p>
+    }
+    <label class="flex gap-3 text-sm text-ink-soft">
+      <input type="checkbox" name="sensitive" class="mt-0.5 size-5 accent-ink" [(ngModel)]="sensitive" />
+      <span>Doy mi consentimiento expreso para que se use mi intención romántica, si la elijo, para sugerirme personas.</span>
+    </label>
+    <button class="btn btn-primary mt-2 min-h-12">Crear cuenta</button>
+    <p class="text-center text-sm text-ink-mute">
+      ¿Ya tienes cuenta? <a routerLink="/entrar" class="font-semibold text-ink underline underline-offset-4">Iniciar sesión</a>
+    </p>
+  </form>
+</app-auth-frame>

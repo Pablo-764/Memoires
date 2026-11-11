@@ -1,13 +1,22 @@
 <!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Memories</title>
-  <base href="/">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-</head>
-<body>
-  <app-root></app-root>
-</body>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>mémoires</title>
+    <base href="/" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f3efe7" />
+    <script>
+      // Aplica el tema antes de pintar para evitar un destello
+      try {
+        var t = localStorage.getItem('memoires-theme')
+        if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches)) document.documentElement.classList.add('dark')
+      } catch (e) {}
+    </script>
+    <meta name="description" content="Conoce personas según lo que buscas: pareja, amistad, un plan o alguien con tu mismo pasatiempo." />
+  </head>
+  <body>
+    <app-root></app-root>
+  </body>
 </html>

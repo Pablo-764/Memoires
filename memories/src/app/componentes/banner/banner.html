@@ -1,0 +1,7 @@
+@for (k of [custom() ?? info().key]; track k) {
+  <div class="fade-in absolute inset-0" [class]="custom() ? '' : (info().anim ?? '')" [style.background]="custom() ? null : info().css">
+    @if (custom(); as src) {
+      <img [src]="src" alt="" class="size-full object-cover" draggable="false" />
+    }
+  </div>
+}

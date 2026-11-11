@@ -1,0 +1,38 @@
+.fx { position: absolute; display: block; opacity: 0; animation-timing-function: linear; animation-iteration-count: infinite; }
+
+.fx-up { animation-name: fx-up; }
+
+.fx-down { animation-name: fx-down; }
+
+.fx-twinkle { animation-name: fx-twinkle; animation-timing-function: ease-in-out; }
+
+.fx-drift { animation-name: fx-drift; animation-timing-function: ease-in-out; }
+
+@keyframes fx-up {
+  0% { transform: translateY(70px) rotate(-8deg); opacity: 0; }
+  15% { opacity: 0.95; }
+  80% { opacity: 0.85; }
+  100% { transform: translateY(-190px) rotate(14deg); opacity: 0; }
+}
+
+@keyframes fx-down {
+  0% { transform: translateY(-150px) rotate(0deg); opacity: 0; }
+  15% { opacity: 0.95; }
+  85% { opacity: 0.85; }
+  100% { transform: translateY(190px) translateX(26px) rotate(150deg); opacity: 0; }
+}
+
+@keyframes fx-twinkle {
+  0%, 100% { transform: scale(0.45) rotate(-10deg); opacity: 0; }
+  50% { transform: scale(1.1) rotate(10deg); opacity: 1; }
+}
+
+@keyframes fx-drift {
+  0%, 100% { transform: translate(-20px, 10px); opacity: 0; }
+  20%, 80% { opacity: 0.9; }
+  50% { transform: translate(26px, -22px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fx { animation: none; opacity: 0.8; }
+}

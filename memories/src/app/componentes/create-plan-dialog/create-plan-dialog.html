@@ -1,0 +1,70 @@
+<app-modal title="Crear un plan" [wide]="true" (closed)="closed.emit()">
+  <form class="flex flex-col gap-5" (ngSubmit)="submit()">
+    <div>
+      <label class="label" for="pt">Qué harán</label>
+      <input id="pt" name="title" class="field" placeholder="Por ejemplo: Ir al cine el viernes…" [(ngModel)]="title" />
+    </div>
+
+    <fieldset>
+      <legend class="label">Con cuántas personas</legend>
+      <div class="grid gap-2 sm:grid-cols-3">
+        @for (k of sizes; track k) {
+          <button type="button" class="size-tile" [attr.aria-pressed]="size() === k" (click)="chooseSize(k)">
+            <span class="size-dots">
+              @for (d of dotsFor(k); track $index) {
+                <span [style.--i]="$index"></span>
+              }
+            </span>
+            <span class="font-display text-[1.45rem] leading-none">{{ info[k].label }}</span>
+            <span class="text-xs text-ink-mute">{{ info[k].hint }}</span>
+          </button>
+        }
+      </div>
+      @if (info[size()].min !== info[size()].max) {
+        <div class="swap-in mt-3 flex items-center gap-3">
+          <input type="range" name="capacity" aria-label="Lugares" class="flex-1 accent-ink" [min]="info[size()].min" [max]="info[size()].max" [(ngModel)]="capacity" />
+          <span class="w-24 text-right text-sm font-semibold tabular-nums">{{ capacity() }} personas</span>
+        </div>
+      }
+    </fieldset>
+
+    <fieldset>
+      <legend class="label">Con quién</legend>
+      <div class="grid gap-2 sm:grid-cols-3">
+        @for (a of audiences; track a) {
+          <button type="button" class="size-tile" [attr.aria-pressed]="audience() === a" (click)="audience.set(a)">
+            <span class="font-semibold">{{ audienceInfo[a].label }}</span>
+            <span class="text-xs text-ink-mute">{{ audienceInfo[a].hint }}</span>
+          </button>
+        }
+      </div>
+    </fieldset>
+
+    <div>
+      <label class="label" for="pd">Detalles</label>
+      <textarea id="pd" name="description" class="field min-h-20" [(ngModel)]="description"></textarea>
+    </div>
+    <div class="grid gap-4 sm:grid-cols-3">
+      <div>
+        <label class="label" for="pp">Lugar público</label>
+        <input id="pp" name="place" class="field" placeholder="Café, parque, museo…" [(ngModel)]="place" />
+      </div>
+      <div>
+        <label class="label" for="pw">Cuándo</label>
+        <input id="pw" name="when" class="field" placeholder="Sábado 17:00…" [(ngModel)]="when" />
+      </div>
+      <div>
+        <label class="label" for="pi">Tipo</label>
+        <select id="pi" name="intent" class="field" [(ngModel)]="intent">
+          <option value="plan">Plan</option>
+          <option value="hobby">Pasatiempo</option>
+          <option value="friend">Amistad</option>
+        </select>
+      </div>
+    </div>
+    @if (error()) {
+      <p class="error-in text-sm font-medium text-danger" role="alert">{{ error() }}</p>
+    }
+    <button class="btn btn-primary min-h-12">Publicar plan</button>
+  </form>
+</app-modal>

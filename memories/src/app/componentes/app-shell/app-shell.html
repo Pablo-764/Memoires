@@ -1,0 +1,47 @@
+<div class="min-h-dvh md:grid md:grid-cols-[272px_1fr]">
+  <div class="ambient" [style.background-color]="store.ambient() ?? 'var(--color-mist)'" aria-hidden="true"></div>
+  <a href="#contenido" class="sr-only z-50 rounded-full bg-accent px-4 py-2 text-on-accent focus:not-sr-only focus:fixed focus:left-4 focus:top-4" (click)="skipToContent($event)">
+    Saltar al contenido
+  </a>
+
+  <app-sidebar [items]="nav()" [active]="activeIndex()" />
+  <app-navbar />
+
+  <main id="contenido" tabindex="-1" class="vt-page mx-auto w-full max-w-5xl px-4 pb-32 pt-4 outline-none md:px-10 md:pb-12 md:pt-10">
+    <router-outlet />
+  </main>
+
+  <app-tab-bar [items]="nav()" [active]="activeIndex()" />
+
+  @if (nudgeOpen()) {
+    <app-modal title="Llevas un buen rato aquí" (closed)="store.snooze(15)">
+      <p class="text-ink-soft">
+        Hoy has usado mémoires durante <strong class="text-ink">{{ store.minutesToday() }} minutos</strong>. Conocer gente también pasa fuera
+        de la pantalla: quizá es buen momento para estirarte, tomar agua o salir a caminar.
+      </p>
+      <div class="mt-6 flex flex-col gap-2 sm:flex-row-reverse">
+        <button class="btn btn-primary flex-1" (click)="takeBreak()">Tomar un descanso</button>
+        <button class="btn btn-ghost flex-1" (click)="store.snooze(15)">Seguir 15 minutos más</button>
+      </div>
+    </app-modal>
+  }
+
+  @if (matchPerson(); as person) {
+    <app-modal title="¡Es una conexión!" (closed)="store.clearMatch()">
+      <div class="text-center">
+        <div class="my-4 flex justify-center">
+          <div class="relative flex items-center">
+            <span class="match-ring" aria-hidden="true"></span>
+            <app-avatar [name]="displayName()" [hue]="260" [size]="84" [frame]="store.me().frame" [photo]="store.me().photo" class="match-left ring-4 ring-surface" />
+            <app-avatar [name]="person.name" [hue]="person.hue" [size]="84" [frame]="person.frame" class="match-right -ml-5 ring-4 ring-surface" />
+          </div>
+        </div>
+        <p class="enter text-ink-soft" style="--d: 420ms">A {{ person.name }} también le interesa conocerte. Ya pueden conversar.</p>
+        <div class="enter mt-6 flex flex-col gap-2 sm:flex-row-reverse" style="--d: 520ms">
+          <button class="btn btn-primary flex-1" (click)="openMatchChat(person.id)">Enviar mensaje</button>
+          <button class="btn btn-ghost flex-1" (click)="store.clearMatch()">Seguir descubriendo</button>
+        </div>
+      </div>
+    </app-modal>
+  }
+</div>

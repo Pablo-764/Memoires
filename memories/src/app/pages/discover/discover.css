@@ -1,0 +1,138 @@
+.deck {
+  position: relative;
+  height: clamp(30rem, calc(100dvh - 17.5rem), 42rem);
+}
+
+@media (max-width: 767px) {
+  .deck { height: clamp(25rem, calc(100dvh - 24.5rem), 38rem); }
+}
+
+.deck-card {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 0;
+  transition: transform 640ms var(--ease-out), opacity 460ms ease;
+  @starting-style {
+    transform: translateY(-58px) scale(0.84);
+    opacity: 0;
+  }
+}
+
+.deck-card[data-depth="1"] { transform: translateY(-20px) scale(0.95); pointer-events: none; }
+
+.deck-card[data-depth="2"] { transform: translateY(-38px) scale(0.9); opacity: 0.7; pointer-events: none; }
+
+.match-btn {
+  white-space: nowrap;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 4.25rem;
+  padding: 0 1.75rem 0 0.6rem;
+  border-radius: 999px;
+  color: var(--color-on-accent);
+  background: var(--match);
+  box-shadow: 0 16px 30px -14px var(--match);
+  touch-action: manipulation;
+  transition: transform 200ms var(--ease-out), background-color 420ms ease, box-shadow 420ms ease;
+}
+
+.match-btn-icon {
+  display: grid;
+  place-items: center;
+  width: 3.1rem;
+  height: 3.1rem;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--color-on-accent) 22%, transparent);
+  transition: transform 320ms var(--ease-out);
+}
+
+.match-btn:active { transform: scale(0.95); }
+
+.pass-btn {
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 4.25rem;
+  padding: 0 1.4rem;
+  border-radius: 999px;
+  font-weight: 600;
+  color: var(--color-ink-soft);
+  background: var(--color-surface);
+  box-shadow: inset 0 0 0 1px var(--color-line);
+  touch-action: manipulation;
+  transition: transform 200ms var(--ease-out), color 180ms ease;
+}
+
+.pass-btn:active { transform: scale(0.95); }
+
+@media (hover: hover) and (pointer: fine) {
+  .match-btn:hover .match-btn-icon { transform: scale(1.14) rotate(-8deg); }
+  .pass-btn:hover { color: var(--color-ink); }
+}
+
+.tune-btn {
+  position: relative;
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 999px;
+  color: var(--color-ink);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-lift);
+  transition: transform 200ms var(--ease-out);
+}
+
+.tune-btn:active { transform: scale(0.93) rotate(-10deg); }
+
+.tune-count {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  display: grid;
+  place-items: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #fff;
+  background: var(--color-romance);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .deck-card { transition: opacity 200ms ease; }
+}
+
+.deck-short { height: clamp(28rem, calc(100dvh - 24rem), 38rem); }
+
+.tune-btn {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 10px;
+  background: var(--color-surface);
+  box-shadow: inset 0 0 0 1.5px var(--color-line-strong), 4px 4px 0 -1px color-mix(in oklab, var(--color-romance) 45%, transparent);
+  transform: rotate(45deg);
+  transition: transform 320ms var(--ease-out), box-shadow 240ms ease;
+}
+
+.tune-btn > app-icon { transform: rotate(-45deg); }
+
+.tune-btn:active { transform: rotate(45deg) scale(0.92); }
+
+@media (hover: hover) and (pointer: fine) {
+  .tune-btn:hover { transform: rotate(135deg); }
+  .tune-btn:hover > app-icon { transform: rotate(-135deg); transition: transform 320ms var(--ease-out); }
+}
+
+.tune-count { transform: rotate(-45deg); top: -6px; right: -6px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tune-btn,
+  .tune-btn:hover { transform: rotate(45deg); }
+  .tune-btn:hover > app-icon { transform: rotate(-45deg); }
+}
