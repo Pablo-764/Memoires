@@ -7,7 +7,25 @@ const noise = (n: number) => {
   return v - Math.floor(v)
 }
 
-// Partículas decorativas del perfil; la posición depende del índice para que no salten al repintar
+// Cuánto dura cada tipo de movimiento (base y variación, en segundos)
+const TIMING: Record<string, [number, number]> = {
+  up: [5, 6],
+  down: [5, 6],
+  twinkle: [2.4, 2.6],
+  drift: [6, 5],
+  orbit: [7, 6],
+  burst: [2.4, 1.6],
+  float: [3, 2.5],
+  rain: [0.8, 0.6],
+  bubble: [4.5, 4],
+  flip: [4.5, 4],
+}
+
+/**
+ * Partículas decorativas del perfil. Cada una tiene dos capas: la de afuera viaja
+ * (sube, cae, orbita, estalla) y la de adentro se balancea o gira, así el movimiento
+ * nunca se ve mecánico. La posición depende del índice para que no salte al repintar.
+ */
 @Component({
   selector: 'app-effect',
   imports: [Icon],
@@ -21,15 +39,24 @@ export class Effect {
 
   protected readonly info = computed(() => effectOf(this.effect()))
   protected readonly particles = computed(() => {
-    const { key, colors } = this.info()
+    const { key, colors, dir } = this.info()
     if (key === 'none') return []
-    return Array.from({ length: this.count() }, (_, i) => ({
-      left: noise(i + 1) * 96,
-      top: noise(i + 40) * 90,
-      color: colors[i % colors.length],
-      delay: -noise(i + 80) * 9,
-      duration: 5 + noise(i + 120) * 6,
-      size: 11 + noise(i + 160) * 15,
-    }))
+    const [base, spread] = TIMING[dir] ?? [5, 5]
+    const total = this.count()
+    return Array.from({ length: total }, (_, i) => {
+      const duration = base + noise(i + 120) * spread
+      return {
+        left: noise(i + 1) * 96,
+        top: noise(i + 40) * 90,
+        color: colors[i % colors.length],
+        delay: -noise(i + 80) * duration * 1.5,
+        duration,
+        size: 11 + noise(i + 160) * 15,
+        // Ángulo y radio para órbitas y estallidos (en % del lado menor)
+        angle: (i / total) * 360 + noise(i + 200) * 30,
+        radius: 16 + noise(i + 240) * 30,
+        sway: 1.4 + noise(i + 280) * 1.6,
+      }
+    })
   })
 }

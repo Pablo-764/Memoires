@@ -40,9 +40,10 @@
 
 .decor-swatch { position: relative; display: block; height: 4rem; overflow: hidden; border-radius: 14px; }
 
-.fx-tile { background: #1a3a5b; }
+.fx-tile { background: #1d3753; }
 
 .decor-lock {
+  z-index: 2;
   position: absolute;
   right: 4px;
   bottom: 4px;

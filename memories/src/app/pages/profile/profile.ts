@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms'
 import { Router, RouterLink } from '@angular/router'
 import { AppStore, type Profile as ProfileData } from '../../servicios/app-store'
 import { Celebrate } from '../../servicios/celebrate'
-import { BANNERS, EFFECTS, FRAMES, NAME_STYLES, bannerOf, canUse, effectOf, frameOf, nameStyleOf, type DecorTier } from '../../modelos/decor'
+import { BANNERS, EFFECTS, FRAMES, NAME_STYLES, bannerOf, canUse, effectOf, frameOf, groupsOf, nameStyleOf, type DecorTier } from '../../modelos/decor'
 import { fitImage } from '../../utilidades/image'
 import { CITIES, INTENTS, INTENT_ORDER, type Intent } from '../../modelos/intents'
 import { Avatar } from '../../componentes/avatar/avatar'
@@ -36,7 +36,9 @@ export class Profile {
   protected readonly frames = FRAMES
   protected readonly effects = EFFECTS
   protected readonly nameStyles = NAME_STYLES
-  protected readonly bannerGroups = [...new Set(BANNERS.map((b) => b.group))].map((group) => ({ group, items: BANNERS.filter((b) => b.group === group) }))
+  protected readonly bannerGroups = groupsOf(BANNERS)
+  protected readonly frameGroups = groupsOf(FRAMES)
+  protected readonly effectGroups = groupsOf(EFFECTS)
 
   protected readonly tabs: { key: Tab; label: string; count?: number }[] = [
     { key: 'about', label: 'Sobre ti' },

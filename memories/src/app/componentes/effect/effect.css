@@ -1,38 +1,186 @@
-.fx { position: absolute; display: block; opacity: 0; animation-timing-function: linear; animation-iteration-count: infinite; }
+:host { container-type: size; }
 
+/* Capa de afuera: el recorrido. Capa de adentro: balanceo o giro propio */
+.fx {
+  position: absolute;
+  display: block;
+  opacity: 0;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  filter: drop-shadow(0 1px 1.5px rgb(14 39 67 / 0.4));
+}
+
+.fx-in {
+  display: block;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-timing-function: var(--ease-in-out);
+}
+
+/* ---------- Recorridos ---------- */
 .fx-up { animation-name: fx-up; }
 
 .fx-down { animation-name: fx-down; }
 
-.fx-twinkle { animation-name: fx-twinkle; animation-timing-function: ease-in-out; }
+.fx-rain { animation-name: fx-rain; }
 
-.fx-drift { animation-name: fx-drift; animation-timing-function: ease-in-out; }
+.fx-bubble { top: 100% !important; animation-name: fx-bubble; animation-timing-function: var(--ease-in-out); }
+
+.fx-flip { animation-name: fx-down; }
+
+.fx-twinkle { animation-name: fx-twinkle; animation-timing-function: var(--ease-in-out); }
+
+.fx-drift { animation-name: fx-drift; animation-timing-function: var(--ease-in-out); }
+
+.fx-float { animation-name: fx-float; animation-timing-function: var(--ease-in-out); animation-direction: alternate; }
+
+.fx-orbit,
+.fx-burst {
+  left: 50% !important;
+  top: 50% !important;
+}
+
+.fx-orbit { animation-name: fx-orbit; opacity: 0.95; }
+
+.fx-burst { animation-name: fx-burst; animation-timing-function: var(--ease-out); }
 
 @keyframes fx-up {
-  0% { transform: translateY(70px) rotate(-8deg); opacity: 0; }
+  0% { transform: translateY(45cqh); opacity: 0; }
   15% { opacity: 0.95; }
   80% { opacity: 0.85; }
-  100% { transform: translateY(-190px) rotate(14deg); opacity: 0; }
+  100% { transform: translateY(-95cqh); opacity: 0; }
 }
 
 @keyframes fx-down {
-  0% { transform: translateY(-150px) rotate(0deg); opacity: 0; }
-  15% { opacity: 0.95; }
+  0% { transform: translateY(-70cqh); opacity: 0; }
+  12% { opacity: 0.95; }
   85% { opacity: 0.85; }
-  100% { transform: translateY(190px) translateX(26px) rotate(150deg); opacity: 0; }
+  100% { transform: translate(6cqw, 95cqh); opacity: 0; }
+}
+
+@keyframes fx-rain {
+  0% { transform: translateY(-60cqh); opacity: 0; }
+  10% { opacity: 0.8; }
+  100% { transform: translate(-4cqw, 110cqh); opacity: 0.6; }
+}
+
+@keyframes fx-bubble {
+  0% { transform: translateY(0) scale(0.6); opacity: 0; }
+  12% { opacity: 0.9; }
+  88% { transform: translateY(-105cqh) scale(1); opacity: 0.9; }
+  100% { transform: translateY(-112cqh) scale(1.5); opacity: 0; }
 }
 
 @keyframes fx-twinkle {
-  0%, 100% { transform: scale(0.45) rotate(-10deg); opacity: 0; }
-  50% { transform: scale(1.1) rotate(10deg); opacity: 1; }
+  0%, 100% { transform: scale(0.4) rotate(-12deg); opacity: 0; }
+  50% { transform: scale(1.15) rotate(12deg); opacity: 1; }
 }
 
 @keyframes fx-drift {
-  0%, 100% { transform: translate(-20px, 10px); opacity: 0; }
+  0%, 100% { transform: translate(-8cqw, 6cqh); opacity: 0; }
   20%, 80% { opacity: 0.9; }
-  50% { transform: translate(26px, -22px); }
+  50% { transform: translate(10cqw, -12cqh); }
+}
+
+@keyframes fx-float {
+  0% { transform: translateY(-5px) rotate(-6deg); opacity: 0.75; }
+  100% { transform: translateY(6px) rotate(6deg); opacity: 1; }
+}
+
+@keyframes fx-orbit {
+  from { transform: rotate(var(--a)) translateX(var(--r)) rotate(calc(var(--a) * -1)); }
+  to { transform: rotate(calc(var(--a) + 360deg)) translateX(var(--r)) rotate(calc(var(--a) * -1 - 360deg)); }
+}
+
+@keyframes fx-burst {
+  0% { transform: rotate(var(--a)) translateX(0) scale(0.3); opacity: 0; }
+  15% { opacity: 1; }
+  100% { transform: rotate(var(--a)) translateX(calc(var(--r) * 1.6)) scale(1); opacity: 0; }
+}
+
+/* ---------- Balanceo propio ---------- */
+:is(.fx-up, .fx-down, .fx-bubble, .fx-drift) > .fx-in { animation-name: fx-sway; }
+
+.fx-flip > .fx-in { animation-name: fx-flip; animation-timing-function: linear; animation-direction: normal; }
+
+.fx-orbit > .fx-in,
+.fx-twinkle > .fx-in { animation-name: fx-pulse; }
+
+@keyframes fx-sway {
+  from { transform: translateX(-7px) rotate(-14deg); }
+  to { transform: translateX(7px) rotate(14deg); }
+}
+
+@keyframes fx-flip {
+  from { transform: rotate3d(1, 0.45, 0.2, 0deg); }
+  to { transform: rotate3d(1, 0.45, 0.2, 360deg); }
+}
+
+@keyframes fx-pulse {
+  from { scale: 0.8; }
+  to { scale: 1.15; }
+}
+
+/* ---------- Figuras sin icono ---------- */
+.fx-shape {
+  display: block;
+  width: calc(var(--z) * 0.55);
+  height: calc(var(--z) * 0.55);
+  border-radius: 999px;
+  background: currentColor;
+}
+
+.fx-ring { background: none; box-shadow: inset 0 0 0 2px currentColor; width: calc(var(--z) * 0.9); height: calc(var(--z) * 0.9); }
+
+.fx-star {
+  width: calc(var(--z) * 0.7);
+  height: calc(var(--z) * 0.7);
+  border-radius: 0;
+  clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%);
+}
+
+.fx-petal { width: calc(var(--z) * 0.55); height: calc(var(--z) * 0.75); border-radius: 100% 0 100% 0; }
+
+.fx-confetti { width: calc(var(--z) * 0.42); height: calc(var(--z) * 0.7); border-radius: 2px; }
+
+.fx-streamer { width: calc(var(--z) * 0.22); height: calc(var(--z) * 1.3); border-radius: 4px; }
+
+.fx-streak {
+  width: 2px;
+  height: calc(var(--z) * 1.2);
+  border-radius: 2px;
+  background: linear-gradient(to bottom, transparent, currentColor);
+}
+
+.fx-glow {
+  width: calc(var(--z) * 0.32);
+  height: calc(var(--z) * 0.32);
+  box-shadow: 0 0 calc(var(--z) * 0.5) calc(var(--z) * 0.12) currentColor;
+}
+
+.fx-balloon {
+  position: relative;
+  width: calc(var(--z) * 0.8);
+  height: calc(var(--z) * 0.95);
+  border-radius: 50% 50% 46% 46%;
+  background: radial-gradient(circle at 32% 28%, rgb(255 255 255 / 0.55) 0 14%, transparent 30%), currentColor;
+}
+
+.fx-balloon::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 1px;
+  height: calc(var(--z) * 0.7);
+  background: currentColor;
+  opacity: 0.7;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .fx { animation: none; opacity: 0.8; }
+  .fx,
+  .fx-in { animation: none !important; }
+  .fx { opacity: 0.8; }
+  .fx-orbit,
+  .fx-burst { transform: rotate(var(--a)) translateX(var(--r)); }
 }

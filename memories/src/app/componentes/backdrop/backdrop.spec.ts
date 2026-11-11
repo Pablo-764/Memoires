@@ -10,9 +10,9 @@ describe('Backdrop', () => {
     await fixture.whenStable()
   })
 
-  it('dibuja las figuras de tinta', () => {
+  it('dibuja el muro de palabras', () => {
     const el: HTMLElement = fixture.nativeElement
-    expect(el.querySelectorAll('.bd-shape').length).toBeGreaterThan(4)
+    expect(el.querySelectorAll('.kt-row').length).toBeGreaterThan(8)
     expect(el.getAttribute('aria-hidden')).toBe('true')
   })
 })

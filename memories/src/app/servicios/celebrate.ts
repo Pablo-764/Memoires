@@ -13,19 +13,19 @@ interface Theme {
 }
 
 const THEMES: Record<CelebrationTheme, Theme> = {
-  romance: { main: 'heart', icons: ['heart'], backdrop: '#b2335f', colors: ['#ffffff', '#ffd1e0', '#ff8fb4'], filled: true },
-  friend: { main: 'handshake', icons: ['handshake', 'smile', 'users', 'coffee'], backdrop: '#b87a10', colors: ['#ffffff', '#fff1b8', '#ffe08a'], filled: false },
-  plan: { main: 'ticket', icons: ['ticket', 'calendar-check', 'map-pin', 'footprints'], backdrop: '#1f7464', colors: ['#ffffff', '#c9f2e6', '#6fd5bd'], filled: false },
-  hobby: { main: 'gamepad-2', icons: ['gamepad-2', 'puzzle', 'dices', 'palette', 'music'], backdrop: '#5a46c3', colors: ['#ffffff', '#dfe2ff', '#b6a8ff'], filled: false },
-  pass: { main: 'x', icons: ['x'], backdrop: '#3e4957', colors: ['#8b9dad', '#b8c5cf'], filled: false },
-  block: { main: 'ban', icons: ['shield-check', 'ban'], backdrop: '#12202e', colors: ['#ff8a80', '#be3a33'], filled: false },
-  report: { main: 'flag', icons: ['flag', 'shield-check'], backdrop: '#12202e', colors: ['#f3c560', '#ff8a80'], filled: false },
-  save: { main: 'sparkles', icons: ['sparkles', 'star'], backdrop: '#1b4e86', colors: ['#f3c560', '#b6a8ff', '#ff8fb4'], filled: true },
-  grand: { main: 'star', icons: ['star', 'sparkles'], backdrop: '#1b4e86', colors: ['#ffffff', '#f3c560', '#b6a8ff'], filled: true },
-  lucidite: { main: 'moon-star', icons: ['moon-star', 'star', 'sparkles', 'gem'], backdrop: '#0f2a44', colors: ['#ffffff', '#f3c560', '#cde5f5'], filled: true },
-  send: { main: 'send', icons: ['send'], backdrop: '#1b4e86', colors: ['#b6a8ff', '#6fd5bd'], filled: false },
-  wellbeing: { main: 'leaf', icons: ['leaf', 'flower-2', 'feather'], backdrop: '#1f7464', colors: ['#ffffff', '#c9f2e6', '#d4fc79'], filled: false },
-  welcome: { main: 'sparkles', icons: ['heart', 'handshake', 'ticket', 'gamepad-2', 'star'], backdrop: '#1b4e86', colors: ['#ff8fb4', '#f3c560', '#6fd5bd', '#b6a8ff'], filled: false },
+  romance: { main: 'heart', icons: ['heart'], backdrop: '#9f3b59', colors: ['#ffffff', '#ffd1e0', '#ff9fb6'], filled: true },
+  friend: { main: 'handshake', icons: ['handshake', 'smile', 'users', 'coffee'], backdrop: '#b46a12', colors: ['#ffffff', '#fff1b8', '#ffe08a'], filled: false },
+  plan: { main: 'ticket', icons: ['ticket', 'calendar-check', 'map-pin', 'footprints'], backdrop: '#007b63', colors: ['#ffffff', '#c9f2e6', '#59dac1'], filled: false },
+  hobby: { main: 'gamepad-2', icons: ['gamepad-2', 'puzzle', 'dices', 'palette', 'music'], backdrop: '#6e4ea5', colors: ['#ffffff', '#dfe2ff', '#cab0ff'], filled: false },
+  pass: { main: 'x', icons: ['x'], backdrop: '#3c4958', colors: ['#97a3b1', '#bec8d4'], filled: false },
+  block: { main: 'ban', icons: ['shield-check', 'ban'], backdrop: '#13202f', colors: ['#ffa392', '#af2c1f'], filled: false },
+  report: { main: 'flag', icons: ['flag', 'shield-check'], backdrop: '#13202f', colors: ['#ffba67', '#ffa392'], filled: false },
+  save: { main: 'sparkles', icons: ['sparkles', 'star'], backdrop: '#1b5296', colors: ['#ffba67', '#cab0ff', '#ff9fb6'], filled: true },
+  grand: { main: 'star', icons: ['star', 'sparkles'], backdrop: '#1b5296', colors: ['#ffffff', '#ffba67', '#cab0ff'], filled: true },
+  lucidite: { main: 'moon-star', icons: ['moon-star', 'star', 'sparkles', 'gem'], backdrop: '#0e2743', colors: ['#ffffff', '#ffba67', '#bae1fb'], filled: true },
+  send: { main: 'send', icons: ['send'], backdrop: '#1b5296', colors: ['#cab0ff', '#59dac1'], filled: false },
+  wellbeing: { main: 'leaf', icons: ['leaf', 'flower-2', 'feather'], backdrop: '#007b63', colors: ['#ffffff', '#c9f2e6', '#d4fc79'], filled: false },
+  welcome: { main: 'sparkles', icons: ['heart', 'handshake', 'ticket', 'gamepad-2', 'star'], backdrop: '#1b5296', colors: ['#ff9fb6', '#ffba67', '#59dac1', '#cab0ff'], filled: false },
 }
 
 const rand = (min: number, max: number) => min + Math.random() * (max - min)

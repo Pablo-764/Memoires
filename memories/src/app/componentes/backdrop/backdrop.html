@@ -1,23 +1,24 @@
-<div class="bd-dots"></div>
-<div class="bd-dots bd-lit"></div>
-<div class="bd-glow"></div>
-
-@for (s of shapes; track $index) {
-  <div
-    #shape
-    class="bd-shape"
-    [style.left]="s.x"
-    [style.top]="s.y"
-    [style.width]="s.size"
-    [style.--depth]="s.depth"
-    [style.--tone]="'var(--color-' + s.tone + ')'"
-    [style.--turn]="s.turn + 'deg'"
-  >
-    <div class="bd-drift" [style.animation-duration]="s.drift + 's'" [style.animation-delay]="s.delay + 's'">
-      <span class="bd-ink bd-echo" [attr.data-shape]="s.kind"></span>
-      <span class="bd-ink" [attr.data-shape]="s.kind"></span>
-    </div>
+<ng-template #wall let-fill="fill">
+  <div class="kt-wall" [class.kt-fill]="fill" [class.kt-outline]="!fill">
+    @for (r of rows; track $index) {
+      <div class="kt-row" [style.--dir]="r.dir" [style.--tone]="r.tone">
+        <div class="kt-track" [style.animation-duration]="r.speed + 's'" [class.kt-reverse]="r.dir > 0">
+          @for (copy of [0, 1]; track copy) {
+            <span class="kt-run">
+              @for (w of r.words; track $index) {
+                <span class="kt-word" [class.kt-serif]="w.serif">{{ w.text }}</span>
+                <span class="kt-sep"></span>
+              }
+            </span>
+          }
+        </div>
+      </div>
+    }
   </div>
-}
+</ng-template>
 
-<div class="bd-grain"></div>
+<ng-container *ngTemplateOutlet="wall; context: { fill: false }" />
+<div class="kt-lens-mask">
+  <ng-container *ngTemplateOutlet="wall; context: { fill: true }" />
+</div>
+<div class="kt-lens"></div>

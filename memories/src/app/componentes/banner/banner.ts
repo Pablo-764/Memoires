@@ -1,16 +1,67 @@
-import { Component, computed, input } from '@angular/core'
+import { Component, DestroyRef, ElementRef, afterNextRender, computed, inject, input } from '@angular/core'
 import { bannerOf } from '../../modelos/decor'
 
-// Fondo de perfil: una decoración del catálogo o la imagen que subió la persona
+/**
+ * Fondo de perfil: una escena animada del catálogo o la imagen que subió la persona.
+ * Las animaciones solo corren mientras el fondo está en pantalla; al pasar el cursor
+ * por la tarjeta que lo contiene, las capas se desplazan con profundidad y cruza un destello.
+ */
 @Component({
   selector: 'app-banner',
   styleUrl: './banner.css',
   templateUrl: './banner.html',
-  host: { class: 'absolute inset-0 block overflow-hidden', 'aria-hidden': 'true' },
+  host: {
+    class: 'absolute inset-0 block overflow-hidden',
+    'aria-hidden': 'true',
+    '[class.is-preview]': 'preview()',
+  },
 })
 export class Banner {
   readonly decoration = input<string | undefined>('none')
   readonly custom = input<string | undefined>()
+  // Miniatura del selector: quieta hasta que se pasa el cursor encima
+  readonly preview = input(false)
 
   protected readonly info = computed(() => bannerOf(this.decoration()))
+  protected readonly scene = computed(() => (this.custom() ? 'photo' : this.info().scene))
+  protected readonly color = (i: number) => {
+    const c = this.info().colors
+    return c.length ? c[i % c.length] : '#ffffff'
+  }
+
+  constructor() {
+    const host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement
+    const destroyRef = inject(DestroyRef)
+    afterNextRender(() => {
+      // Pausa lo que no se ve: en Conexiones puede haber decenas de fondos
+      const io = new IntersectionObserver(([entry]) => host.classList.toggle('is-off', !entry.isIntersecting), { rootMargin: '80px' })
+      io.observe(host)
+
+      const fine = matchMedia('(hover: hover) and (pointer: fine)')
+      const zone = host.parentElement?.closest<HTMLElement>('a, button, article, .card, [data-banner-zone]') ?? host.parentElement
+      if (!zone) return () => io.disconnect()
+      const enter = () => fine.matches && host.classList.add('is-hover')
+      const leave = () => {
+        host.classList.remove('is-hover')
+        host.style.removeProperty('--hx')
+        host.style.removeProperty('--hy')
+      }
+      const move = (e: PointerEvent) => {
+        if (!fine.matches) return
+        const r = host.getBoundingClientRect()
+        host.style.setProperty('--hx', ((e.clientX - r.left) / r.width - 0.5).toFixed(3))
+        host.style.setProperty('--hy', ((e.clientY - r.top) / r.height - 0.5).toFixed(3))
+      }
+      zone.addEventListener('pointerenter', enter)
+      zone.addEventListener('pointerleave', leave)
+      zone.addEventListener('pointermove', move, { passive: true })
+      destroyRef.onDestroy(() => {
+        io.disconnect()
+        zone.removeEventListener('pointerenter', enter)
+        zone.removeEventListener('pointerleave', leave)
+        zone.removeEventListener('pointermove', move)
+      })
+      return undefined
+    })
+  }
 }

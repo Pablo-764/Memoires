@@ -1,7 +1,66 @@
 @for (k of [custom() ?? info().key]; track k) {
-  <div class="fade-in absolute inset-0" [class]="custom() ? '' : (info().anim ?? '')" [style.background]="custom() ? null : info().css">
-    @if (custom(); as src) {
-      <img [src]="src" alt="" class="size-full object-cover" draggable="false" />
+  <div class="bn fade-in" [attr.data-scene]="scene()" [style.background]="custom() ? null : info().css">
+    @switch (scene()) {
+      @case ('photo') {
+        <img [src]="custom()" alt="" class="bn-photo bn-far" draggable="false" />
+      }
+      @case ('mesh') {
+        <div class="bn-layer bn-far">
+          @for (i of [0, 1, 2]; track i) {
+            <span class="bn-blob" [class]="'bn-blob-' + i" [style.--c]="color(i)"></span>
+          }
+        </div>
+      }
+      @case ('aurora') {
+        <div class="bn-layer bn-far">
+          @for (i of [0, 1, 2]; track i) {
+            <span class="bn-ribbon" [class]="'bn-ribbon-' + i" [style.--c]="color(i)"></span>
+          }
+        </div>
+        <span class="bn-stars bn-stars-a bn-near"></span>
+      }
+      @case ('stars') {
+        <span class="bn-glow bn-far" [style.--c]="color(0)"></span>
+        <span class="bn-stars bn-stars-a bn-far"></span>
+        <span class="bn-stars bn-stars-b bn-near"></span>
+        <span class="bn-shoot"></span>
+      }
+      @case ('galaxy') {
+        <span class="bn-spin bn-far" [style.background]="info().css"></span>
+        <span class="bn-stars bn-stars-a bn-near"></span>
+        <span class="bn-stars bn-stars-b bn-near"></span>
+        <span class="bn-shoot"></span>
+      }
+      @case ('sun') {
+        <span class="bn-rays bn-far" [style.--c]="color(0)"></span>
+        <span class="bn-sun bn-near" [style.--c]="color(0)" [style.--c2]="color(1)"></span>
+      }
+      @case ('flow') {
+        <span class="bn-flow bn-far" [style.background]="info().css"></span>
+        <span class="bn-sweep"></span>
+      }
+      @case ('waves') {
+        @for (i of [0, 1, 2]; track i) {
+          <span class="bn-wave" [class]="'bn-wave-' + i" [style.--c]="color(i)"></span>
+        }
+      }
+      @case ('rain') {
+        <div class="bn-layer bn-rain-tilt bn-far"><span class="bn-rain"></span></div>
+        <div class="bn-layer bn-rain-tilt bn-near"><span class="bn-rain bn-rain-b"></span></div>
+        <span class="bn-flash"></span>
+      }
+      @case ('rings') {
+        @for (i of [0, 1, 2, 3]; track i) {
+          <span class="bn-ring" [style.--c]="color(i)" [style.--i]="i"></span>
+        }
+      }
+      @case ('pattern') {
+        <span class="bn-pattern bn-far" [style.background]="info().css"></span>
+      }
+    }
+    @if (scene() !== 'static') {
+      <span class="bn-grain"></span>
+      <span class="bn-sheen"></span>
     }
   </div>
 }
