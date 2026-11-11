@@ -35,7 +35,7 @@ export class ThemeService {
   private apply() {
     const dark = this.mode() === 'dark'
     document.documentElement.classList.toggle('dark', dark)
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#07121d' : '#f3efe7')
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#060f1a' : '#f7f3ea')
   }
 
   set(next: ThemeChoice, origin?: { x: number; y: number }) {

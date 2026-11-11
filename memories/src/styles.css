@@ -11,8 +11,12 @@
    - Palabras destacadas en la cursiva de Fraunces con "wonk": contraste serif dentro del título.
    - Texto en Space Grotesk: grotesca con detalles excéntricos pero muy legible.
    Las tres son libres (SIL OFL) y están en ffonts.net; aquí se instalan desde Fontsource.
-   - Paleta "porcelana y noche": azul porcelana de día, azul medianoche de noche.
-   - Cada intención conserva su color en ambos modos. */
+   - Paleta armada en OKLCH con teoría del color:
+     * Base complementaria: papel cálido (tono 85) contra azul cianotipo (tono 256).
+     * Intenciones en tétrada (pareja 5, amistad 68, plan 178, pasatiempo 298) con la
+       misma luminosidad y croma, para que ninguna pese más que otra.
+     * Neutros teñidos hacia el azul; todos los textos pasan 4.5:1 y los bordes 3:1
+       en ambos temas. */
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -21,36 +25,36 @@
   --font-serif: "Fraunces Variable", ui-serif, Georgia, serif;
   --font-sans: "Space Grotesk Variable", ui-sans-serif, system-ui, sans-serif;
 
-  --color-ink: #12202e;
-  --color-ink-soft: #3e4957;
-  --color-ink-mute: #6a7480;
-  --color-mist: #f3efe7;
-  --color-surface: #ffffff;
-  --color-raised: #faf7f1;
-  --color-line: #e3ddd1;
-  --color-line-strong: #cbc3b3;
+  --color-ink: #13202f;
+  --color-ink-soft: #3c4958;
+  --color-ink-mute: #5a6471;
+  --color-mist: #f7f3ea;
+  --color-surface: #fffefb;
+  --color-raised: #fcf9f2;
+  --color-line: #e4dfd4;
+  --color-line-strong: #938b7d;
 
   /* Acción principal y su texto */
-  --color-accent: #1b4e86;
-  --color-accent-hover: #23609f;
+  --color-accent: #1b5296;
+  --color-accent-hover: #2a63ab;
   --color-on-accent: #ffffff;
 
   /* Superficie nocturna fija (panel, sección de seguridad, Lucidité) */
-  --color-night: #0f2a44;
-  --color-night-soft: #1a3a5b;
+  --color-night: #0e2743;
+  --color-night-soft: #1d3753;
 
   /* Colores de intención */
-  --color-romance: #b2335f;
-  --color-romance-soft: #f9e4ec;
-  --color-friend: #8f5d00;
-  --color-friend-soft: #fbefd2;
-  --color-plan: #1f7464;
-  --color-plan-soft: #dbf1ea;
-  --color-hobby: #5a46c3;
-  --color-hobby-soft: #ece7fb;
+  --color-romance: #9f3b59;
+  --color-romance-soft: #ffe5eb;
+  --color-friend: #9a5600;
+  --color-friend-soft: #ffebd6;
+  --color-plan: #007b63;
+  --color-plan-soft: #d7f7ee;
+  --color-hobby: #6e4ea5;
+  --color-hobby-soft: #f1eaff;
 
-  --color-danger: #be3a33;
-  --color-danger-soft: #fae5e3;
+  --color-danger: #af2c1f;
+  --color-danger-soft: #ffe6e1;
 
   --radius-card: 24px;
   --radius-field: 14px;
@@ -66,33 +70,33 @@
 /* Modo nocturno: mismos nombres, otros valores */
 .dark {
   color-scheme: dark;
-  --color-ink: #e7eef3;
-  --color-ink-soft: #b8c5cf;
-  --color-ink-mute: #8b9dad;
-  --color-mist: #07121d;
-  --color-surface: #0f1f2e;
-  --color-raised: #152a3c;
-  --color-line: #213649;
-  --color-line-strong: #305068;
+  --color-ink: #e6ecf3;
+  --color-ink-soft: #bec8d4;
+  --color-ink-mute: #97a3b1;
+  --color-mist: #060f1a;
+  --color-surface: #0e1a28;
+  --color-raised: #162433;
+  --color-line: #243140;
+  --color-line-strong: #5b6b7d;
 
-  --color-accent: #cde5f5;
-  --color-accent-hover: #e2f1fb;
-  --color-on-accent: #0f2a44;
+  --color-accent: #bae1fb;
+  --color-accent-hover: #d3f0ff;
+  --color-on-accent: #0e2743;
 
-  --color-night: #0a1a29;
-  --color-night-soft: #13283b;
+  --color-night: #081523;
+  --color-night-soft: #132334;
 
-  --color-romance: #ff8fb4;
-  --color-romance-soft: rgb(255 143 180 / 0.14);
-  --color-friend: #f3c560;
-  --color-friend-soft: rgb(243 197 96 / 0.14);
-  --color-plan: #6fd5bd;
-  --color-plan-soft: rgb(111 213 189 / 0.13);
-  --color-hobby: #b6a8ff;
-  --color-hobby-soft: rgb(182 168 255 / 0.15);
+  --color-romance: #ff9fb6;
+  --color-romance-soft: rgb(255 159 182 / 0.14);
+  --color-friend: #ffba67;
+  --color-friend-soft: rgb(255 186 103 / 0.14);
+  --color-plan: #59dac1;
+  --color-plan-soft: rgb(89 218 193 / 0.13);
+  --color-hobby: #cab0ff;
+  --color-hobby-soft: rgb(202 176 255 / 0.15);
 
-  --color-danger: #ff8a80;
-  --color-danger-soft: rgb(255 138 128 / 0.14);
+  --color-danger: #ffa392;
+  --color-danger-soft: rgb(255 163 146 / 0.14);
 
   --shadow-lift: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 10px 28px -14px rgb(0 0 0 / 0.6);
   --shadow-float: 0 1px 0 rgb(255 255 255 / 0.05) inset, 0 28px 56px -24px rgb(0 0 0 / 0.75);
@@ -202,7 +206,7 @@
     border-radius: var(--radius-field);
     background: var(--color-surface);
     color: var(--color-ink);
-    box-shadow: inset 0 0 0 1.5px var(--color-line);
+    box-shadow: inset 0 0 0 1.5px var(--color-line-strong);
     transition: box-shadow 160ms ease;
   }
   .field::placeholder {
@@ -306,7 +310,7 @@
 /* Superficies nocturnas con luz de atardecer: panel, seguridad, Lucidité */
 .night-glow {
   background: var(--color-night);
-  color: #eef4f8;
+  color: #e6ecf3;
 }
 
 .dark .night-glow {
@@ -449,9 +453,9 @@ html.vt-list::view-transition-new(*) { animation-duration: 300ms; }
 
 .logo-bright .logo-arch-a { fill: #8fc1e8; }
 
-.logo-bright .logo-arch-b { fill: #ff8fb4; }
+.logo-bright .logo-arch-b { fill: #ff9fb6; }
 
-.logo-bright .logo-accent { fill: #f3c560; }
+.logo-bright .logo-accent { fill: #ffba67; }
 
 .logo-arch,
 .logo-accent { transform-box: fill-box; transition: transform 420ms var(--ease-out); }
@@ -807,7 +811,7 @@ html[data-vt-kind="pop"]::view-transition-new(page) { animation: pop-page-in 560
   border-radius: 999px;
   color: var(--color-ink-mute);
   background: var(--color-surface);
-  box-shadow: inset 0 0 0 1.5px var(--color-line);
+  box-shadow: inset 0 0 0 1.5px var(--color-line-strong);
   transition: box-shadow 200ms ease;
 }
 

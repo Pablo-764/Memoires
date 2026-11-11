@@ -185,7 +185,8 @@
               <div class="decor-grid stagger">
                 @for (b of g.items; track b.key) {
                   <button type="button" class="decor-tile" [attr.aria-pressed]="!draft().customBanner && draft().decoration === b.key" (click)="patch({ decoration: b.key, customBanner: undefined })">
-                    <span class="decor-swatch" [style.background]="b.css">
+                    <span class="decor-swatch">
+                      <app-banner [decoration]="b.key" [preview]="true" />
                       @if (!usable(b)) {
                         <span class="decor-lock"><app-icon name="lock" [size]="14" /></span>
                       }
@@ -197,8 +198,10 @@
             }
           }
           @case ('frames') {
+            @for (g of frameGroups; track g.group) {
+            <h3 class="mb-3 mt-7 text-2xl first:mt-0">{{ g.group }}</h3>
             <div class="decor-grid stagger">
-              @for (f of frames; track f.key) {
+              @for (f of g.items; track f.key) {
                 <button type="button" class="decor-tile" [attr.aria-pressed]="draft().frame === f.key" (click)="patch({ frame: f.key })">
                   <span class="decor-swatch grid place-items-center bg-raised">
                     <app-avatar [name]="draft().name || 'Tú'" [hue]="260" [size]="46" [frame]="f.key" [photo]="draft().photo" />
@@ -210,10 +213,13 @@
                 </button>
               }
             </div>
+            }
           }
           @case ('effects') {
+            @for (g of effectGroups; track g.group) {
+            <h3 class="mb-3 mt-7 text-2xl first:mt-0">{{ g.group }}</h3>
             <div class="decor-grid stagger">
-              @for (e of effects; track e.key) {
+              @for (e of g.items; track e.key) {
                 <button type="button" class="decor-tile" [attr.aria-pressed]="draft().effect === e.key" (click)="patch({ effect: e.key })">
                   <span class="decor-swatch fx-tile">
                     <app-effect [effect]="e.key" [count]="6" />
@@ -225,6 +231,7 @@
                 </button>
               }
             </div>
+            }
           }
           @case ('names') {
             <div class="grid gap-2 sm:grid-cols-2">

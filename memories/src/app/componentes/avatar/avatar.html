@@ -6,5 +6,38 @@
   }
 </span>
 @if (frameInfo().key !== 'none') {
-  <span class="avatar-frame" [class]="frameInfo().anim ?? ''" [style.background]="frameInfo().bg" [style.--t.px]="thickness()"></span>
+  @let fx = frameInfo().fx;
+  @if (fx === 'glow') {
+    <span class="af-glow" [style.background]="frameInfo().bg" [style.--t.px]="thickness()"></span>
+  }
+  @if (fx === 'ripple') {
+    <span class="af-ripple" [style.--c]="accent()" [style.--t.px]="thickness()"></span>
+    <span class="af-ripple af-ripple-b" [style.--c]="accent()" [style.--t.px]="thickness()"></span>
+  }
+  <span
+    class="avatar-frame"
+    [class]="(frameInfo().anim ?? '') + (fx === 'dash' ? ' af-dash' : '')"
+    [style.background]="frameInfo().bg"
+    [style.--t.px]="thickness()"
+  ></span>
+  @switch (fx) {
+    @case ('shimmer') {
+      <span class="avatar-frame af-shimmer" [style.--t.px]="thickness()"></span>
+    }
+    @case ('double') {
+      <span class="af-double" [style.background]="accent()" [style.--t.px]="thickness()"></span>
+    }
+    @case ('orbit') {
+      <span class="af-orbit" [style.--t.px]="thickness()" [style.color]="accent()"><span class="af-moon"></span></span>
+    }
+    @case ('atom') {
+      <span class="af-orbit" [style.--t.px]="thickness()" [style.color]="accent()"><span class="af-moon"></span></span>
+      <span class="af-orbit af-orbit-b" [style.--t.px]="thickness()" [style.color]="accent()"><span class="af-moon"></span></span>
+    }
+    @case ('sparkle') {
+      @for (i of sparks; track i) {
+        <span class="af-spark" [style.--i]="i" [style.background]="accent()" [style.--t.px]="thickness()"></span>
+      }
+    }
+  }
 }

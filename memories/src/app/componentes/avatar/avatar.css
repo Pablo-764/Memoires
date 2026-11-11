@@ -1,3 +1,5 @@
+:host { isolation: isolate; }
+
 .avatar-core {
   display: grid;
   width: 100%;
@@ -27,8 +29,129 @@
 
 @keyframes frame-pulse { 50% { transform: scale(1.09); opacity: 0.55; } }
 
+/* Punteado: el aro se corta en segmentos */
+.af-dash {
+  -webkit-mask:
+    radial-gradient(farthest-side, transparent calc(100% - var(--t)), #000 calc(100% - var(--t) + 0.5px)),
+    repeating-conic-gradient(#000 0 11deg, transparent 11deg 20deg);
+  -webkit-mask-composite: source-in;
+  mask:
+    radial-gradient(farthest-side, transparent calc(100% - var(--t)), #000 calc(100% - var(--t) + 0.5px)) intersect,
+    repeating-conic-gradient(#000 0 11deg, transparent 11deg 20deg);
+}
+
+/* Resplandor que respira detrás del aro */
+.af-glow {
+  position: absolute;
+  inset: calc(var(--t) * -2.4);
+  z-index: -1;
+  border-radius: 999px;
+  filter: blur(calc(var(--t) * 1.5));
+  opacity: 0.55;
+  pointer-events: none;
+  animation: af-breathe 2.8s var(--ease-in-out) infinite alternate;
+}
+
+@keyframes af-breathe {
+  from { opacity: 0.3; transform: scale(0.94); }
+  to { opacity: 0.8; transform: scale(1.06); }
+}
+
+/* Ondas que salen del aro */
+.af-ripple {
+  position: absolute;
+  inset: calc(var(--t) * -1.45);
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 calc(var(--t) * 0.6) var(--c);
+  opacity: 0;
+  pointer-events: none;
+  animation: af-ripple 2.6s var(--ease-out) infinite;
+}
+
+.af-ripple-b { animation-delay: -1.3s; }
+
+@keyframes af-ripple {
+  0% { opacity: 0.85; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.55); }
+}
+
+/* Reflejo metálico que recorre el aro */
+.af-shimmer {
+  background: conic-gradient(from 0deg, transparent 0 62%, rgb(255 255 255 / 0.95) 76%, transparent 88%);
+  animation: frame-spin 3.4s var(--ease-in-out) infinite;
+}
+
+/* Segundo aro, más fino y punteado, girando al revés */
+.af-double {
+  position: absolute;
+  inset: calc(var(--t) * -3.3);
+  border-radius: 999px;
+  pointer-events: none;
+  -webkit-mask:
+    radial-gradient(farthest-side, transparent calc(100% - var(--t) * 0.55), #000 calc(100% - var(--t) * 0.55 + 0.5px)),
+    repeating-conic-gradient(#000 0 28deg, transparent 28deg 40deg);
+  -webkit-mask-composite: source-in;
+  mask:
+    radial-gradient(farthest-side, transparent calc(100% - var(--t) * 0.55), #000 calc(100% - var(--t) * 0.55 + 0.5px)) intersect,
+    repeating-conic-gradient(#000 0 28deg, transparent 28deg 40deg);
+  animation: frame-spin 11s linear infinite reverse;
+}
+
+/* Lunas que giran sobre el aro */
+.af-orbit {
+  position: absolute;
+  inset: calc(var(--t) * -1.45);
+  pointer-events: none;
+  animation: frame-spin 5s linear infinite;
+}
+
+.af-orbit-b {
+  inset: calc(var(--t) * -2.6);
+  animation-duration: 3.2s;
+  animation-direction: reverse;
+}
+
+.af-moon {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: max(5px, calc(var(--t) * 1.7));
+  height: max(5px, calc(var(--t) * 1.7));
+  border-radius: 999px;
+  background: currentColor;
+  translate: -50% calc(var(--t) * 0.5 - 50%);
+  box-shadow: 0 0 calc(var(--t) * 1.6) currentColor;
+}
+
+/* Destellos de cuatro puntas alrededor */
+.af-spark {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: max(6px, calc(var(--t) * 2.3));
+  height: max(6px, calc(var(--t) * 2.3));
+  clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%);
+  pointer-events: none;
+  transform: translate(-50%, -50%) rotate(calc(var(--i) * 72deg + 18deg)) translateY(calc(var(--s) * -0.5 - var(--t) * 2.2));
+  animation: af-twinkle 2.2s var(--ease-in-out) infinite;
+  animation-delay: calc(var(--i) * -0.45s);
+}
+
+@keyframes af-twinkle {
+  0%, 100% { opacity: 0; scale: 0.3; rotate: 0deg; }
+  50% { opacity: 1; scale: 1; rotate: 45deg; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .frame-spin,
   .frame-spin-slow,
-  .frame-pulse { animation: none; }
+  .frame-pulse,
+  .af-glow,
+  .af-ripple,
+  .af-shimmer,
+  .af-double,
+  .af-orbit,
+  .af-spark { animation: none; }
+  .af-ripple { opacity: 0; }
+  .af-spark { opacity: 0.8; }
 }

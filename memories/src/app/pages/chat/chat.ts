@@ -55,7 +55,7 @@ export class Chat {
   constructor() {
     effect(() => {
       const p = this.person()
-      this.store.ambient.set(p ? `color-mix(in oklab, hsl(${p.hue} 62% 58%) 14%, var(--color-mist))` : null)
+      this.store.ambient.set(p ? `color-mix(in oklab, oklch(0.7 0.12 ${p.hue}) 14%, var(--color-mist))` : null)
     })
     inject(DestroyRef).onDestroy(() => this.store.ambient.set(null))
 

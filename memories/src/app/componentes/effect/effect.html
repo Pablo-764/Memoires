@@ -7,11 +7,15 @@
     [style.color]="p.color"
     [style.animation-delay.s]="p.delay"
     [style.animation-duration.s]="p.duration"
+    [style.--a]="p.angle + 'deg'"
+    [style.--r]="p.radius + 'cqmin'"
   >
-    @if (info().icon; as icon) {
-      <app-icon [name]="icon" [size]="p.size" [filled]="true" />
-    } @else {
-      <span class="block rounded-full bg-current" [style.width.px]="p.size * 0.55" [style.height.px]="p.size * 0.55"></span>
-    }
+    <span class="fx-in" [style.animation-duration.s]="p.sway" [style.animation-delay.s]="p.delay">
+      @if (info().icon; as icon) {
+        <app-icon [name]="icon" [size]="p.size" [filled]="true" />
+      } @else {
+        <span class="fx-shape" [class]="'fx-' + info().shape" [style.--z.px]="p.size"></span>
+      }
+    </span>
   </span>
 }

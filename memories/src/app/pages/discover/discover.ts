@@ -60,7 +60,7 @@ export class Discover {
   protected readonly limits = computed(() => TIERS[this.store.tier()])
   protected readonly ambient = computed(() => {
     const person = this.current()?.person
-    return person ? `color-mix(in oklab, hsl(${person.hue} 62% 58%) 20%, var(--color-mist))` : 'var(--color-mist)'
+    return person ? `color-mix(in oklab, oklch(0.7 0.12 ${person.hue}) 18%, var(--color-mist))` : 'var(--color-mist)'
   })
   protected readonly activeFilters = computed(() => {
     const f = this.store.filters()

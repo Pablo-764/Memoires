@@ -1,173 +1,135 @@
-/* Fondo vivo de toda la aplicación. Sin encapsulación porque los sellos se crean
-   desde el código; por eso todas las clases llevan el prefijo bd-. */
+/* Fondo tipográfico de toda la aplicación. Sin encapsulación: las clases llevan prefijo kt-. */
+@property --kt-r {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 250px;
+}
+
 app-backdrop {
+  --kt-r: 250px;
   position: fixed;
   inset: 0;
   z-index: -1;
   overflow: hidden;
   pointer-events: none;
   contain: strict;
-  transition: background-color 900ms var(--ease-in-out);
+  transition: background-color 900ms var(--ease-in-out), --kt-r 700ms var(--ease-out);
 }
 
-/* Retícula de puntos: tenue en reposo, encendida alrededor del cursor */
-.bd-dots {
+app-backdrop.is-burst {
+  --kt-r: 460px;
+  transition: background-color 900ms var(--ease-in-out), --kt-r 260ms var(--ease-out);
+}
+
+/* El muro: más grande que la ventana y girado para que las filas crucen en diagonal */
+.kt-wall {
+  position: absolute;
+  left: -35vw;
+  top: -40vh;
+  width: 170vw;
+  display: flex;
+  flex-direction: column;
+  gap: 0.06em;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(64px, 12.5vh, 150px);
+  line-height: 1.04;
+  letter-spacing: -0.04em;
+  white-space: nowrap;
+  transform: rotate(-9deg);
+  user-select: none;
+}
+
+/* Cada fila se recorre con el desplazamiento de la página y se inclina con su velocidad */
+.kt-row {
+  translate: calc(var(--sy, 0) * var(--dir) * 0.35px) 0;
+  transform: skewX(var(--skew, 0deg));
+}
+
+.kt-track {
+  display: flex;
+  width: max-content;
+  animation: kt-marquee 90s linear infinite;
+}
+
+.kt-track.kt-reverse { animation-direction: reverse; }
+
+@keyframes kt-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.kt-run { display: flex; align-items: center; flex-shrink: 0; }
+
+.kt-word { padding: 0 0.12em; }
+
+.kt-serif {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 500;
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+  letter-spacing: -0.02em;
+}
+
+/* Separador: un rombo pequeño entre palabras */
+.kt-sep {
+  width: 0.22em;
+  height: 0.22em;
+  margin: 0 0.2em;
+  flex-shrink: 0;
+  rotate: 45deg;
+  border-radius: 0.04em;
+}
+
+/* Contorno: siempre visible y muy tenue */
+.kt-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.3px color-mix(in oklab, var(--color-ink) 11%, transparent);
+}
+
+.kt-outline .kt-sep { box-shadow: inset 0 0 0 1.3px color-mix(in oklab, var(--color-ink) 11%, transparent); }
+
+/* Relleno: solo se ve dentro de la lupa */
+.kt-fill .kt-row { color: var(--tone); }
+
+.kt-fill .kt-sep { background: currentColor; }
+
+.kt-lens-mask {
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(circle at center, color-mix(in oklab, var(--color-ink) 15%, transparent) 0.9px, transparent 1.5px);
-  background-size: 26px 26px;
-  -webkit-mask-image: linear-gradient(170deg, #000 10%, rgb(0 0 0 / 0.35) 55%, #000 100%);
-  mask-image: linear-gradient(170deg, #000 10%, rgb(0 0 0 / 0.35) 55%, #000 100%);
-}
-
-.bd-lit {
-  background-image: radial-gradient(circle at center, var(--glow) 2px, transparent 2.6px);
-  -webkit-mask-image: radial-gradient(circle 240px at var(--mx, 50%) var(--my, 30%), #000 0%, rgb(0 0 0 / 0.45) 45%, transparent 100%);
-  mask-image: radial-gradient(circle 240px at var(--mx, 50%) var(--my, 30%), #000 0%, rgb(0 0 0 / 0.45) 45%, transparent 100%);
   opacity: 0;
-  transition: opacity 600ms ease;
+  -webkit-mask-image: radial-gradient(circle var(--kt-r) at var(--mx, 50%) var(--my, 35%), #000 0%, #000 52%, transparent 100%);
+  mask-image: radial-gradient(circle var(--kt-r) at var(--mx, 50%) var(--my, 35%), #000 0%, #000 52%, transparent 100%);
+  transition: opacity 500ms ease;
 }
 
-/* Halo de tinta que sigue al cursor con un poco de retraso */
-.bd-glow {
+/* El aro de la lupa, con la tinta de la intención */
+.kt-lens {
   position: absolute;
   left: 0;
   top: 0;
-  width: 680px;
-  height: 680px;
-  margin: -340px 0 0 -340px;
+  width: calc(var(--kt-r) * 1.25);
+  height: calc(var(--kt-r) * 1.25);
   border-radius: 50%;
-  translate: var(--mx, 50vw) var(--my, 30vh);
-  background: radial-gradient(closest-side, color-mix(in oklab, var(--glow) 24%, transparent), color-mix(in oklab, var(--glow) 8%, transparent) 55%, transparent);
+  translate: calc(var(--mx, 50vw) - var(--kt-r) * 0.625) calc(var(--my, 35vh) - var(--kt-r) * 0.625);
+  box-shadow:
+    inset 0 0 0 1.5px color-mix(in oklab, var(--glow) 45%, transparent),
+    0 0 0 10px color-mix(in oklab, var(--glow) 6%, transparent);
   opacity: 0;
-  transition: opacity 700ms ease;
+  transition: opacity 500ms ease;
 }
 
-app-backdrop.is-live .bd-lit,
-app-backdrop.is-live .bd-glow { opacity: 1; }
+app-backdrop.is-live .kt-lens-mask { opacity: 0.6; }
 
-/* Figuras de tinta: derivan solas, se mueven al revés que el cursor (profundidad)
-   y al acercarse se agrandan y se separan sus dos tintas */
-.bd-shape {
-  position: absolute;
-  aspect-ratio: 1;
-  translate: calc(var(--px, 0) * var(--depth) * -1px) calc(var(--py, 0) * var(--depth) * -1px);
-}
+app-backdrop.is-live .kt-lens { opacity: 1; }
 
-.bd-drift {
-  position: absolute;
-  inset: 0;
-  animation-name: bd-drift;
-  animation-duration: 24s;
-  animation-timing-function: ease-in-out;
-  animation-iteration-count: infinite;
-  animation-direction: alternate;
-  rotate: var(--turn);
-}
+.dark .kt-outline { -webkit-text-stroke-color: color-mix(in oklab, var(--color-ink) 13%, transparent); }
 
-@keyframes bd-drift {
-  0% { transform: translate(0, 0) rotate(0deg); }
-  50% { transform: translate(2.2vw, -3vh) rotate(9deg); }
-  100% { transform: translate(-1.6vw, 2.4vh) rotate(-7deg); }
-}
-
-.bd-ink {
-  position: absolute;
-  inset: 0;
-  background: var(--tone);
-  opacity: calc(0.13 + var(--near, 0) * 0.1);
-  mix-blend-mode: multiply;
-  scale: calc(1 + var(--near, 0) * 0.12);
-}
-
-.bd-echo {
-  background: var(--glow);
-  opacity: calc(0.07 + var(--near, 0) * 0.12);
-  translate: calc(5px + var(--near, 0) * 22px) calc(-4px - var(--near, 0) * 16px);
-  rotate: calc(var(--near, 0) * 8deg);
-}
-
-:is(.bd-ink, .bd-stamp)[data-shape="arch"] { border-radius: 50% 50% 0 0 / 50% 50% 0 0; }
-
-:is(.bd-ink, .bd-stamp)[data-shape="drop"] { border-radius: 50% 50% 50% 8%; }
-
-:is(.bd-ink, .bd-stamp)[data-shape="leaf"] { border-radius: 100% 0; }
-
-:is(.bd-ink, .bd-stamp)[data-shape="diamond"] { border-radius: 12%; }
-
-.bd-ink[data-shape="half"] { inset: 50% 0 0 0; border-radius: 0 0 50% 50% / 0 0 100% 100%; }
-
-.bd-ink[data-shape="ring"] {
-  background: none;
-  border-radius: 50%;
-  border: clamp(14px, 1.7vw, 26px) solid var(--tone);
-}
-
-.bd-echo[data-shape="ring"] { border-color: var(--glow); }
-
-/* Textura de papel: un grano fijo que quita lo plano del color */
-.bd-grain {
-  position: absolute;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.07 0 0 0 0 0.12 0 0 0 0 0.18 0 0 0 .7 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  opacity: 0.22;
-  mix-blend-mode: multiply;
-}
-
-/* Sello al hacer clic en el fondo */
-.bd-stamp {
-  position: absolute;
-  width: 72px;
-  height: 72px;
-  margin: -36px 0 0 -36px;
-  background: var(--tone);
-  mix-blend-mode: multiply;
-  animation: bd-stamp 1300ms var(--ease-out) forwards;
-}
-
-.bd-stamp::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: var(--glow);
-  mix-blend-mode: multiply;
-  opacity: 0.7;
-  animation: bd-stamp-echo 1300ms var(--ease-out) forwards;
-}
-
-.bd-stamp[data-shape="half"] { height: 36px; margin-top: 0; border-radius: 0 0 36px 36px; }
-
-@keyframes bd-stamp {
-  0% { opacity: 0; transform: rotate(var(--spin)) scale(0.2); }
-  14% { opacity: 0.5; transform: rotate(calc(var(--spin) * 0.3)) scale(1.08); }
-  30% { opacity: 0.42; transform: rotate(0deg) scale(1); }
-  100% { opacity: 0; transform: rotate(0deg) scale(1.35); }
-}
-
-@keyframes bd-stamp-echo {
-  0%, 18% { translate: 0 0; }
-  100% { translate: 14px -10px; }
-}
-
-/* Modo nocturno: las tintas suman luz en vez de oscurecer */
-.dark .bd-dots { background-image: radial-gradient(circle at center, color-mix(in oklab, var(--color-ink) 12%, transparent) 0.9px, transparent 1.5px); }
-
-.dark .bd-ink,
-.dark .bd-stamp,
-.dark .bd-stamp::after { mix-blend-mode: screen; }
-
-.dark .bd-ink { opacity: calc(0.09 + var(--near, 0) * 0.1); }
-
-.dark .bd-echo { opacity: calc(0.05 + var(--near, 0) * 0.1); }
-
-.dark .bd-grain { opacity: 0.5; filter: invert(1); mix-blend-mode: soft-light; }
-
-.dark .bd-glow { background: radial-gradient(closest-side, color-mix(in oklab, var(--glow) 13%, transparent), color-mix(in oklab, var(--glow) 4%, transparent) 55%, transparent); }
+.dark app-backdrop.is-live .kt-lens-mask { opacity: 0.5; }
 
 @media (prefers-reduced-motion: reduce) {
-  .bd-drift { animation: none; }
-  .bd-shape { translate: none; }
-  .bd-glow,
-  .bd-lit { display: none; }
+  .kt-track { animation: none; }
+  .kt-row { translate: none; transform: none; }
+  .kt-lens-mask,
+  .kt-lens { display: none; }
 }

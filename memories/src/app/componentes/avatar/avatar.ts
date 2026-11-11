@@ -11,6 +11,7 @@ import { frameOf } from '../../modelos/decor'
     '[style.width.px]': 'size()',
     '[style.height.px]': 'size()',
     '[style.font-size.px]': 'size() * 0.42',
+    '[style.--s.px]': 'size()',
   },
 })
 export class Avatar {
@@ -21,7 +22,14 @@ export class Avatar {
   readonly photo = input<string | undefined>()
 
   protected readonly initial = computed(() => this.name().trim()[0]?.toUpperCase() ?? '?')
-  protected readonly background = computed(() => `hsl(${this.hue()} 38% 46%)`)
+  protected readonly background = computed(() => `oklch(0.52 0.1 ${this.hue()})`)
+  // OKLCH: todos los tonos con la misma luminosidad percibida, así ninguna inicial se lee peor
   protected readonly frameInfo = computed(() => frameOf(this.frame()))
   protected readonly thickness = computed(() => Math.max(2, this.size() * this.frameInfo().width))
+  // Color de lunas, destellos y ondas: el propio si lo tiene, si no el del aro cuando es liso
+  protected readonly accent = computed(() => {
+    const { accent, bg } = this.frameInfo()
+    return accent ?? (bg.startsWith('#') || bg.startsWith('light-dark') ? bg : '#ffffff')
+  })
+  protected readonly sparks = [0, 1, 2, 3, 4]
 }
