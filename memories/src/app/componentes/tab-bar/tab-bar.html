@@ -1,0 +1,23 @@
+<nav
+  class="vt-dock night-glow fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-30 grid grid-cols-4 rounded-full p-1.5 shadow-(--shadow-float) md:hidden"
+  aria-label="Principal"
+>
+  <span
+    aria-hidden="true"
+    class="nav-pill absolute inset-y-1.5 left-1.5 rounded-full bg-white/14"
+    style="width: calc((100% - 0.75rem) / 4)"
+    [style.opacity]="active() < 0 ? 0 : 1"
+    [style.transform]="'translateX(' + (active() < 0 ? 0 : active()) * 100 + '%)'"
+  ></span>
+  @for (n of items(); track n.to; let i = $index) {
+    <a
+      [routerLink]="n.to"
+      [attr.aria-current]="active() === i ? 'page' : null"
+      class="relative flex flex-col items-center gap-0.5 rounded-full py-2 text-[11px] font-semibold transition-colors duration-200"
+      [class]="active() === i ? 'text-white' : 'text-white/55'"
+    >
+      <app-icon [name]="n.icon" [size]="20" />
+      <span>{{ n.label }}</span>
+    </a>
+  }
+</nav>

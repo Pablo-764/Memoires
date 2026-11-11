@@ -1,0 +1,23 @@
+<app-modal [title]="'Reportar a ' + name()" (closed)="closed.emit()">
+  <form class="flex flex-col gap-4" (ngSubmit)="submit()">
+    <fieldset class="flex flex-col gap-2">
+      <legend class="label">Motivo</legend>
+      @for (r of reasons; track r) {
+        <label class="flex items-center gap-3 rounded-2xl px-3 py-2.5 shadow-[inset_0_0_0_1.5px_var(--color-line)] has-checked:shadow-[inset_0_0_0_2px_var(--color-ink)]">
+          <input type="radio" name="reason" class="size-4 accent-ink" [value]="r" [(ngModel)]="reason" />
+          {{ r }}
+        </label>
+      }
+    </fieldset>
+    <div>
+      <label class="label" for="detail">Cuéntanos qué pasó (opcional)</label>
+      <textarea id="detail" name="detail" class="field min-h-24" [(ngModel)]="detail"></textarea>
+    </div>
+    <label class="flex items-center gap-3 text-sm">
+      <input type="checkbox" name="alsoBlock" class="size-5 accent-ink" [(ngModel)]="alsoBlock" />
+      También bloquear a {{ name() }}
+    </label>
+    <p class="text-sm text-ink-mute">El equipo de moderación revisará tu reporte. {{ name() }} no sabrá quién lo envió.</p>
+    <button class="btn btn-danger min-h-12">Enviar reporte</button>
+  </form>
+</app-modal>

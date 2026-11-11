@@ -1,0 +1,17 @@
+<div class="grid min-h-dvh lg:grid-cols-[1fr_1.1fr]">
+  <div class="flex flex-col px-5 py-6 sm:px-10">
+    <div class="flex items-center justify-between">
+      <a [routerLink]="store.homeUrl()" aria-label="Volver al inicio"><app-logo /></a>
+      <button appThemeIcon></button>
+    </div>
+    <div class="mx-auto my-auto w-full max-w-sm py-10">
+      <h1 class="enter text-5xl">{{ title() }}</h1>
+      <p class="enter mt-2 text-ink-soft" style="--d: 70ms">{{ subtitle() }}</p>
+      <div class="enter mt-8" style="--d: 140ms"><ng-content /></div>
+    </div>
+  </div>
+  <figure class="relative hidden p-3 lg:block">
+    <img src="fotos/cafe.webp" alt="" width="1100" height="1650" class="enter-photo h-full w-full rounded-[28px] object-cover object-[50%_70%]" />
+    <figcaption class="absolute bottom-6 right-7 text-xs text-white/80">Foto: tommao wang en Unsplash</figcaption>
+  </figure>
+</div>

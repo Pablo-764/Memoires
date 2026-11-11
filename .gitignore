@@ -1,0 +1,17 @@
+# Dependencias
+node_modules/
+
+# Variables de entorno: nunca se suben, solo el ejemplo
+.env
+.env.*
+!.env.example
+
+# Compilados y caché
+dist/
+.angular/
+coverage/
+*.log
+
+# Sistema operativo
+.DS_Store
+Thumbs.db

@@ -1,0 +1,6 @@
+.plan-feature {
+  position: absolute;
+  inset: auto 0 0;
+  padding: 5rem 1.75rem 1.75rem;
+  background: linear-gradient(to top, rgb(6 16 26 / 0.86), rgb(6 16 26 / 0.5) 62%, transparent);
+}

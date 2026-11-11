@@ -1,9 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject } from '@angular/core'
+import { RouterLink } from '@angular/router'
+import { AppStore } from '../../servicios/app-store'
+import { TIERS } from '../../modelos/plans'
+import { Icon } from '../icon/icon'
+import { Logo } from '../logo/logo'
+import { ThemeIconButton } from '../theme-icon-button/theme-icon-button'
 
+// Cabecera superior en celular
 @Component({
-  imports: [],
   selector: 'app-navbar',
+  imports: [RouterLink, Icon, Logo, ThemeIconButton],
   styleUrl: './navbar.css',
   templateUrl: './navbar.html',
+  host: { class: 'contents' },
 })
-export class Navbar {}
+export class Navbar {
+  protected readonly store = inject(AppStore)
+  protected readonly tierInfo = computed(() => TIERS[this.store.tier()])
+}

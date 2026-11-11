@@ -1,0 +1,10 @@
+<span class="avatar-core" [style.background]="photo() ? null : background()">
+  @if (photo()) {
+    <img [src]="photo()" alt="" class="size-full object-cover" draggable="false" />
+  } @else {
+    {{ initial() }}
+  }
+</span>
+@if (frameInfo().key !== 'none') {
+  <span class="avatar-frame" [class]="frameInfo().anim ?? ''" [style.background]="frameInfo().bg" [style.--t.px]="thickness()"></span>
+}

@@ -1,0 +1,52 @@
+<div class="stagger max-w-3xl">
+  <h1 class="text-[clamp(3rem,6vw,4.6rem)]">Ajustes</h1>
+
+  <section class="settings-row mt-8">
+    <h2>Apariencia</h2>
+    <div>
+      <p class="text-sm text-ink-soft">Elige el modo claro, el nocturno, o que siga la configuración de tu dispositivo.</p>
+      <div class="mt-4 max-w-sm"><app-theme-segmented /></div>
+    </div>
+  </section>
+
+  <section class="settings-row">
+    <h2>Bienestar</h2>
+    <div>
+    <p class="text-sm text-ink-soft">
+      Te avisaremos cuando pases este tiempo en mémoires durante el día. Hoy llevas {{ store.minutesToday() }} {{ store.minutesToday() === 1 ? 'minuto' : 'minutos' }}.
+    </p>
+    <div class="mt-4 flex flex-wrap gap-2">
+      @for (m of limits; track m) {
+        <button appChip [selected]="store.limitMinutes() === m" (click)="store.setLimitMinutes(m)">{{ m }} min</button>
+      }
+    </div>
+    <button class="btn btn-ghost mt-4" (click)="store.triggerNudgeNow()">Ver el aviso de bienestar</button>
+    </div>
+  </section>
+
+  <section class="settings-row">
+    <h2>Privacidad y seguridad</h2>
+    <ul class="flex flex-col gap-2 text-sm text-ink-soft">
+      <li>Personas bloqueadas: {{ store.blocked().length }}</li>
+      <li>Tu ubicación exacta nunca se guarda; solo tu ciudad.</li>
+      <li><a routerLink="/privacidad" class="font-semibold text-ink underline underline-offset-4">Leer el aviso de privacidad</a></li>
+    </ul>
+  </section>
+
+  <section class="settings-row">
+    <h2>Cuenta</h2>
+    <div class="flex flex-col items-start gap-3">
+      <button class="btn btn-ghost" (click)="logout()"><app-icon name="log-out" [size]="18" /> Cerrar sesión</button>
+      <button class="btn text-danger" (click)="confirmDelete.set(true)"><app-icon name="trash-2" [size]="18" /> Eliminar mi cuenta</button>
+    </div>
+  </section>
+
+  @if (confirmDelete()) {
+    <app-modal title="Eliminar tu cuenta" (closed)="confirmDelete.set(false)">
+      <p class="text-ink-soft">Se borrarán tu perfil, tus conexiones y tus mensajes. Esta acción no se puede deshacer.</p>
+      <label class="label mt-4" for="confirm">Escribe ELIMINAR para confirmar</label>
+      <input id="confirm" class="field" [(ngModel)]="typed" />
+      <button class="btn btn-danger mt-4 w-full min-h-12" [disabled]="typed() !== 'ELIMINAR'" (click)="deleteAccount()">Eliminar cuenta y datos</button>
+    </app-modal>
+  }
+</div>

@@ -1,1 +1,12 @@
-<p>navbar works!</p>
+<header class="vt-head sticky top-0 z-30 flex items-center justify-between bg-mist/80 px-4 py-2.5 backdrop-blur-md md:hidden">
+  <a routerLink="/app/descubre" aria-label="Inicio de mémoires"><app-logo class="scale-90 origin-left" /></a>
+  <div class="flex items-center">
+    <a routerLink="/app/suscripcion" class="btn min-h-9 px-3 text-sm text-hobby" [attr.aria-label]="'Plan ' + tierInfo().name">
+      {{ tierInfo().name }}
+    </a>
+    <button appThemeIcon class="text-ink-soft"></button>
+    <a routerLink="/app/ajustes" class="btn size-10 min-h-0 p-0 text-ink-soft" aria-label="Ajustes">
+      <app-icon name="settings" [size]="19" />
+    </a>
+  </div>
+</header>

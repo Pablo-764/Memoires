@@ -1,0 +1,74 @@
+<article
+  #card
+  class="swipe-card relative flex size-full cursor-grab touch-pan-y select-none flex-col overflow-hidden rounded-[32px] bg-surface shadow-(--shadow-float) active:cursor-grabbing"
+  [attr.aria-label]="person().name + ', ' + person().age + ' años'"
+  [attr.aria-hidden]="active() ? null : true"
+  (pointerdown)="onPointerDown($event)"
+  (pointermove)="onPointerMove($event)"
+  (pointerup)="onPointerUp($event)"
+  (pointercancel)="onPointerCancel()"
+>
+  <div class="relative min-h-0 flex-[0.7] md:flex-[1.15]">
+    <app-banner [decoration]="person().decoration" />
+    @if (active()) {
+      <app-effect [effect]="person().effect" [count]="14" />
+    }
+    <span #like class="absolute left-5 top-5 rounded-full bg-plan px-4 py-1.5 font-display text-xl text-on-accent opacity-0">Me interesa</span>
+    <span #pass class="absolute right-5 top-5 rounded-full bg-accent px-4 py-1.5 font-display text-xl text-on-accent opacity-0">Pasar</span>
+    @if (active()) {
+      <div class="absolute right-3 top-3 flex gap-1">
+        <button class="glass-icon" [attr.aria-label]="'Reportar a ' + person().name" (click)="reportOpen.set(true)"><app-icon name="flag" [size]="17" /></button>
+        <button class="glass-icon" [attr.aria-label]="'Bloquear a ' + person().name" (click)="blockOpen.set(true)"><app-icon name="ban" [size]="17" /></button>
+      </div>
+    }
+  </div>
+
+  <div class="relative flex min-h-0 flex-1 flex-col px-6 pb-6">
+    <div class="-mt-14 mb-3">
+      <app-avatar [name]="person().name" [hue]="person().hue" [size]="104" [frame]="person().frame" class="ring-[5px] ring-surface" />
+    </div>
+    <h2 class="flex items-center gap-2 text-[2.6rem] leading-none" [style.color]="name().color" [class.italic]="name().italic">
+      {{ person().name }}, {{ person().age }}
+      @if (person().verified) {
+        <span role="img" aria-label="Perfil verificado" class="inline-flex text-hobby"><app-icon name="badge-check" [size]="22" /></span>
+      }
+    </h2>
+    <p class="mt-1 flex items-center gap-1 text-sm text-ink-mute">
+      <app-icon name="map-pin" [size]="15" /> {{ person().city }}
+      @if (active()) {
+        <a [routerLink]="['/app/persona', person().id]" class="link-soft ml-2 font-semibold text-hobby">Ver perfil</a>
+      }
+    </p>
+    <div class="mt-3 flex flex-wrap gap-1.5">
+      @for (i of person().intents; track i) {
+        <app-intent-badge [intent]="i" />
+      }
+    </div>
+    @if (planText()) {
+      <p class="mt-2 text-sm font-semibold text-plan">Prefiere: {{ planText() }}</p>
+    }
+    <p class="mt-2 line-clamp-2 text-ink-soft">{{ person().bio }}</p>
+    <div class="mt-auto pt-3">
+      <p class="text-sm font-semibold">Por qué te lo sugerimos</p>
+      <p class="mt-0.5 line-clamp-2 text-sm text-ink-soft">
+        Los dos buscan {{ sharedIntentsText() }}.
+        @if (s().sharedInterests.length) {
+          Comparten {{ s().sharedInterests.join(', ') }}.
+        }
+      </p>
+    </div>
+  </div>
+
+  @if (stampIcon(); as kind) {
+    <div class="stamp" [class]="kind === 'like' ? 'stamp-like' : 'stamp-pass'" aria-hidden="true" [style.color]="kind === 'like' ? 'var(--color-' + intent() + ')' : 'var(--color-ink-mute)'">
+      <app-icon [name]="kind === 'like' ? likeIcon() : 'x'" [size]="190" [filled]="kind === 'like' && intent() === 'romance'" />
+    </div>
+  }
+</article>
+
+@if (reportOpen()) {
+  <app-report-dialog [personId]="person().id" [name]="person().name" (closed)="reportOpen.set(false)" />
+}
+@if (blockOpen()) {
+  <app-block-dialog [personId]="person().id" [name]="person().name" (closed)="blockOpen.set(false)" />
+}

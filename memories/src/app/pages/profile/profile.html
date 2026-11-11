@@ -1,0 +1,258 @@
+<div class="grid items-start gap-8 lg:grid-cols-[360px_1fr]">
+  <div class="profile-preview card overflow-hidden lg:sticky lg:top-10">
+    <div class="relative h-44">
+      <app-banner [decoration]="draft().decoration" [custom]="draft().customBanner" />
+      <app-effect [effect]="draft().effect" [count]="12" />
+      <label class="glass-icon absolute right-3 top-3 cursor-pointer" aria-label="Subir fondo propio">
+        <app-icon name="image-plus" [size]="18" />
+        <input type="file" accept="image/*" class="sr-only" (change)="upload($event, 'customBanner')" />
+      </label>
+    </div>
+    <div class="relative px-5 pb-5">
+      <label class="avatar-upload -mt-14 mb-3 inline-block cursor-pointer" aria-label="Cambiar foto de perfil">
+        <app-avatar [name]="draft().name || 'Tú'" [hue]="260" [size]="104" [frame]="draft().frame" [photo]="draft().photo" class="ring-[5px] ring-surface" />
+        <span class="avatar-upload-hint"><app-icon name="camera" [size]="22" /></span>
+        <input type="file" accept="image/*" class="sr-only" (change)="upload($event, 'photo')" />
+      </label>
+      <h2 class="text-[2.2rem] leading-none" [style.color]="name().color" [class.italic]="name().italic">{{ draft().name || 'Tu nombre' }}, {{ draft().age }}</h2>
+      <p class="mt-1 text-sm text-ink-mute">{{ draft().city }}</p>
+      <div class="mt-3 flex flex-wrap gap-1.5">
+        @for (i of draft().intents; track i) {
+          <app-intent-badge [intent]="i" />
+        }
+      </div>
+      <p class="mt-3 whitespace-pre-line text-sm text-ink-soft">{{ draft().bio || 'Escribe algo sobre ti.' }}</p>
+      <p class="mt-3 text-sm text-ink-mute">{{ draft().interests.join(', ') }}</p>
+      <div class="mt-4 flex flex-wrap gap-x-3 gap-y-2 text-xs">
+        <a routerLink="/app/persona/me" class="link-soft font-semibold text-hobby">Ver mi perfil completo</a>
+        @if (draft().photo) {
+          <button class="link-soft text-ink-mute" (click)="patch({ photo: undefined })">Quitar foto</button>
+        }
+        @if (draft().customBanner) {
+          <button class="link-soft text-ink-mute" (click)="patch({ customBanner: undefined })">Quitar fondo propio</button>
+        }
+      </div>
+      @if (uploadError()) {
+        <p class="error-in mt-2 text-sm font-medium text-danger" role="alert">{{ uploadError() }}</p>
+      }
+    </div>
+  </div>
+
+  <div class="min-w-0">
+    <div class="shape-bar" [appPillGroup]="tab()" role="tablist">
+      <span class="group-echo" aria-hidden="true"></span>
+      <span class="group-pill shape-marker" aria-hidden="true"></span>
+      @for (t of tabs; track t.key; let n = $index) {
+        <button type="button" role="tab" [attr.data-shape]="tabLook[n].shape" [attr.data-tone]="tabLook[n].tone" class="intent-tab" [class.is-on]="tab() === t.key" [attr.aria-selected]="tab() === t.key" (click)="tab.set(t.key)">
+          {{ t.label }}
+          @if (t.count) {
+            <span class="tabular-nums opacity-60">{{ t.count }}</span>
+          }
+        </button>
+      }
+    </div>
+
+    @for (current of [tab()]; track current) {
+      <div class="step-forward mt-6">
+        @switch (current) {
+          @case ('about') {
+            <div class="flex flex-col gap-6">
+              <div>
+                <label class="label" for="pb">Descripción</label>
+                <textarea id="pb" class="field min-h-32" maxlength="280" placeholder="Cuenta quién eres y qué te gusta hacer…" [ngModel]="draft().bio" (ngModelChange)="patch({ bio: $event })"></textarea>
+                <p class="mt-1 text-right text-xs tabular-nums text-ink-mute">{{ draft().bio.length }}/280</p>
+              </div>
+              <div class="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label class="label" for="pn">Nombre</label>
+                  <input id="pn" class="field" [ngModel]="draft().name" (ngModelChange)="patch({ name: $event })" />
+                </div>
+                <div>
+                  <label class="label" for="pcity">Ciudad</label>
+                  <select id="pcity" class="field" [ngModel]="draft().city" (ngModelChange)="patch({ city: $event })">
+                    @for (c of cities; track c) {
+                      <option [value]="c">{{ c }}</option>
+                    }
+                  </select>
+                </div>
+              </div>
+              <div>
+                <p class="label">Género (opcional)</p>
+                <div class="flex flex-wrap gap-2">
+                  @for (g of genderOrder; track g) {
+                    <button appChip [selected]="draft().gender === g" (click)="patch({ gender: g })">{{ genderInfo[g].label }}</button>
+                  }
+                  <button appChip [selected]="draft().gender === 'unsaid'" (click)="patch({ gender: 'unsaid' })">Prefiero no decirlo</button>
+                </div>
+              </div>
+              <div class="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label class="label" for="pjob">Trabajo</label>
+                  <input id="pjob" class="field" placeholder="A qué te dedicas" [ngModel]="draft().occupation" (ngModelChange)="patch({ occupation: $event })" />
+                </div>
+                <div>
+                  <label class="label" for="pedu">Estudios</label>
+                  <input id="pedu" class="field" placeholder="Qué estudias o estudiaste" [ngModel]="draft().education" (ngModelChange)="patch({ education: $event })" />
+                </div>
+              </div>
+              <div>
+                <p class="label">Idiomas</p>
+                <div class="flex flex-wrap gap-2">
+                  @for (l of languageOptions; track l) {
+                    <button appChip [selected]="draft().languages.includes(l)" (click)="toggleLanguage(l)">{{ l }}</button>
+                  }
+                </div>
+              </div>
+              <div>
+                <p class="label">Disponibilidad</p>
+                <div class="flex flex-wrap gap-2">
+                  @for (a of availabilityOptions; track a) {
+                    <button appChip [selected]="draft().availability === a" (click)="patch({ availability: a })">{{ a }}</button>
+                  }
+                </div>
+              </div>
+              <div>
+                <p class="label">Preguntas de tu perfil</p>
+                <div class="flex flex-col gap-3">
+                  @for (p of draft().prompts; track $index; let i = $index) {
+                    <div class="rounded-[20px] p-3 shadow-[inset_0_0_0_1.5px_var(--color-line)]">
+                      <select class="field min-h-10 py-2 text-sm" [attr.aria-label]="'Pregunta ' + (i + 1)" [ngModel]="p.q" (ngModelChange)="setPrompt(i, { q: $event })">
+                        @for (o of promptOptions; track o) {
+                          <option [value]="o">{{ o }}</option>
+                        }
+                      </select>
+                      <input class="field mt-2" maxlength="90" placeholder="Tu respuesta…" [attr.aria-label]="'Respuesta ' + (i + 1)" [ngModel]="p.a" (ngModelChange)="setPrompt(i, { a: $event })" />
+                    </div>
+                  }
+                </div>
+              </div>
+              <div class="grid gap-4 sm:grid-cols-3">
+                <div>
+                  <label class="label" for="fmus">Música favorita</label>
+                  <input id="fmus" class="field" [ngModel]="draft().favorites.music" (ngModelChange)="setFavorite('music', $event)" />
+                </div>
+                <div>
+                  <label class="label" for="fmov">Película favorita</label>
+                  <input id="fmov" class="field" [ngModel]="draft().favorites.movie" (ngModelChange)="setFavorite('movie', $event)" />
+                </div>
+                <div>
+                  <label class="label" for="ffood">Comida favorita</label>
+                  <input id="ffood" class="field" [ngModel]="draft().favorites.food" (ngModelChange)="setFavorite('food', $event)" />
+                </div>
+              </div>
+              <div>
+                <p class="label">Momentos ({{ draft().gallery.length }} de 6)</p>
+                <div class="grid grid-cols-3 gap-2 sm:grid-cols-6">
+                  @for (g of draft().gallery; track $index; let i = $index) {
+                    <button type="button" class="group relative aspect-square overflow-hidden rounded-2xl" aria-label="Quitar foto" (click)="removeMoment(i)">
+                      <img [src]="g" alt="" class="size-full object-cover" />
+                      <span class="absolute inset-0 grid place-items-center bg-black/45 text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100"><app-icon name="x" [size]="20" /></span>
+                    </button>
+                  }
+                  @if (draft().gallery.length < 6) {
+                    <label class="grid aspect-square cursor-pointer place-items-center rounded-2xl text-ink-mute shadow-[inset_0_0_0_1.5px_var(--color-line-strong)]" aria-label="Agregar foto">
+                      <app-icon name="image-plus" [size]="22" />
+                      <input type="file" accept="image/*" class="sr-only" (change)="addMoment($event)" />
+                    </label>
+                  }
+                </div>
+              </div>
+              <div>
+                <p class="label">Qué buscas</p>
+                <div class="flex flex-wrap gap-2">
+                  @for (i of intentOrder; track i) {
+                    <button appChip [selected]="draft().intents.includes(i)" (click)="toggleIntent(i)">{{ intents[i].label }}</button>
+                  }
+                </div>
+              </div>
+              @for (i of prefIntents(); track i) {
+                <app-intent-prefs [intent]="i" [value]="prefsOf(i)" (valueChange)="setPrefs(i, $event)" />
+              }
+              <div>
+                <p class="label">Intereses ({{ draft().interests.length }})</p>
+                <app-interest-picker [selected]="draft().interests" (toggled)="toggleInterest($event)" />
+              </div>
+            </div>
+          }
+          @case ('banners') {
+            <label class="upload-tile">
+              <app-icon name="image-plus" [size]="22" />
+              <span><span class="block font-semibold">Sube el fondo que quieras</span><span class="block text-sm text-ink-mute">Cualquier imagen de tu dispositivo</span></span>
+              <input type="file" accept="image/*" class="sr-only" (change)="upload($event, 'customBanner')" />
+            </label>
+            @for (g of bannerGroups; track g.group) {
+              <h3 class="mb-3 mt-7 text-2xl">{{ g.group }}</h3>
+              <div class="decor-grid stagger">
+                @for (b of g.items; track b.key) {
+                  <button type="button" class="decor-tile" [attr.aria-pressed]="!draft().customBanner && draft().decoration === b.key" (click)="patch({ decoration: b.key, customBanner: undefined })">
+                    <span class="decor-swatch" [style.background]="b.css">
+                      @if (!usable(b)) {
+                        <span class="decor-lock"><app-icon name="lock" [size]="14" /></span>
+                      }
+                    </span>
+                    {{ b.label }}
+                  </button>
+                }
+              </div>
+            }
+          }
+          @case ('frames') {
+            <div class="decor-grid stagger">
+              @for (f of frames; track f.key) {
+                <button type="button" class="decor-tile" [attr.aria-pressed]="draft().frame === f.key" (click)="patch({ frame: f.key })">
+                  <span class="decor-swatch grid place-items-center bg-raised">
+                    <app-avatar [name]="draft().name || 'Tú'" [hue]="260" [size]="46" [frame]="f.key" [photo]="draft().photo" />
+                    @if (!usable(f)) {
+                      <span class="decor-lock"><app-icon name="lock" [size]="14" /></span>
+                    }
+                  </span>
+                  {{ f.label }}
+                </button>
+              }
+            </div>
+          }
+          @case ('effects') {
+            <div class="decor-grid stagger">
+              @for (e of effects; track e.key) {
+                <button type="button" class="decor-tile" [attr.aria-pressed]="draft().effect === e.key" (click)="patch({ effect: e.key })">
+                  <span class="decor-swatch fx-tile">
+                    <app-effect [effect]="e.key" [count]="6" />
+                    @if (!usable(e)) {
+                      <span class="decor-lock"><app-icon name="lock" [size]="14" /></span>
+                    }
+                  </span>
+                  {{ e.label }}
+                </button>
+              }
+            </div>
+          }
+          @case ('names') {
+            <div class="grid gap-2 sm:grid-cols-2">
+              @for (n of nameStyles; track n.key) {
+                <button type="button" class="name-tile" [attr.aria-pressed]="draft().nameStyle === n.key" (click)="patch({ nameStyle: n.key })">
+                  <span class="font-display text-[1.7rem]" [style.color]="n.color" [class.italic]="n.italic">{{ draft().name || 'Tu nombre' }}</span>
+                  <span class="flex items-center gap-1.5 text-xs text-ink-mute">
+                    {{ n.label }}
+                    @if (!usable(n)) {
+                      <app-icon name="lock" [size]="13" />
+                    }
+                  </span>
+                </button>
+              }
+            </div>
+          }
+        }
+      </div>
+    }
+
+    @if (dirty()) {
+      <div animate.leave="bar-out" class="rise-in sticky bottom-24 z-20 mt-6 flex flex-wrap items-center justify-end gap-3 md:bottom-6">
+        @if (lockedTier(); as t) {
+          <a routerLink="/app/suscripcion" class="mr-auto rounded-full bg-surface px-4 py-2 text-sm font-semibold text-hobby shadow-(--shadow-lift)">Estás probando un estilo de {{ t === 'grand' ? 'Grand' : 'Lucidité' }}. Ver planes</a>
+        }
+        <button class="btn btn-soft min-h-12" (click)="discard()">Descartar</button>
+        <button #saveBtn class="btn btn-primary min-h-12 px-8 shadow-(--shadow-float)" [disabled]="draft().intents.length === 0 || !!lockedTier()" (click)="save()">Guardar cambios</button>
+      </div>
+    }
+  </div>
+</div>

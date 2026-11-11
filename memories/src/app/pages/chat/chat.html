@@ -1,0 +1,93 @@
+@if (person(); as p) {
+  <div class="mx-auto flex h-[calc(100dvh-11rem)] max-w-3xl flex-col md:h-[calc(100dvh-5rem)]">
+    <header class="relative flex items-center gap-3 overflow-hidden rounded-[24px] p-3">
+      <app-banner [decoration]="p.decoration" class="opacity-90" />
+      <div class="absolute inset-0 bg-surface/55 backdrop-blur-[2px]"></div>
+      <a routerLink="/app/conexiones" class="btn relative size-10 min-h-0 p-0" aria-label="Volver a conexiones"><app-icon name="arrow-left" [size]="20" /></a>
+      <a [routerLink]="['/app/persona', p.id]" class="relative flex min-w-0 flex-1 items-center gap-3" [attr.aria-label]="'Ver perfil de ' + p.name">
+        <app-avatar [name]="p.name" [hue]="p.hue" [size]="44" [frame]="p.frame" />
+        <span class="min-w-0">
+          <span class="block font-display text-2xl leading-tight">{{ p.name }}</span>
+          <span class="block truncate text-sm text-ink-soft">{{ p.interests.slice(0, 3).join(', ') }}</span>
+        </span>
+      </a>
+      <button class="btn relative size-10 min-h-0 p-0 text-ink-soft" aria-label="Buscar en la conversación" [attr.aria-expanded]="searching()" (click)="toggleSearch()"><app-icon name="search" [size]="18" /></button>
+      <button class="btn relative size-10 min-h-0 p-0 text-ink-soft" aria-label="Reportar" (click)="reportOpen.set(true)"><app-icon name="flag" [size]="18" /></button>
+      <button class="btn relative size-10 min-h-0 p-0 text-ink-soft" aria-label="Bloquear" (click)="blockOpen.set(true)"><app-icon name="ban" [size]="18" /></button>
+    </header>
+
+    @if (searching()) {
+      <div class="swap-in mt-3 flex items-center gap-3">
+        <div class="search-box flex-1">
+          <app-icon name="search" [size]="18" />
+          <input #searchInput type="search" aria-label="Buscar mensajes" placeholder="Buscar en esta conversación…" autocomplete="off" [value]="query()" (input)="query.set($any($event.target).value)" />
+        </div>
+        @if (query().trim()) {
+          <span class="shrink-0 text-sm tabular-nums text-ink-mute">{{ hits() }} {{ hits() === 1 ? 'resultado' : 'resultados' }}</span>
+        }
+      </div>
+    }
+
+    <div class="flex-1 overflow-y-auto py-6" aria-live="polite">
+      <p class="mx-auto mb-6 max-w-sm text-center text-sm text-ink-mute">
+        Se conectaron porque los dos buscan {{ p.intents.length > 1 ? 'cosas en común' : 'lo mismo' }}. Recuerda: nunca compartas
+        datos bancarios y, si quedan de verse, elijan un lugar público.
+      </p>
+      <ul class="flex flex-col gap-2">
+        @for (m of thread(); track m.id) {
+          <li class="flex" [class]="m.from === 'me' ? 'justify-end' : 'justify-start'">
+            <p class="bubble-in max-w-[78%] rounded-[20px] px-4 py-2.5 transition-opacity duration-200" [class.opacity-35]="query().trim() && !isHit(m.text)" [class]="m.from === 'me' ? 'bubble-me rounded-br-md bg-accent text-on-accent' : 'bubble-them rounded-bl-md bg-surface shadow-(--shadow-lift)'">@for (part of parts(m.text); track $index) {@if (part.hit) {<mark class="msg-hit">{{ part.text }}</mark>} @else {{{ part.text }}}}</p>
+          </li>
+        }
+        @if (store.typing() === id()) {
+          <li class="flex justify-start" animate.leave="bar-out" [attr.aria-label]="p.name + ' está escribiendo'">
+            <p class="bubble-in bubble-them flex items-center gap-1 rounded-[20px] rounded-bl-md bg-surface px-4 py-3.5 shadow-(--shadow-lift)">
+              <span class="typing-dot size-1.5 rounded-full bg-ink-mute"></span>
+              <span class="typing-dot size-1.5 rounded-full bg-ink-mute"></span>
+              <span class="typing-dot size-1.5 rounded-full bg-ink-mute"></span>
+            </p>
+          </li>
+        }
+      </ul>
+      <div #end></div>
+    </div>
+
+    <div class="border-t border-line pt-4">
+      <div class="mb-3">
+        <app-meter [used]="store.wordsUsed()" [total]="total()" label="Palabras de esta semana" />
+      </div>
+      <form class="flex items-end gap-2" (ngSubmit)="submit()">
+        <label for="msg" class="sr-only">Mensaje</label>
+        <textarea id="msg" name="msg" rows="1" class="field max-h-32 min-h-12 flex-1 resize-none py-3" [placeholder]="'Escribe a ' + p.name + '…'" [(ngModel)]="text" (keydown)="onKeydown($event)"></textarea>
+        <button #sendBtn class="btn btn-primary size-12 min-h-0 shrink-0 p-0" [disabled]="!text().trim()" aria-label="Enviar mensaje"><app-icon name="send" [size]="19" /></button>
+      </form>
+      @if (words() > 0) {
+        <p class="mt-1.5 text-xs text-ink-mute">{{ words() }} {{ words() === 1 ? 'palabra' : 'palabras' }}</p>
+      }
+    </div>
+
+    @if (reportOpen()) {
+      <app-report-dialog [personId]="id()" [name]="p.name" (closed)="reportOpen.set(false)" (done)="router.navigateByUrl('/app/conexiones')" />
+    }
+    @if (blockOpen()) {
+      <app-block-dialog [personId]="id()" [name]="p.name" (closed)="blockOpen.set(false)" (done)="router.navigateByUrl('/app/conexiones')" />
+    }
+    @if (limitOpen()) {
+      <app-modal title="Llegaste a tu límite de palabras" (closed)="limitOpen.set(false)">
+        <p class="text-ink-soft">Tu plan {{ tierInfo().name }} incluye {{ totalText() }} palabras por semana. Se renuevan el lunes.</p>
+        <div class="mt-6 flex flex-col gap-2 sm:flex-row-reverse">
+          <button class="btn btn-primary flex-1" (click)="limitOpen.set(false); router.navigateByUrl('/app/suscripcion')">
+            {{ store.tier() === 'free' ? 'Triplicar con Grand' : 'Ilimitado con Lucidité' }}
+          </button>
+          <button class="btn btn-ghost flex-1" (click)="limitOpen.set(false)">Entendido</button>
+        </div>
+      </app-modal>
+    }
+  </div>
+} @else {
+  <div class="card p-8 text-center">
+    <h1 class="text-[1.85rem]">Esta conversación no está disponible</h1>
+    <p class="mt-2 text-ink-soft">Solo puedes escribir a personas con las que hay interés mutuo.</p>
+    <a routerLink="/app/conexiones" class="btn btn-primary mt-6">Ver mis conexiones</a>
+  </div>
+}

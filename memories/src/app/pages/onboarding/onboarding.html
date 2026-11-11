@@ -1,0 +1,93 @@
+<div class="mx-auto flex min-h-dvh max-w-2xl flex-col px-5 py-6">
+  <div class="flex items-center justify-between">
+    <app-logo />
+    <span class="text-sm text-ink-mute">Paso {{ step() + 1 }} de 3</span>
+  </div>
+  <ol class="mt-6 grid grid-cols-3 gap-2" aria-label="Progreso">
+    @for (s of steps; track s; let i = $index) {
+      <li class="flex flex-col gap-1.5">
+        <span class="h-1.5 overflow-hidden rounded-full bg-line">
+          <span class="block h-full origin-left rounded-full bg-accent transition-transform duration-300 ease-(--ease-out)" [style.transform]="'scaleX(' + (i <= step() ? 1 : 0) + ')'"></span>
+        </span>
+        <span class="text-xs font-semibold" [class]="i === step() ? 'text-ink' : 'text-ink-mute'">{{ s }}</span>
+      </li>
+    }
+  </ol>
+
+  @for (current of [step()]; track current) {
+    <div class="mt-10 flex-1" [class]="direction() === 'back' ? 'step-back' : 'step-forward'">
+      @switch (current) {
+        @case (0) {
+          <h1 class="text-5xl">¿Qué buscas, {{ me().name || 'hola' }}?</h1>
+          <p class="mt-2 text-ink-soft">Elige todas las que quieras. Solo te sugeriremos personas que busquen lo mismo.</p>
+          <div class="mt-8 grid gap-3 sm:grid-cols-2">
+            @for (i of order; track i) {
+              @let on = intents().includes(i);
+              <button
+                type="button"
+                [attr.aria-pressed]="on"
+                class="btn h-auto flex-col items-start rounded-[22px] p-5 text-left"
+                [class]="on ? catalog[i].soft + ' shadow-[inset_0_0_0_2px_currentColor] ' + catalog[i].text : 'bg-surface shadow-(--shadow-lift)'"
+                (click)="toggleIntent(i)"
+              >
+                <span class="font-display text-2xl">{{ catalog[i].label }}</span>
+                <span class="text-sm font-normal" [class]="on ? 'text-ink-soft' : 'text-ink-mute'">{{ catalog[i].description }}</span>
+              </button>
+            }
+          </div>
+          @for (i of prefIntents(); track i) {
+            <app-intent-prefs class="mt-6" [intent]="i" [value]="prefsOf(i)" (valueChange)="setPrefs(i, $event)" />
+          }
+        }
+        @case (1) {
+          <h1 class="text-5xl">¿Qué te gusta hacer?</h1>
+          <p class="mt-2 text-ink-soft">Elige al menos 3. Mientras más elijas, mejores sugerencias recibirás.</p>
+          <div class="mt-8">
+              <app-interest-picker [selected]="interests()" (toggled)="toggleInterest($event)" />
+            </div>
+          <p class="mt-4 text-sm text-ink-mute">{{ interests().length }} seleccionados</p>
+        }
+        @default {
+          <h1 class="text-5xl">Preséntate</h1>
+          <p class="mt-2 text-ink-soft">Solo mostramos tu ciudad, nunca tu ubicación exacta.</p>
+          <div class="mt-8 flex flex-col gap-4">
+            <div>
+              <label class="label" for="city">Ciudad</label>
+              <select id="city" class="field" [(ngModel)]="city">
+                @for (c of cities; track c) {
+                  <option [value]="c">{{ c }}</option>
+                }
+              </select>
+            </div>
+            <div>
+              <p class="label">Género (opcional)</p>
+              <div class="mb-4 flex flex-wrap gap-2">
+                @for (g of genderOrder; track g) {
+                  <button appChip [selected]="gender() === g" (click)="gender.set(g)">{{ genderInfo[g].label }}</button>
+                }
+                <button appChip [selected]="gender() === 'unsaid'" (click)="gender.set('unsaid')">Prefiero no decirlo</button>
+              </div>
+              <label class="label" for="bio">Sobre ti</label>
+              <textarea id="bio" class="field min-h-32 resize-y" maxlength="280" [(ngModel)]="bio" placeholder="Por ejemplo: Me mudé a Guadalajara por trabajo y busco con quién correr los fines de semana…"></textarea>
+              <p class="mt-1 text-right text-xs text-ink-mute">{{ bio().length }}/280</p>
+            </div>
+            <div class="flex flex-wrap gap-1.5">
+              @for (i of intents(); track i) {
+                <app-intent-badge [intent]="i" size="md" />
+              }
+            </div>
+          </div>
+        }
+      }
+    </div>
+  }
+
+  <div class="sticky bottom-0 mt-8 flex gap-3 bg-mist py-4">
+    @if (step() > 0) {
+      <button class="btn btn-ghost min-h-12" (click)="back()"><app-icon name="arrow-left" [size]="18" /> Atrás</button>
+    }
+    <button class="btn btn-primary min-h-12 flex-1" [disabled]="!canNext()" (click)="next()">
+      {{ step() < 2 ? 'Continuar' : 'Empezar a descubrir' }}
+    </button>
+  </div>
+</div>

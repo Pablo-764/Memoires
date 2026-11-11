@@ -1,0 +1,17 @@
+@for (p of particles(); track $index) {
+  <span
+    class="fx"
+    [class]="'fx-' + info().dir"
+    [style.left.%]="p.left"
+    [style.top.%]="p.top"
+    [style.color]="p.color"
+    [style.animation-delay.s]="p.delay"
+    [style.animation-duration.s]="p.duration"
+  >
+    @if (info().icon; as icon) {
+      <app-icon [name]="icon" [size]="p.size" [filled]="true" />
+    } @else {
+      <span class="block rounded-full bg-current" [style.width.px]="p.size * 0.55" [style.height.px]="p.size * 0.55"></span>
+    }
+  </span>
+}
