@@ -78,10 +78,22 @@ export class PolaroidBoard {
           const w = b.el.offsetWidth
           const h = b.el.offsetHeight
           // Rebote suave en los bordes del tablero
-          if (b.x < -w * 0.2) (b.x = -w * 0.2), (b.vx = Math.abs(b.vx) * 0.6)
-          if (b.x > bounds.width - w * 0.8) (b.x = bounds.width - w * 0.8), (b.vx = -Math.abs(b.vx) * 0.6)
-          if (b.y < -h * 0.1) (b.y = -h * 0.1), (b.vy = Math.abs(b.vy) * 0.6)
-          if (b.y > bounds.height - h * 0.85) (b.y = bounds.height - h * 0.85), (b.vy = -Math.abs(b.vy) * 0.6)
+          if (b.x < -w * 0.2) {
+            b.x = -w * 0.2
+            b.vx = Math.abs(b.vx) * 0.6
+          }
+          if (b.x > bounds.width - w * 0.8) {
+            b.x = bounds.width - w * 0.8
+            b.vx = -Math.abs(b.vx) * 0.6
+          }
+          if (b.y < -h * 0.1) {
+            b.y = -h * 0.1
+            b.vy = Math.abs(b.vy) * 0.6
+          }
+          if (b.y > bounds.height - h * 0.85) {
+            b.y = bounds.height - h * 0.85
+            b.vy = -Math.abs(b.vy) * 0.6
+          }
           place(b)
         }
         if (moving) frame = requestAnimationFrame(step)

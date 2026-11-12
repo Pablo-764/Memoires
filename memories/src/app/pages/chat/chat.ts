@@ -60,7 +60,7 @@ export class Chat {
     inject(DestroyRef).onDestroy(() => this.store.ambient.set(null))
 
     afterRenderEffect(() => {
-      this.thread().length
+      this.thread()
       this.store.typing()
       if (!untracked(this.query).trim()) this.end()?.nativeElement.scrollIntoView({ block: 'end' })
     })

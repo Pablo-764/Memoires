@@ -31,7 +31,11 @@ export interface Profile {
   intentPrefs: Partial<Record<Intent, IntentPrefs>>
 }
 
-export type Toast = { id: number; text: string; tone?: 'ok' | 'info' | 'danger' }
+export interface Toast {
+  id: number
+  text: string
+  tone?: 'ok' | 'info' | 'danger'
+}
 
 interface State {
   loggedIn: boolean
