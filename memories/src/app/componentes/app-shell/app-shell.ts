@@ -35,6 +35,9 @@ export class AppShell {
     { initialValue: this.router.url },
   )
 
+  // Cada sección vive en una hoja de distinto color (descubre, conexiones, planes, perfil…)
+  protected readonly page = computed(() => this.url().split('?')[0].split('/')[2] ?? 'descubre')
+
   protected readonly activeIndex = computed(() => {
     const url = this.url()
     return NAV_ITEMS.findIndex((n) => url.startsWith(n.to) || (!!n.also && url.startsWith(n.also)))

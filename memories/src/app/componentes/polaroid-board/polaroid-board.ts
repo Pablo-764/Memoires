@@ -1,14 +1,28 @@
-import { Component, DestroyRef, ElementRef, afterNextRender, inject, viewChildren } from '@angular/core'
+import { Component, DestroyRef, ElementRef, afterNextRender, computed, inject, input, viewChildren } from '@angular/core'
 
-interface Snap {
+// Lo que se pega en la mesa: foto, nota a mano y color de la cinta
+export interface BoardItem {
   photo: string
   note: string
   tone: string
+}
+
+interface Snap extends BoardItem {
   // Posición inicial en % del tablero y giro
   x: number
   y: number
   r: number
 }
+
+// Acomodo inicial para hasta 6 fotos, como si se hubieran dejado caer sobre la mesa
+const LAYOUT = [
+  { x: 6, y: 10, r: -7 },
+  { x: 30, y: 30, r: 5 },
+  { x: 55, y: 6, r: -4 },
+  { x: 74, y: 34, r: 8 },
+  { x: 16, y: 52, r: 3 },
+  { x: 46, y: 50, r: -6 },
+]
 
 const SNAPS: Snap[] = [
   { photo: 'fotos/cafe.webp', note: 'café con Abril, sábado', tone: 'friend', x: 6, y: 10, r: -7 },
@@ -39,7 +53,12 @@ interface Body {
   host: { class: 'block' },
 })
 export class PolaroidBoard {
-  protected readonly snaps = SNAPS
+  // Fotos a mostrar; si no se pasan, se usan las de ejemplo de la portada
+  readonly items = input<BoardItem[] | null>(null)
+  protected readonly snaps = computed<Snap[]>(() => {
+    const list = this.items()
+    return list ? list.slice(0, LAYOUT.length).map((it, i) => ({ ...it, ...LAYOUT[i] })) : SNAPS
+  })
   private readonly board = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement
   private readonly cards = viewChildren<ElementRef<HTMLElement>>('card')
 
@@ -49,8 +68,9 @@ export class PolaroidBoard {
       const still = matchMedia('(prefers-reduced-motion: reduce)').matches
       const area = this.board.querySelector<HTMLElement>('.pb-area')!
       let bounds = area.getBoundingClientRect()
+      const snaps = this.snaps()
       const bodies: Body[] = this.cards().map(({ nativeElement: el }, i) => {
-        const s = SNAPS[i]
+        const s = snaps[i]
         return { el, x: (s.x / 100) * bounds.width, y: (s.y / 100) * bounds.height, vx: 0, vy: 0, r: s.r, vr: 0 }
       })
       let z = 10

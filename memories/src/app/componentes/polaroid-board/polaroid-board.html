@@ -1,5 +1,5 @@
 <div class="pb-area" aria-label="Fotos de ejemplo: puedes arrastrarlas">
-  @for (s of snaps; track s.photo) {
+  @for (s of snaps(); track $index) {
     <figure #card class="pb-card" [style.--tone]="'var(--color-' + s.tone + ')'">
       <span class="pb-tape" aria-hidden="true"></span>
       <img [src]="s.photo" alt="" draggable="false" loading="lazy" decoding="async" />

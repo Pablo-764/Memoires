@@ -1618,3 +1618,210 @@ html[data-vt-kind="pop"]::view-transition-new(page) { animation: page-turn-back 
 @media (prefers-reduced-motion: reduce) {
   .album-page { animation: none; rotate: none; }
 }
+
+/* =====================================================================
+   Color: ocho tintas repartidas en el círculo cromático (OKLCH), todas con
+   la misma luminosidad y croma para que ninguna domine. Cada una tiene
+   relleno, papel suave y tinta oscura para texto (4.5:1 o más en ambos temas).
+   Las secciones usan pares complementarios: su color y el opuesto del círculo.
+   ===================================================================== */
+:root {
+  --c-coral: #f47d67; --c-coral-soft: #ffe3da; --c-coral-deep: #933525;
+  --c-ambar: #da950b; --c-ambar-soft: #ffe9cc; --c-ambar-deep: #814a00;
+  --c-lima: #89b645; --c-lima-soft: #e4f3d3; --c-lima-deep: #426400;
+  --c-menta: #00c296; --c-menta-soft: #d0f7e8; --c-menta-deep: #006e4d;
+  --c-cielo: #00b8e7; --c-cielo-soft: #cdf4ff; --c-cielo-deep: #00658b;
+  --c-indigo: #7c9fff; --c-indigo-soft: #e0edff; --c-indigo-deep: #3951a0;
+  --c-violeta: #c188ea; --c-violeta-soft: #f6e5ff; --c-violeta-deep: #6e3f8d;
+  --c-rosa: #ec79a9; --c-rosa-soft: #ffe1ee; --c-rosa-deep: #8d325c;
+}
+
+.dark {
+  --c-coral: #f68771; --c-coral-soft: #341914; --c-coral-deep: #ffbcac;
+  --c-ambar: #de9c31; --c-ambar-soft: #2e1e06; --c-ambar-deep: #f4c98e;
+  --c-lima: #91bb54; --c-lima-soft: #1b260d; --c-lima-deep: #c0dd9d;
+  --c-menta: #23c79d; --c-menta-soft: #04281e; --c-menta-deep: #93e5c8;
+  --c-cielo: #00bdea; --c-cielo-soft: #012631; --c-cielo-deep: #8cdffb;
+  --c-indigo: #85a6ff; --c-indigo-soft: #182137; --c-indigo-deep: #b8d0ff;
+  --c-violeta: #c690ec; --c-violeta-soft: #281b32; --c-violeta-deep: #e3c1fe;
+  --c-rosa: #ee83af; --c-rosa-soft: #321823; --c-rosa-deep: #ffb9d4;
+}
+
+/* Color de cada sección y su complementario */
+.page-sheet { --page: var(--c-coral); --page-soft: var(--c-coral-soft); --page-deep: var(--c-coral-deep); --page-2: var(--c-cielo); --page-3: var(--c-ambar); }
+.page-sheet[data-page="conexiones"], .page-sheet[data-page="chat"] { --page: var(--c-rosa); --page-soft: var(--c-rosa-soft); --page-deep: var(--c-rosa-deep); --page-2: var(--c-menta); --page-3: var(--c-violeta); }
+.page-sheet[data-page="planes"] { --page: var(--c-menta); --page-soft: var(--c-menta-soft); --page-deep: var(--c-menta-deep); --page-2: var(--c-rosa); --page-3: var(--c-ambar); }
+.page-sheet[data-page="perfil"] { --page: var(--c-violeta); --page-soft: var(--c-violeta-soft); --page-deep: var(--c-violeta-deep); --page-2: var(--c-lima); --page-3: var(--c-cielo); }
+.page-sheet[data-page="persona"] { --page: var(--c-lima); --page-soft: var(--c-lima-soft); --page-deep: var(--c-lima-deep); --page-2: var(--c-violeta); --page-3: var(--c-coral); }
+.page-sheet[data-page="suscripcion"] { --page: var(--c-ambar); --page-soft: var(--c-ambar-soft); --page-deep: var(--c-ambar-deep); --page-2: var(--c-indigo); --page-3: var(--c-rosa); }
+.page-sheet[data-page="ajustes"] { --page: var(--c-cielo); --page-soft: var(--c-cielo-soft); --page-deep: var(--c-cielo-deep); --page-2: var(--c-coral); --page-3: var(--c-lima); }
+
+/* La sección es una hoja de color con cuadrícula, borde de tinta y sombra en su complementario */
+.page-sheet {
+  position: relative;
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 1px 1px, color-mix(in oklab, var(--page) 35%, transparent) 1px, transparent 1.6px) 0 0 / 24px 24px,
+    var(--paper-grain),
+    color-mix(in oklab, var(--page-soft) 94%, transparent);
+  transition: background-color 400ms ease;
+}
+
+@media (min-width: 768px) {
+  .page-sheet {
+    min-height: calc(100dvh - 2rem);
+    border-radius: 18px;
+    box-shadow: 0 0 0 1.5px var(--edge), 8px 8px 0 var(--page-2);
+  }
+}
+
+/* Stickers de la hoja: figuras planas en tres colores que se mecen */
+.sheet-sticker { position: absolute; z-index: -1; pointer-events: none; }
+
+.sheet-star {
+  top: 1.1rem;
+  right: 1.4rem;
+  width: 4.2rem;
+  height: 4.2rem;
+  background: var(--page-3);
+  clip-path: polygon(50% 0, 61% 33%, 96% 35%, 68% 56%, 79% 91%, 50% 70%, 21% 91%, 32% 56%, 4% 35%, 39% 33%);
+  animation: sticker-wobble 6s var(--ease-in-out) infinite alternate;
+}
+
+.sheet-squiggle {
+  top: 5.6rem;
+  right: 5.2rem;
+  width: 5.5rem;
+  height: 1.6rem;
+  background: var(--page-2);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 88 24'%3E%3Cpath d='M3 14c9-12 14 10 23 0s14 10 23 0 14 10 23 0 9 6 13 2' fill='none' stroke='black' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E") 0 0 / 100% 100%;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 88 24'%3E%3Cpath d='M3 14c9-12 14 10 23 0s14 10 23 0 14 10 23 0 9 6 13 2' fill='none' stroke='black' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E") 0 0 / 100% 100%;
+  animation: sticker-wobble 5s var(--ease-in-out) infinite alternate-reverse;
+}
+
+.sheet-dot {
+  bottom: 2rem;
+  right: 2rem;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  border: 5px solid var(--page);
+  box-shadow: 6px 6px 0 var(--page-3);
+}
+
+@keyframes sticker-wobble {
+  from { transform: rotate(-8deg) scale(0.96); }
+  to { transform: rotate(10deg) scale(1.04); }
+}
+
+/* Títulos con resaltador del color de la sección y subtítulo en su tinta */
+.page-sheet h1:not([data-name-fx], .no-mark) { --marker: color-mix(in oklab, var(--page) 55%, transparent); }
+
+.page-sheet h1 + p { color: var(--page-deep); }
+
+/* Tarjetas: cada una con sombra de un color distinto, en orden por el círculo */
+.page-sheet :is(ul, ol, .stagger) > .card:nth-child(6n + 1) { --edge-soft: var(--c-coral); }
+.page-sheet :is(ul, ol, .stagger) > .card:nth-child(6n + 2) { --edge-soft: var(--c-cielo); }
+.page-sheet :is(ul, ol, .stagger) > .card:nth-child(6n + 3) { --edge-soft: var(--c-lima); }
+.page-sheet :is(ul, ol, .stagger) > .card:nth-child(6n + 4) { --edge-soft: var(--c-violeta); }
+.page-sheet :is(ul, ol, .stagger) > .card:nth-child(6n + 5) { --edge-soft: var(--c-ambar); }
+.page-sheet :is(ul, ol, .stagger) > .card:nth-child(6n) { --edge-soft: var(--c-rosa); }
+
+.page-sheet :is(ul, ol, .stagger) > .card { box-shadow: 0 0 0 1.5px var(--edge), 5px 5px 0 var(--edge-soft); }
+
+@media (hover: hover) and (pointer: fine) {
+  .page-sheet :is(ul, ol, .stagger) > .card.lift:hover { box-shadow: 0 0 0 1.5px var(--edge), 9px 9px 0 var(--edge-soft); }
+}
+
+/* Botón principal: tinta azul con sombra en el color de la sección */
+.page-sheet .btn-primary { box-shadow: 0 0 0 1.5px var(--edge), 4px 4px 0 var(--page); }
+
+@media (hover: hover) and (pointer: fine) {
+  .page-sheet .btn-primary:hover:not(:disabled, :active) { box-shadow: 0 0 0 1.5px var(--edge), 6px 6px 0 var(--page); }
+}
+
+/* Chips de intereses: cada uno con su color; el elegido se rellena */
+button[appchip]:nth-child(8n + 1) { --chip: var(--c-coral); }
+button[appchip]:nth-child(8n + 2) { --chip: var(--c-ambar); }
+button[appchip]:nth-child(8n + 3) { --chip: var(--c-lima); }
+button[appchip]:nth-child(8n + 4) { --chip: var(--c-menta); }
+button[appchip]:nth-child(8n + 5) { --chip: var(--c-cielo); }
+button[appchip]:nth-child(8n + 6) { --chip: var(--c-indigo); }
+button[appchip]:nth-child(8n + 7) { --chip: var(--c-violeta); }
+button[appchip]:nth-child(8n) { --chip: var(--c-rosa); }
+
+button[appchip]:not([aria-pressed="true"]) { box-shadow: inset 0 0 0 1.5px var(--chip) !important; }
+
+button[appchip][aria-pressed="true"] {
+  background: var(--chip) !important;
+  color: #13202f !important;
+  box-shadow: 0 0 0 1.5px var(--edge), 3px 3px 0 var(--edge) !important;
+}
+
+/* ---------- Separadores de colores en la libreta ---------- */
+.nb-link:nth-child(1) { --tab: var(--c-coral); }
+.nb-link:nth-child(2) { --tab: var(--c-rosa); }
+.nb-link:nth-child(3) { --tab: var(--c-menta); }
+.nb-link:nth-child(4) { --tab: var(--c-violeta); }
+
+.nb-link app-icon { color: var(--tab); }
+
+.nb-link.is-on .nb-label { --marker: color-mix(in oklab, var(--tab) 55%, transparent); }
+
+/* La pestaña sale por el borde derecho de la libreta, como un separador */
+.nb-link::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -2.05rem;
+  width: 1rem;
+  height: 2.4rem;
+  margin-top: -1.2rem;
+  border-radius: 0 8px 8px 0;
+  background: var(--tab);
+  box-shadow: 1.5px 0 0 var(--edge), 0 1.5px 0 var(--edge), 0 -1.5px 0 var(--edge);
+  transition: width 260ms var(--ease-out), right 260ms var(--ease-out);
+}
+
+.nb-link.is-on::after { right: -2.6rem; width: 1.6rem; }
+
+@media (hover: hover) and (pointer: fine) {
+  .nb-link:not(.is-on):hover::after { right: -2.35rem; width: 1.3rem; }
+}
+
+.tabbar-link:nth-child(1) { --tab: var(--c-coral); }
+.tabbar-link:nth-child(2) { --tab: var(--c-rosa); }
+.tabbar-link:nth-child(3) { --tab: var(--c-menta); }
+.tabbar-link:nth-child(4) { --tab: var(--c-violeta); }
+
+.tabbar-link app-icon { color: var(--tab); }
+
+.tabbar-link.is-on { background: color-mix(in oklab, var(--tab) 24%, transparent); }
+
+/* Fondo de palabras: cada fila con contorno de su color */
+.kt-outline .kt-row:nth-child(1) { -webkit-text-stroke-color: color-mix(in oklab, var(--c-coral) 30%, transparent); }
+.kt-outline .kt-row:nth-child(2) { -webkit-text-stroke-color: color-mix(in oklab, var(--c-cielo) 30%, transparent); }
+.kt-outline .kt-row:nth-child(3) { -webkit-text-stroke-color: color-mix(in oklab, var(--c-lima) 30%, transparent); }
+.kt-outline .kt-row:nth-child(4) { -webkit-text-stroke-color: color-mix(in oklab, var(--c-violeta) 30%, transparent); }
+.kt-outline .kt-row:nth-child(5) { -webkit-text-stroke-color: color-mix(in oklab, var(--c-ambar) 30%, transparent); }
+.kt-outline .kt-row:nth-child(6) { -webkit-text-stroke-color: color-mix(in oklab, var(--c-rosa) 30%, transparent); }
+.kt-outline .kt-row:nth-child(7) { -webkit-text-stroke-color: color-mix(in oklab, var(--c-menta) 30%, transparent); }
+
+/* Nota del plan: cambia de color con la sección */
+.sticky-note { background: linear-gradient(180deg, rgb(0 0 0 / 0.04), transparent 30%), #ffe38f; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sheet-star,
+  .sheet-squiggle { animation: none; }
+}
+
+/* Portada e inicio de sesión también a color */
+.album-page:nth-child(3n + 1) { box-shadow: 0 0 0 1.5px var(--edge), 7px 7px 0 var(--c-coral); }
+.album-page:nth-child(3n + 2) { box-shadow: 0 0 0 1.5px var(--edge), 7px 7px 0 var(--c-cielo); }
+.album-page:nth-child(3n) { box-shadow: 0 0 0 1.5px var(--edge), 7px 7px 0 var(--c-lima); }
+
+.album-page:nth-child(3n + 1) > :first-child { color: var(--c-coral-deep); }
+.album-page:nth-child(3n + 2) > :first-child { color: var(--c-cielo-deep); }
+.album-page:nth-child(3n) > :first-child { color: var(--c-lima-deep); }
+
+.pb-area { box-shadow: 0 0 0 1.5px var(--edge), 8px 8px 0 var(--c-violeta) !important; }

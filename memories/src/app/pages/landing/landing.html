@@ -1,6 +1,6 @@
 <div appStickerTrail class="hero-tint" [style.background-color]="wash()">
   <header class="relative z-10 mx-auto flex max-w-6xl items-center justify-between px-5 py-5">
-    <a [routerLink]="store.homeUrl()" aria-label="Inicio de mémoires"><app-logo [draw]="true" /></a>
+    <a routerLink="/" aria-label="Inicio de mémoires" (click)="toTop()"><app-logo [draw]="true" /></a>
     <nav class="enter flex items-center gap-1 sm:gap-2" style="--d: 500ms">
       <button appThemeIcon aria-label="Cambiar tema"></button>
       <a routerLink="/entrar" class="btn min-h-10 px-4 text-sm">Iniciar sesión</a>
