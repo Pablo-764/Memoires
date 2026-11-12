@@ -1,10 +1,45 @@
 <section class="night-glow enter rounded-[32px] p-7 md:p-10">
-  <p class="text-sm text-white/65">Tu plan actual</p>
+  <p class="text-sm text-ink-mute">Tu plan actual</p>
   <h1 class="mt-1 text-[clamp(3.4rem,8vw,6rem)]" [class.italic]="store.tier() === 'lucidite'">{{ info().name }}</h1>
-  <p class="mt-2 max-w-[56ch] text-white/75">Los precios incluyen IVA y puedes cancelar cuando quieras desde esta misma página.</p>
+  <p class="mt-2 max-w-[56ch] text-ink-soft">Los precios incluyen IVA y puedes cancelar cuando quieras desde esta misma página.</p>
   <div class="meter-on-night mt-7 grid gap-5 sm:grid-cols-2">
     <app-meter [used]="store.matchesUsed()" [total]="info().weeklyMatches" label="Matches esta semana" />
     <app-meter [used]="store.wordsUsed()" [total]="info().weeklyWords" label="Palabras esta semana" />
+  </div>
+</section>
+
+<!-- Ver con Lucidité: el mismo perfil sin y con decoraciones, para ver el plan funcionando -->
+<section class="mt-8 grid items-center gap-6 md:grid-cols-[1fr_1.15fr]" aria-labelledby="ver-lucidite">
+  <div>
+    <h2 id="ver-lucidite" class="text-[2.2rem] leading-tight">Ver con <span class="font-serif italic text-accent">Lucidité</span></h2>
+    <p class="mt-2 max-w-[42ch] text-ink-soft">Tu mismo perfil, sin y con lo que incluye Lucidité: fondo animado, marco con ornamentos, efecto y nombre con estilo.</p>
+    <button type="button" role="switch" class="luc-switch mt-5" [attr.aria-checked]="showLuc()" (click)="showLuc.set(!showLuc())">
+      <span class="luc-track" aria-hidden="true"><span class="luc-thumb"></span></span>
+      <span class="font-semibold">{{ showLuc() ? 'Con Lucidité' : 'Sin decoraciones' }}</span>
+    </button>
+  </div>
+  <div class="luc-preview card" [class.is-on]="showLuc()" aria-live="polite">
+    <article class="luc-layer luc-plain" [attr.aria-hidden]="showLuc()">
+      <div class="relative h-28 bg-raised"></div>
+      <div class="px-5 pb-5">
+        <app-avatar class="-mt-10 ring-4 ring-surface" [name]="myName()" [hue]="260" [size]="84" [photo]="store.me().photo" />
+        <h3 class="mt-2 text-[2rem] leading-none">{{ myName() }}</h3>
+        <p class="mt-1 text-sm text-ink-mute">Así se ve tu perfil con el plan Gratuito.</p>
+      </div>
+    </article>
+    <article class="luc-layer luc-deco" [attr.aria-hidden]="!showLuc()">
+      <div class="relative h-28">
+        <app-banner [decoration]="luc.banner" [preview]="true" />
+        @if (showLuc()) {
+          <app-effect [effect]="luc.effect" [count]="12" />
+        }
+      </div>
+      <div class="px-5 pb-5">
+        <app-avatar class="-mt-10 ring-4 ring-surface" [name]="myName()" [hue]="260" [size]="84" [frame]="luc.frame" [photo]="store.me().photo" />
+        <h3 class="mt-2 text-[2rem] leading-none" [style.color]="lucName?.color" [class.italic]="lucName?.italic" [attr.data-name-fx]="lucName?.fx ?? null">{{ myName() }}</h3>
+        <p class="mt-1 text-sm text-ink-mute">Con el tema {{ lucTheme.label }}, uno de los {{ totalStyles }} estilos.</p>
+      </div>
+    </article>
   </div>
 </section>
 

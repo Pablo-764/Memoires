@@ -1,0 +1,33 @@
+/* ---------- Jardín de texto ----------
+   Piezas ASCII de línea sobre papel. El tamaño de letra sale de la altura del fondo
+   (unidades de contenedor), así el mismo dibujo sirve en tarjetas y en el perfil. */
+.gd {
+  position: absolute;
+  inset: 0;
+  container-type: size;
+}
+
+.gd-piece {
+  position: absolute;
+  font-size: calc(7.4cqh * var(--gd-s, 1));
+}
+
+.gd-piece ::ng-deep .ascii-pre { font-size: inherit; }
+
+/* Variante que crece: cada pieza se revela de abajo hacia arriba, una sola vez */
+.gd-grow .gd-piece {
+  animation: gd-grow 1500ms var(--ease-out) both;
+  animation-delay: calc(200ms + var(--i) * 260ms);
+}
+
+@keyframes gd-grow {
+  from { clip-path: inset(100% 0 0 0); }
+  to { clip-path: inset(0); }
+}
+
+/* En las miniaturas se ve completa; al pasar el cursor vuelve a crecer */
+:host(.is-preview:not(.is-hover)) .gd-grow .gd-piece { animation: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .gd-grow .gd-piece { animation: none; }
+}

@@ -14,13 +14,15 @@ import { PillGroup } from '../../directivas/pill-group'
 import { CreatePlanDialog } from '../../componentes/create-plan-dialog/create-plan-dialog'
 
 import { PolaroidBoard, type BoardItem } from '../../componentes/polaroid-board/polaroid-board'
+import { AsciiArt } from '../../componentes/ascii-art/ascii-art'
+import { ASCII_BY_INTENT } from '../../datos/ascii'
 
 // Fotos para los planes que no traen la suya
 const FALLBACK = ['fotos/cafe.webp', 'fotos/correr.webp', 'fotos/juegos.webp', 'fotos/concierto.webp', 'fotos/biblioteca.webp']
 
 @Component({
   selector: 'app-plans',
-  imports: [NgTemplateOutlet, RouterLink, Avatar, Icon, IntentBadge, PillGroup, CreatePlanDialog, PolaroidBoard],
+  imports: [AsciiArt, NgTemplateOutlet, RouterLink, Avatar, Icon, IntentBadge, PillGroup, CreatePlanDialog, PolaroidBoard],
   styleUrl: './plans.css',
   templateUrl: './plans.html',
 })
@@ -57,6 +59,9 @@ export class Plans {
   protected readonly visible = computed(() =>
     this.store.plans().filter((p) => !this.store.blocked().includes(p.hostId) && (this.filter() === 'all' || p.intent === this.filter()) && (this.sizeFilter() === 'all' || sizeOf(p.capacity) === this.sizeFilter())),
   )
+
+  // Dibujo de la tarjeta cuando el plan no tiene foto
+  protected readonly asciiFor = (i: Intent) => ASCII_BY_INTENT[i]
 
   protected setFilter(next: Intent | 'all') {
     runListTransition(this.appRef, () => this.filter.set(next))

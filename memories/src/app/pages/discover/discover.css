@@ -136,3 +136,50 @@
   .tune-btn:hover { transform: rotate(45deg); }
   .tune-btn:hover > app-icon { transform: rotate(-45deg); }
 }
+
+/* ---------- Intereses en común que flotan junto a la tarjeta ---------- */
+.float-tags {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+@media (min-width: 900px) {
+  .float-tags { display: block; }
+}
+
+.float-tag {
+  position: absolute;
+  padding: 0.3rem 0.85rem 0.35rem;
+  border-radius: 999px;
+  font-size: 1.3rem;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--intent-c);
+  background: var(--color-surface);
+  box-shadow: inset 0 0 0 1.5px var(--intent-c), 3px 3px 0 var(--intent-soft);
+  animation:
+    tag-in 520ms var(--ease-out) backwards,
+    tag-float 5.5s var(--ease-in-out) infinite alternate;
+  animation-delay: calc(260ms + var(--i) * 110ms), calc(var(--i) * -1.4s);
+}
+
+.float-tag[data-slot="0"] { top: 14%; right: calc(100% + 0.9rem); rotate: -6deg; }
+.float-tag[data-slot="1"] { top: 26%; left: calc(100% + 0.9rem); rotate: 5deg; }
+.float-tag[data-slot="2"] { top: 52%; right: calc(100% + 1.6rem); rotate: 4deg; }
+.float-tag[data-slot="3"] { top: 64%; left: calc(100% + 1.4rem); rotate: -5deg; }
+
+@keyframes tag-in {
+  from { opacity: 0; scale: 0.6; }
+}
+
+@keyframes tag-float {
+  from { translate: 0 -5px; }
+  to { translate: 0 6px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .float-tag { animation: none; }
+}

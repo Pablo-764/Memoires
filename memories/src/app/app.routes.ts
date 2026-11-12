@@ -25,5 +25,5 @@ export const routes: Routes = [
       { path: 'ajustes', loadComponent: () => import('./pages/settings/settings').then((m) => m.Settings) },
     ],
   },
-  { path: '**', redirectTo: '' },
+  { path: '**', loadComponent: () => import('./pages/not-found/not-found').then((m) => m.NotFound) },
 ]

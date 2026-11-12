@@ -8,17 +8,25 @@
 
 @import "@fontsource-variable/caveat";
 
+@import "@fontsource/space-mono/400.css";
+
 /* Sistema de diseño de mémoires
    - Títulos en Syne ExtraBold: ancha, geométrica y con rasgos raros; da la voz atrevida.
    - Palabras destacadas en la cursiva de Fraunces con "wonk": contraste serif dentro del título.
    - Texto en Space Grotesk: grotesca con detalles excéntricos pero muy legible.
-   Las tres son libres (SIL OFL) y están en ffonts.net; aquí se instalan desde Fontsource.
-   - Paleta armada en OKLCH con teoría del color:
-     * Base complementaria: papel cálido (tono 85) contra azul cianotipo (tono 256).
-     * Intenciones en tétrada (pareja 5, amistad 68, plan 178, pasatiempo 298) con la
-       misma luminosidad y croma, para que ninguna pese más que otra.
-     * Neutros teñidos hacia el azul; todos los textos pasan 4.5:1 y los bordes 3:1
-       en ambos temas. */
+   - Arte ASCII en Space Mono, de la misma familia que Space Grotesk.
+   Las cuatro son libres (SIL OFL) y se instalan desde Fontsource.
+   - Paleta en OKLCH: cada tema tiene su propia pareja y reparte 60-30-10
+     (60 % base, 30 % superficies y texto, 10 % acento).
+     * Claro: beige (tono 80) con violeta y lila (tono 300). Son complementarios en el
+       círculo de pintor; el beige casi no tiene croma, así que el violeta resalta sin
+       gritar. El texto es violeta muy oscuro.
+     * Oscuro: morado (tono 300) con naranja (tono 55), dos vértices de una tríada con
+       el máximo contraste de temperatura. El texto es blanco con un toque de naranja.
+     * Los dos temas comparten el tono 300, así la marca se reconoce al cambiar.
+     * Intenciones en hexada (pareja 355, amistad 95, plan 175, pasatiempo 245) con la
+       misma luz y croma; solo en piezas pequeñas: chips, hilo, cinta, tramado.
+     * Todo texto pasa 4.5:1 y los bordes 3:1 en ambos temas. */
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -27,37 +35,45 @@
   --font-serif: "Fraunces Variable", ui-serif, Georgia, serif;
   --font-sans: "Space Grotesk Variable", ui-sans-serif, system-ui, sans-serif;
   --font-hand: "Caveat Variable", "Segoe Print", cursive;
+  /* Solo para el arte ASCII, nunca para texto de lectura */
+  --font-mono: "Space Mono", ui-monospace, "Cascadia Mono", monospace;
 
-  --color-ink: #13202f;
-  --color-ink-soft: #3c4958;
-  --color-ink-mute: #5a6471;
-  --color-mist: #f7f3ea;
-  --color-surface: #fffefb;
-  --color-raised: #fcf9f2;
-  --color-line: #e4dfd4;
-  --color-line-strong: #938b7d;
+  /* Base beige y texto violeta muy oscuro */
+  --color-ink: #2e1f46;
+  --color-ink-soft: #524569;
+  --color-ink-mute: #635975;
+  --color-mist: #f7f2e8;
+  --color-surface: #fefcf8;
+  --color-raised: #fbf6ef;
+  --color-line: #e6ded3;
+  --color-line-strong: #8b7e6d;
 
   /* Acción principal y su texto */
-  --color-accent: #1b5296;
-  --color-accent-hover: #2a63ab;
+  --color-accent: #6e3ead;
+  --color-accent-hover: #5c2f95;
   --color-on-accent: #ffffff;
+  /* Selección y fondos suaves del acento */
+  --color-accent-soft: #ede5fe;
+  /* Decoración sin intención: cinta, hilo, ilustraciones */
+  --color-lila: #d2c0f5;
 
-  /* Superficie nocturna fija (panel, sección de seguridad, Lucidité) */
-  --color-night: #0e2743;
-  --color-night-soft: #1d3753;
+  /* Bloque destacado (panel, Lucidité) y sección de seguridad */
+  --color-night: #e4d9fd;
+  --color-night-soft: #dbcef8;
+  --color-safe: #ede5fe;
 
   /* Colores de intención */
-  --color-romance: #9f3b59;
-  --color-romance-soft: #ffe5eb;
-  --color-friend: #9a5600;
-  --color-friend-soft: #ffebd6;
-  --color-plan: #007b63;
-  --color-plan-soft: #d7f7ee;
-  --color-hobby: #6e4ea5;
-  --color-hobby-soft: #f1eaff;
+  --color-romance: #93506c;
+  --color-romance-soft: #fdeaf1;
+  --color-friend: #7a681c;
+  --color-friend-soft: #f5f0e0;
+  --color-plan: #0d7a66;
+  --color-plan-soft: #e2f5ef;
+  --color-hobby: #346e9c;
+  --color-hobby-soft: #e4f2fe;
 
-  --color-danger: #af2c1f;
-  --color-danger-soft: #ffe6e1;
+  --color-danger: #af2b25;
+  --color-danger-soft: #ffebe8;
 
   --radius-card: 12px;
   --radius-field: 10px;
@@ -66,43 +82,48 @@
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
   --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
 
-  --shadow-lift: 0 1px 2px rgb(16 32 46 / 0.05), 0 10px 28px -14px rgb(16 32 46 / 0.2);
-  --shadow-float: 0 2px 6px rgb(16 32 46 / 0.08), 0 28px 56px -24px rgb(16 32 46 / 0.38);
+  /* Sombras teñidas de violeta, nunca negras */
+  --shadow-lift: 0 1px 2px rgb(46 31 70 / 0.06), 0 10px 28px -14px rgb(46 31 70 / 0.22);
+  --shadow-float: 0 2px 6px rgb(46 31 70 / 0.09), 0 28px 56px -24px rgb(46 31 70 / 0.4);
 }
 
-/* Modo nocturno: mismos nombres, otros valores */
+/* Modo nocturno: morado con naranja, mismos nombres */
 .dark {
   color-scheme: dark;
-  --color-ink: #e6ecf3;
-  --color-ink-soft: #bec8d4;
-  --color-ink-mute: #97a3b1;
-  --color-mist: #060f1a;
-  --color-surface: #0e1a28;
-  --color-raised: #162433;
-  --color-line: #243140;
-  --color-line-strong: #5b6b7d;
+  --color-ink: #f8ece3;
+  --color-ink-soft: #dac6b8;
+  --color-ink-mute: #b6a08f;
+  --color-mist: #110a1d;
+  --color-surface: #1a1228;
+  --color-raised: #251c36;
+  --color-line: #352c45;
+  --color-line-strong: #796e8e;
 
-  --color-accent: #bae1fb;
-  --color-accent-hover: #d3f0ff;
-  --color-on-accent: #0e2743;
+  --color-accent: #fc984c;
+  --color-accent-hover: #fdb57e;
+  --color-on-accent: #0c0519;
+  --color-accent-soft: rgb(252 152 76 / 0.14);
+  --color-lila: #a8673d;
 
-  --color-night: #081523;
-  --color-night-soft: #132334;
+  --color-night: #0c0519;
+  --color-night-soft: #170e27;
+  --color-safe: #321e24;
 
-  --color-romance: #ff9fb6;
-  --color-romance-soft: rgb(255 159 182 / 0.14);
-  --color-friend: #ffba67;
-  --color-friend-soft: rgb(255 186 103 / 0.14);
-  --color-plan: #59dac1;
-  --color-plan-soft: rgb(89 218 193 / 0.13);
-  --color-hobby: #cab0ff;
-  --color-hobby-soft: rgb(202 176 255 / 0.15);
+  --color-romance: #f2a3c1;
+  --color-romance-soft: rgb(242 163 193 / 0.14);
+  --color-friend: #d2bd70;
+  --color-friend-soft: rgb(210 189 112 / 0.14);
+  --color-plan: #71d3ba;
+  --color-plan-soft: rgb(113 211 186 / 0.14);
+  --color-hobby: #86c5fa;
+  --color-hobby-soft: rgb(134 197 250 / 0.14);
 
-  --color-danger: #ffa392;
-  --color-danger-soft: rgb(255 163 146 / 0.14);
+  --color-danger: #f68678;
+  --color-danger-soft: rgb(246 134 120 / 0.14);
 
-  --shadow-lift: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 10px 28px -14px rgb(0 0 0 / 0.6);
-  --shadow-float: 0 1px 0 rgb(255 255 255 / 0.05) inset, 0 28px 56px -24px rgb(0 0 0 / 0.75);
+  /* Sombra negra con un borde interior de luz naranja */
+  --shadow-lift: 0 0 0 1px rgb(252 152 76 / 0.04) inset, 0 10px 28px -14px rgb(0 0 0 / 0.6);
+  --shadow-float: 0 0 0 1px rgb(252 152 76 / 0.05) inset, 0 28px 56px -24px rgb(0 0 0 / 0.75);
 }
 
 @layer base {
@@ -133,12 +154,12 @@
     text-wrap: pretty;
   }
   :focus-visible {
-    outline: 2.5px solid var(--color-hobby);
+    outline: 2.5px solid var(--color-accent);
     outline-offset: 2px;
     border-radius: 8px;
   }
   ::selection {
-    background: var(--color-hobby-soft);
+    background: color-mix(in oklab, var(--color-accent) 22%, transparent);
   }
 }
 
@@ -313,7 +334,13 @@
 /* Superficies nocturnas con luz de atardecer: panel, seguridad, Lucidité */
 .night-glow {
   background: var(--color-night);
-  color: #e6ecf3;
+  color: var(--color-ink);
+}
+
+/* Sección de seguridad: lila claro o naranja suave */
+.safe-glow {
+  background: var(--color-safe);
+  color: var(--color-ink);
 }
 
 .dark .night-glow {
@@ -331,6 +358,17 @@ html.theme-switching::view-transition-new(root) {
   animation: none;
   mix-blend-mode: normal;
 }
+
+/* Mancha de tinta: la capa que se anima lleva la máscara; tamaño y posición los da theme.ts */
+html.ink-spread::view-transition-new(root),
+html.ink-retract::view-transition-old(root) {
+  -webkit-mask-image: var(--ink-blot);
+  mask-image: var(--ink-blot);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+html.ink-retract::view-transition-old(root) { z-index: 2; }
 
 @media (prefers-reduced-motion: reduce) {
   .modal-panel,
@@ -375,7 +413,7 @@ html {
 
 input,
 textarea {
-  caret-color: var(--color-hobby);
+  caret-color: var(--color-accent);
 }
 
 a {
@@ -447,18 +485,16 @@ html.vt-list::view-transition-new(*) { animation-duration: 300ms; }
 
 .logo-arch-a { fill: var(--color-accent); }
 
-.logo-arch-b { fill: var(--color-romance); mix-blend-mode: multiply; }
+.logo-arch-b { fill: var(--color-lila); mix-blend-mode: multiply; }
 
-.logo-accent { fill: var(--color-friend); }
+.logo-accent { fill: var(--color-ink); }
 
 .dark .logo-arch-b,
-.logo-bright .logo-arch-b { mix-blend-mode: screen; }
+.logo-bright .logo-arch-b { fill: #8a6fc0; mix-blend-mode: screen; }
 
-.logo-bright .logo-arch-a { fill: #8fc1e8; }
+.logo-bright .logo-arch-a { fill: #fc984c; }
 
-.logo-bright .logo-arch-b { fill: #ff9fb6; }
-
-.logo-bright .logo-accent { fill: #ffba67; }
+.logo-bright .logo-accent { fill: #f8ece3; }
 
 .logo-arch,
 .logo-accent { transform-box: fill-box; transition: transform 420ms var(--ease-out); }
@@ -532,14 +568,6 @@ html.vt-list::view-transition-new(*) { animation-duration: 300ms; }
   opacity: 1;
   translate: 0 0;
 }
-
-.step.reveal-armed:not(.is-in)::before { transform: scaleX(0); }
-
-.reveal-armed:not(.is-in) .chip-in { opacity: 0; scale: 0.82; }
-
-.reveal-armed:not(.is-in) .meet-left { translate: -46px 0; rotate: -10deg; }
-
-.reveal-armed:not(.is-in) .meet-right { translate: 46px 0; rotate: 10deg; }
 
 /* La sección nocturna se abre hasta ocupar todo el ancho */
 
@@ -715,7 +743,7 @@ html[data-vt-kind="pop"]::view-transition-new(page) { animation: pop-page-in 560
   height: 2.5rem;
   border-radius: 999px;
   color: #fff;
-  background: rgb(7 18 29 / 0.42);
+  background: rgb(17 10 29 / 0.45);
   backdrop-filter: blur(8px);
   transition: transform 160ms var(--ease-out), background-color 180ms ease;
 }
@@ -755,11 +783,9 @@ html[data-vt-kind="pop"]::view-transition-new(page) { animation: pop-page-in 560
 
 /* ---------- Planes ---------- */
 
-.meter-on-night span { color: rgb(255 255 255 / 0.75); }
+.meter-on-night span { color: var(--color-ink-soft); }
 
-.meter-on-night [role="progressbar"] { background: rgb(255 255 255 / 0.14); }
-
-.meter-on-night .bg-accent { background: #fff; }
+.meter-on-night [role="progressbar"] { background: color-mix(in oklab, var(--color-ink) 12%, transparent); }
 
 .pill-group {
   scrollbar-width: none;
@@ -973,7 +999,7 @@ html[data-vt-kind="pop"]::view-transition-new(page) { animation: pop-page-in 560
   --spot: 0;
   background-image: radial-gradient(
     380px circle at var(--cx, 50%) var(--cy, 0%),
-    color-mix(in oklab, var(--color-hobby) calc(var(--spot) * 9%), transparent),
+    color-mix(in oklab, var(--color-accent) calc(var(--spot) * 9%), transparent),
     transparent 70%
   );
   transition: --spot 420ms ease, transform 260ms var(--ease-out), box-shadow 260ms ease, background-color 220ms ease;
@@ -1169,8 +1195,8 @@ app-avatar {
 [data-name-fx="comic"] {
   font-weight: 800 !important;
   letter-spacing: -0.02em;
-  -webkit-text-stroke: 1.5px #13202f;
-  text-shadow: 3px 3px 0 #13202f;
+  -webkit-text-stroke: 1.5px #2e1f46;
+  text-shadow: 3px 3px 0 #2e1f46;
   rotate: -2deg;
 }
 
@@ -1238,17 +1264,54 @@ app-avatar {
 :root {
   --edge: var(--color-ink);
   --edge-soft: color-mix(in oklab, var(--color-ink) 82%, var(--color-mist));
-  --paper-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.08 0 0 0 0 0.12 0 0 0 0 0.18 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  --tape: rgb(255 214 120 / 0.62);
-  --marker: color-mix(in oklab, var(--color-friend) 38%, transparent);
+  /* Grano de papel: ruido SVG teñido de violeta, tenue */
+  --paper-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.18 0 0 0 0 0.12 0 0 0 0 0.27 0 0 0 .055 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  /* Papel de las polaroids y notas */
+  --polaroid: #fefcf8;
+  --polaroid-ink: #2e1f46;
+  --tape-alpha: 42%;
+  --marker: color-mix(in oklab, var(--color-accent) 24%, transparent);
+  /* Detalle del arte ASCII: lila en el claro */
+  --ascii-detail: color-mix(in oklab, var(--color-accent) 40%, var(--color-lila));
+  /* Sombra desplazada de las hojas: lila en el claro */
+  --offset: var(--color-lila);
+  /* Luz sobre el papel: un brillo lila arriba a la derecha y una sombra tibia abajo */
+  --paper-light:
+    radial-gradient(70% 55% at 100% 0%, color-mix(in oklab, var(--color-accent-soft) 85%, transparent), transparent 70%),
+    radial-gradient(60% 50% at 0% 100%, color-mix(in oklab, var(--color-lila) 22%, transparent), transparent 75%),
+    linear-gradient(180deg, rgb(255 255 255 / 0.35), transparent 40%);
 }
 
 .dark {
-  --edge: #4d6680;
-  --edge-soft: #384f66;
-  --tape: rgb(255 214 120 / 0.32);
-  --marker: color-mix(in oklab, var(--color-friend) 30%, transparent);
+  --edge: #5a4d72;
+  --edge-soft: #43385a;
+  /* En el oscuro el grano es aún más tenue y claro */
+  --paper-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.97 0 0 0 0 0.85 0 0 0 0 0.78 0 0 0 .03 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --polaroid: #251c36;
+  --polaroid-ink: #f8ece3;
+  --tape-alpha: 48%;
+  --marker: color-mix(in oklab, var(--color-accent) 30%, transparent);
+  --offset: color-mix(in oklab, var(--color-accent) 55%, var(--color-mist));
+  --ascii-detail: var(--color-ink-soft);
+  --paper-light:
+    radial-gradient(70% 55% at 100% 0%, rgb(252 152 76 / 0.09), transparent 70%),
+    radial-gradient(60% 50% at 0% 100%, rgb(12 5 25 / 0.55), transparent 75%),
+    linear-gradient(180deg, rgb(255 255 255 / 0.025), transparent 40%);
 }
+
+/* Cinta e hilo: color de la intención activa o el acento del tema. Se declaran también
+   en cada [data-intent] para que la variable se resuelva ahí y no en la raíz. */
+:root,
+[data-intent] {
+  --tape: color-mix(in oklab, var(--intent-c, var(--color-accent)) var(--tape-alpha), transparent);
+  --thread: var(--intent-c, var(--color-accent));
+}
+
+/* Cada intención fija su color para cinta, hilo y detalles */
+[data-intent="romance"] { --intent-c: var(--color-romance); --intent-soft: var(--color-romance-soft); }
+[data-intent="friend"] { --intent-c: var(--color-friend); --intent-soft: var(--color-friend-soft); }
+[data-intent="plan"] { --intent-c: var(--color-plan); --intent-soft: var(--color-plan-soft); }
+[data-intent="hobby"] { --intent-c: var(--color-hobby); --intent-soft: var(--color-hobby-soft); }
 
 .hand { font-family: var(--font-hand); font-weight: 600; letter-spacing: 0; }
 
@@ -1292,7 +1355,7 @@ app-avatar {
 /* Grano de papel debajo de la luz que sigue al cursor */
 :where(.card, .size-tile, .spot) {
   background-image:
-    radial-gradient(380px circle at var(--cx, 50%) var(--cy, 0%), color-mix(in oklab, var(--color-hobby) calc(var(--spot) * 9%), transparent), transparent 70%),
+    radial-gradient(380px circle at var(--cx, 50%) var(--cy, 0%), color-mix(in oklab, var(--color-accent) calc(var(--spot) * 9%), transparent), transparent 70%),
     var(--paper-grain);
 }
 
@@ -1446,12 +1509,12 @@ button[appchip][aria-pressed="true"] { box-shadow: 0 0 0 1.5px var(--edge), 3px 
   position: relative;
   display: block;
   padding: 1.1rem 1rem 0.95rem;
-  color: #13202f;
+  color: var(--note-ink);
   background:
-    linear-gradient(180deg, rgb(0 0 0 / 0.04), transparent 30%),
-    #ffe38f;
+    linear-gradient(180deg, rgb(46 31 70 / 0.05), transparent 30%),
+    var(--note-bg);
   rotate: -2deg;
-  box-shadow: 2px 3px 0 rgb(19 32 47 / 0.25), 0 12px 18px -14px rgb(19 32 47 / 0.6);
+  box-shadow: 2px 3px 0 rgb(46 31 70 / 0.22), 0 12px 18px -14px rgb(46 31 70 / 0.6);
   transition: rotate 320ms var(--ease-out), transform 260ms var(--ease-out);
 }
 
@@ -1469,7 +1532,7 @@ button[appchip][aria-pressed="true"] { box-shadow: 0 0 0 1.5px var(--edge), 3px 
   rotate: 4deg;
   background:
     repeating-linear-gradient(90deg, rgb(255 255 255 / 0.25) 0 4px, transparent 4px 9px),
-    rgb(160 200 255 / 0.6);
+    var(--tape);
 }
 
 .note-meter {
@@ -1478,10 +1541,10 @@ button[appchip][aria-pressed="true"] { box-shadow: 0 0 0 1.5px var(--edge), 3px 
   margin-top: 0.6rem;
   overflow: hidden;
   border-radius: 3px;
-  box-shadow: inset 0 0 0 1.5px #13202f;
+  box-shadow: inset 0 0 0 1.5px var(--note-ink);
 }
 
-.note-meter > span { background: #13202f; }
+.note-meter > span { background: var(--note-ink); }
 
 /* ---------- Barra inferior en móvil ---------- */
 .tabbar {
@@ -1519,11 +1582,6 @@ button[appchip][aria-pressed="true"] { box-shadow: 0 0 0 1.5px var(--edge), 3px 
 
 .print-edge { box-shadow: 0 0 0 1.5px var(--edge), 4px 4px 0 var(--edge); }
 
-/* ---------- Títulos que reaccionan al cursor ---------- */
-.pr-word { display: inline-block; white-space: nowrap; }
-
-.pr-ch { display: inline-block; transform-origin: 50% 80%; }
-
 /* ---------- Cambio de página como hoja de álbum ----------
    Al avanzar, la página nueva entra barriendo con el borde inclinado de una hoja;
    al regresar, lo mismo desde el otro lado. La anterior se oscurece un poco. */
@@ -1555,115 +1613,24 @@ html[data-vt-kind="pop"]::view-transition-old(page) { animation: page-under-back
 
 html[data-vt-kind="pop"]::view-transition-new(page) { animation: page-turn-back 620ms var(--ease-in-out) both; }
 
-/* ---------- Rastro de polaroids (portada) ---------- */
-.trail-layer {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.trail-card {
-  position: absolute;
-  width: 128px;
-  margin: 0;
-  padding: 7px 7px 5px;
-  background: #fffdf8;
-  box-shadow: 0 1px 0 rgb(0 0 0 / 0.08), 0 16px 26px -14px rgb(19 32 47 / 0.6);
-  will-change: transform, opacity;
-}
-
-.trail-card img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; }
-
-.trail-card figcaption {
-  padding: 4px 2px 0;
-  font-family: var(--font-hand);
-  font-size: 1.05rem;
-  font-weight: 600;
-  line-height: 1;
-  color: #13202f;
-}
-
-/* ---------- Cómo funciona: páginas del álbum que se apilan ---------- */
-.album-page {
-  position: sticky;
-  top: calc(5.5rem + var(--i) * 1.4rem);
-  margin-bottom: 2.2rem;
-  padding: 2.2rem 2rem;
-  border-radius: 14px;
-  background:
-    linear-gradient(90deg, transparent 30px, color-mix(in oklab, var(--color-romance) 40%, transparent) 30px 31.5px, transparent 31.5px),
-    repeating-linear-gradient(180deg, transparent 0 31px, color-mix(in oklab, var(--color-accent) 10%, transparent) 31px 32px),
-    var(--paper-grain),
-    var(--color-surface);
-  box-shadow: 0 0 0 1.5px var(--edge), 6px 6px 0 var(--edge);
-  rotate: calc((var(--i) - 1) * 0.8deg);
-}
-
-.album-page > :first-child { padding-left: 1.2rem; }
-
-@supports (animation-timeline: view()) {
-  .album-page {
-    animation: album-in linear both;
-    animation-timeline: view();
-    animation-range: entry 0% entry 70%;
-  }
-}
-
-@keyframes album-in {
-  from { opacity: 0; transform: translateY(60px) rotate(calc((var(--i) - 1) * 3deg)); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .album-page { animation: none; rotate: none; }
-}
-
 /* =====================================================================
-   Color: ocho tintas repartidas en el círculo cromático (OKLCH), todas con
-   la misma luminosidad y croma para que ninguna domine. Cada una tiene
-   relleno, papel suave y tinta oscura para texto (4.5:1 o más en ambos temas).
-   Las secciones usan pares complementarios: su color y el opuesto del círculo.
+   Color por tema (60-30-10)
+   Claro: hojas beige con cuadrícula lila; sombras desplazadas en lila y el
+   violeta solo para acción, selección y lo activo.
+   Oscuro: hojas moradas; sombras y acción en naranja.
+   Los colores de intención solo aparecen en piezas pequeñas.
    ===================================================================== */
-:root {
-  --c-coral: #f47d67; --c-coral-soft: #ffd5c7; --c-coral-deep: #933525;
-  --c-ambar: #da950b; --c-ambar-soft: #ffe0af; --c-ambar-deep: #814a00;
-  --c-lima: #89b645; --c-lima-soft: #d8f0bb; --c-lima-deep: #426400;
-  --c-menta: #00c296; --c-menta-soft: #b4f7df; --c-menta-deep: #006e4d;
-  --c-cielo: #00b8e7; --c-cielo-soft: #aef2ff; --c-cielo-deep: #00658b;
-  --c-indigo: #7c9fff; --c-indigo-soft: #d1e5ff; --c-indigo-deep: #3951a0;
-  --c-violeta: #c188ea; --c-violeta-soft: #f6d9ff; --c-violeta-deep: #6e3f8d;
-  --c-rosa: #ec79a9; --c-rosa-soft: #ffd2e9; --c-rosa-deep: #8d325c;
-}
+:root { --note-bg: var(--color-night); --note-ink: var(--color-ink); }
 
-.dark {
-  --c-coral: #f68771; --c-coral-soft: #411811; --c-coral-deep: #ffbcac;
-  --c-ambar: #de9c31; --c-ambar-soft: #382100; --c-ambar-deep: #f4c98e;
-  --c-lima: #91bb54; --c-lima-soft: #1d2c04; --c-lima-deep: #c0dd9d;
-  --c-menta: #23c79d; --c-menta-soft: #003021; --c-menta-deep: #93e5c8;
-  --c-cielo: #00bdea; --c-cielo-soft: #002d3d; --c-cielo-deep: #8cdffb;
-  --c-indigo: #85a6ff; --c-indigo-soft: #192446; --c-indigo-deep: #b8d0ff;
-  --c-violeta: #c690ec; --c-violeta-soft: #301c3e; --c-violeta-deep: #e3c1fe;
-  --c-rosa: #ee83af; --c-rosa-soft: #3e1728; --c-rosa-deep: #ffb9d4;
-}
+.dark { --note-bg: #fdb57e; --note-ink: #0c0519; }
 
-/* Color de cada sección y su complementario */
-.page-sheet { --page: var(--c-coral); --page-soft: var(--c-coral-soft); --page-deep: var(--c-coral-deep); --page-2: var(--c-cielo); --page-3: var(--c-ambar); }
-.page-sheet[data-page="conexiones"], .page-sheet[data-page="chat"] { --page: var(--c-rosa); --page-soft: var(--c-rosa-soft); --page-deep: var(--c-rosa-deep); --page-2: var(--c-menta); --page-3: var(--c-violeta); }
-.page-sheet[data-page="planes"] { --page: var(--c-menta); --page-soft: var(--c-menta-soft); --page-deep: var(--c-menta-deep); --page-2: var(--c-rosa); --page-3: var(--c-ambar); }
-.page-sheet[data-page="perfil"] { --page: var(--c-violeta); --page-soft: var(--c-violeta-soft); --page-deep: var(--c-violeta-deep); --page-2: var(--c-lima); --page-3: var(--c-cielo); }
-.page-sheet[data-page="persona"] { --page: var(--c-lima); --page-soft: var(--c-lima-soft); --page-deep: var(--c-lima-deep); --page-2: var(--c-violeta); --page-3: var(--c-coral); }
-.page-sheet[data-page="suscripcion"] { --page: var(--c-ambar); --page-soft: var(--c-ambar-soft); --page-deep: var(--c-ambar-deep); --page-2: var(--c-indigo); --page-3: var(--c-rosa); }
-.page-sheet[data-page="ajustes"] { --page: var(--c-cielo); --page-soft: var(--c-cielo-soft); --page-deep: var(--c-cielo-deep); --page-2: var(--c-coral); --page-3: var(--c-lima); }
-
-/* La sección es una hoja de color con cuadrícula, borde de tinta y sombra en su complementario */
 .page-sheet {
   position: relative;
   isolation: isolate;
   background:
-    radial-gradient(circle at 1px 1px, color-mix(in oklab, var(--page) 35%, transparent) 1px, transparent 1.6px) 0 0 / 24px 24px,
+    var(--paper-light),
     var(--paper-grain),
-    color-mix(in oklab, var(--page-soft) 94%, transparent);
+    var(--color-mist);
   transition: background-color 400ms ease;
 }
 
@@ -1671,11 +1638,11 @@ html[data-vt-kind="pop"]::view-transition-new(page) { animation: page-turn-back 
   .page-sheet {
     min-height: calc(100dvh - 2rem);
     border-radius: 18px;
-    box-shadow: 0 0 0 1.5px var(--edge), 8px 8px 0 var(--page-2);
+    box-shadow: 0 0 0 1.5px var(--edge), 8px 8px 0 var(--offset);
   }
 }
 
-/* Stickers de la hoja: figuras planas en tres colores que se mecen */
+/* Stickers de la hoja: figuras planas en la pareja del tema que se mecen */
 .sheet-sticker { position: absolute; z-index: -1; pointer-events: none; }
 
 .sheet-star {
@@ -1683,7 +1650,7 @@ html[data-vt-kind="pop"]::view-transition-new(page) { animation: page-turn-back 
   right: 1.4rem;
   width: 4.2rem;
   height: 4.2rem;
-  background: var(--page-3);
+  background: var(--offset);
   clip-path: polygon(50% 0, 61% 33%, 96% 35%, 68% 56%, 79% 91%, 50% 70%, 21% 91%, 32% 56%, 4% 35%, 39% 33%);
   animation: sticker-wobble 6s var(--ease-in-out) infinite alternate;
 }
@@ -1693,7 +1660,7 @@ html[data-vt-kind="pop"]::view-transition-new(page) { animation: page-turn-back 
   right: 5.2rem;
   width: 5.5rem;
   height: 1.6rem;
-  background: var(--page-2);
+  background: var(--color-accent);
   -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 88 24'%3E%3Cpath d='M3 14c9-12 14 10 23 0s14 10 23 0 14 10 23 0 9 6 13 2' fill='none' stroke='black' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E") 0 0 / 100% 100%;
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 88 24'%3E%3Cpath d='M3 14c9-12 14 10 23 0s14 10 23 0 14 10 23 0 9 6 13 2' fill='none' stroke='black' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E") 0 0 / 100% 100%;
   animation: sticker-wobble 5s var(--ease-in-out) infinite alternate-reverse;
@@ -1705,8 +1672,8 @@ html[data-vt-kind="pop"]::view-transition-new(page) { animation: page-turn-back 
   width: 3rem;
   height: 3rem;
   border-radius: 50%;
-  border: 5px solid var(--page);
-  box-shadow: 6px 6px 0 var(--page-3);
+  border: 5px solid var(--color-accent);
+  box-shadow: 6px 6px 0 var(--offset);
 }
 
 @keyframes sticker-wobble {
@@ -1714,59 +1681,37 @@ html[data-vt-kind="pop"]::view-transition-new(page) { animation: page-turn-back 
   to { transform: rotate(10deg) scale(1.04); }
 }
 
-/* Títulos con resaltador del color de la sección y subtítulo en su tinta */
-.page-sheet h1:not([data-name-fx], .no-mark) { --marker: color-mix(in oklab, var(--page) 55%, transparent); }
+/* Subtítulo de cada sección en la tinta suave */
+.page-sheet h1 + p { color: var(--color-ink-soft); }
 
-.page-sheet h1 + p { color: var(--page-deep); }
-
-/* Tarjetas: cada una con sombra de un color distinto, en orden por el círculo */
-.page-sheet :is(ul, ol, .stagger) > .card:nth-child(6n + 1) { --edge-soft: var(--c-coral); }
-.page-sheet :is(ul, ol, .stagger) > .card:nth-child(6n + 2) { --edge-soft: var(--c-cielo); }
-.page-sheet :is(ul, ol, .stagger) > .card:nth-child(6n + 3) { --edge-soft: var(--c-lima); }
-.page-sheet :is(ul, ol, .stagger) > .card:nth-child(6n + 4) { --edge-soft: var(--c-violeta); }
-.page-sheet :is(ul, ol, .stagger) > .card:nth-child(6n + 5) { --edge-soft: var(--c-ambar); }
-.page-sheet :is(ul, ol, .stagger) > .card:nth-child(6n) { --edge-soft: var(--c-rosa); }
-
-.page-sheet :is(ul, ol, .stagger) > .card { box-shadow: 0 0 0 1.5px var(--edge), 5px 5px 0 var(--edge-soft); }
+/* Tarjetas: sombra desplazada en la pareja; al pasar el cursor toma el acento */
+.page-sheet :is(ul, ol, .stagger) > .card { box-shadow: 0 0 0 1.5px var(--edge), 5px 5px 0 var(--offset); }
 
 @media (hover: hover) and (pointer: fine) {
-  .page-sheet :is(ul, ol, .stagger) > .card.lift:hover { box-shadow: 0 0 0 1.5px var(--edge), 9px 9px 0 var(--edge-soft); }
+  .page-sheet :is(ul, ol, .stagger) > .card.lift:hover { box-shadow: 0 0 0 1.5px var(--edge), 9px 9px 0 var(--color-accent); }
 }
 
-/* Botón principal: tinta azul con sombra en el color de la sección */
-.page-sheet .btn-primary { box-shadow: 0 0 0 1.5px var(--edge), 4px 4px 0 var(--page); }
+.page-sheet .btn-primary { box-shadow: 0 0 0 1.5px var(--edge), 4px 4px 0 var(--offset); }
 
 @media (hover: hover) and (pointer: fine) {
-  .page-sheet .btn-primary:hover:not(:disabled, :active) { box-shadow: 0 0 0 1.5px var(--edge), 6px 6px 0 var(--page); }
+  .page-sheet .btn-primary:hover:not(:disabled, :active) { box-shadow: 0 0 0 1.5px var(--edge), 6px 6px 0 var(--offset); }
 }
 
-/* Chips de intereses: cada uno con su color; el elegido se rellena */
-button[appchip]:nth-child(8n + 1) { --chip: var(--c-coral); }
-button[appchip]:nth-child(8n + 2) { --chip: var(--c-ambar); }
-button[appchip]:nth-child(8n + 3) { --chip: var(--c-lima); }
-button[appchip]:nth-child(8n + 4) { --chip: var(--c-menta); }
-button[appchip]:nth-child(8n + 5) { --chip: var(--c-cielo); }
-button[appchip]:nth-child(8n + 6) { --chip: var(--c-indigo); }
-button[appchip]:nth-child(8n + 7) { --chip: var(--c-violeta); }
-button[appchip]:nth-child(8n) { --chip: var(--c-rosa); }
-
-button[appchip]:not([aria-pressed="true"]) { box-shadow: inset 0 0 0 1.5px var(--chip) !important; }
+/* Chips de intereses: borde visible; el elegido se rellena con el acento */
+button[appchip]:not([aria-pressed="true"]) { box-shadow: inset 0 0 0 1.5px var(--color-line-strong) !important; }
 
 button[appchip][aria-pressed="true"] {
-  background: var(--chip) !important;
-  color: #13202f !important;
-  box-shadow: 0 0 0 1.5px var(--edge), 3px 3px 0 var(--edge) !important;
+  background: var(--color-accent) !important;
+  color: var(--color-on-accent) !important;
+  box-shadow: 0 0 0 1.5px var(--edge), 3px 3px 0 var(--offset) !important;
 }
 
-/* ---------- Separadores de colores en la libreta ---------- */
-.nb-link:nth-child(1) { --tab: var(--c-coral); }
-.nb-link:nth-child(2) { --tab: var(--c-rosa); }
-.nb-link:nth-child(3) { --tab: var(--c-menta); }
-.nb-link:nth-child(4) { --tab: var(--c-violeta); }
+/* ---------- Separadores de la libreta ---------- */
+.nb-link { --tab: var(--offset); }
 
-.nb-link app-icon { color: var(--tab); }
+.nb-link.is-on { --tab: var(--color-accent); }
 
-.nb-link.is-on .nb-label { --marker: color-mix(in oklab, var(--tab) 55%, transparent); }
+.nb-link.is-on app-icon { color: var(--color-accent); }
 
 /* La pestaña sale por el borde derecho de la libreta, como un separador */
 .nb-link::after {
@@ -1780,7 +1725,7 @@ button[appchip][aria-pressed="true"] {
   border-radius: 0 8px 8px 0;
   background: var(--tab);
   box-shadow: 1.5px 0 0 var(--edge), 0 1.5px 0 var(--edge), 0 -1.5px 0 var(--edge);
-  transition: width 260ms var(--ease-out), right 260ms var(--ease-out);
+  transition: width 260ms var(--ease-out), right 260ms var(--ease-out), background-color 260ms ease;
 }
 
 .nb-link.is-on::after { right: -2.6rem; width: 1.6rem; }
@@ -1789,39 +1734,15 @@ button[appchip][aria-pressed="true"] {
   .nb-link:not(.is-on):hover::after { right: -2.35rem; width: 1.3rem; }
 }
 
-.tabbar-link:nth-child(1) { --tab: var(--c-coral); }
-.tabbar-link:nth-child(2) { --tab: var(--c-rosa); }
-.tabbar-link:nth-child(3) { --tab: var(--c-menta); }
-.tabbar-link:nth-child(4) { --tab: var(--c-violeta); }
+.tabbar-link.is-on { color: var(--color-accent); background: var(--color-accent-soft); }
 
-.tabbar-link app-icon { color: var(--tab); }
-
-.tabbar-link.is-on { background: color-mix(in oklab, var(--tab) 24%, transparent); }
-
-/* Fondo de palabras: cada fila con contorno de su color */
-.kt-outline .kt-row:nth-child(1) { -webkit-text-stroke-color: color-mix(in oklab, var(--c-coral) 30%, transparent); }
-.kt-outline .kt-row:nth-child(2) { -webkit-text-stroke-color: color-mix(in oklab, var(--c-cielo) 30%, transparent); }
-.kt-outline .kt-row:nth-child(3) { -webkit-text-stroke-color: color-mix(in oklab, var(--c-lima) 30%, transparent); }
-.kt-outline .kt-row:nth-child(4) { -webkit-text-stroke-color: color-mix(in oklab, var(--c-violeta) 30%, transparent); }
-.kt-outline .kt-row:nth-child(5) { -webkit-text-stroke-color: color-mix(in oklab, var(--c-ambar) 30%, transparent); }
-.kt-outline .kt-row:nth-child(6) { -webkit-text-stroke-color: color-mix(in oklab, var(--c-rosa) 30%, transparent); }
-.kt-outline .kt-row:nth-child(7) { -webkit-text-stroke-color: color-mix(in oklab, var(--c-menta) 30%, transparent); }
-
-/* Nota del plan: cambia de color con la sección */
-.sticky-note { background: linear-gradient(180deg, rgb(0 0 0 / 0.04), transparent 30%), #ffe38f; }
+/* Fondo de palabras: filas alternas en la pareja del tema */
+.kt-outline .kt-row:nth-child(odd) { -webkit-text-stroke-color: color-mix(in oklab, var(--color-accent) 26%, transparent); }
+.kt-outline .kt-row:nth-child(even) { -webkit-text-stroke-color: color-mix(in oklab, var(--offset) 60%, transparent); }
 
 @media (prefers-reduced-motion: reduce) {
   .sheet-star,
   .sheet-squiggle { animation: none; }
 }
 
-/* Portada e inicio de sesión también a color */
-.album-page:nth-child(3n + 1) { box-shadow: 0 0 0 1.5px var(--edge), 7px 7px 0 var(--c-coral); }
-.album-page:nth-child(3n + 2) { box-shadow: 0 0 0 1.5px var(--edge), 7px 7px 0 var(--c-cielo); }
-.album-page:nth-child(3n) { box-shadow: 0 0 0 1.5px var(--edge), 7px 7px 0 var(--c-lima); }
-
-.album-page:nth-child(3n + 1) > :first-child { color: var(--c-coral-deep); }
-.album-page:nth-child(3n + 2) > :first-child { color: var(--c-cielo-deep); }
-.album-page:nth-child(3n) > :first-child { color: var(--c-lima-deep); }
-
-.pb-area { box-shadow: 0 0 0 1.5px var(--edge), 8px 8px 0 var(--c-violeta) !important; }
+.pb-area { box-shadow: 0 0 0 1.5px var(--edge), 8px 8px 0 var(--offset) !important; }

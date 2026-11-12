@@ -2,7 +2,7 @@
   position: fixed;
   inset: 0;
   z-index: 49;
-  background: #060f1a73;
+  background: #110a1d73;
   transition: opacity 320ms ease;
   @starting-style { opacity: 0; }
 }

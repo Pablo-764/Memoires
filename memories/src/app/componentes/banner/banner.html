@@ -219,6 +219,12 @@
         <span class="bn-stars bn-stars-b cx-snow cx-snow-b"></span>
         <span class="bn-sweep"></span>
       }
+      @case ('garden') {
+        <ng-container [ngTemplateOutlet]="gardenTpl" [ngTemplateOutletContext]="{ $implicit: false }" />
+      }
+      @case ('garden-grow') {
+        <ng-container [ngTemplateOutlet]="gardenTpl" [ngTemplateOutletContext]="{ $implicit: true }" />
+      }
       @case ('anime') {
         <span class="bn-rays-diag bn-far" [style.--c]="color(1)"></span>
         <span class="bn-cloud bn-cloud-a bn-far" [style.--c]="color(0)"></span>
@@ -231,3 +237,11 @@
     }
   </div>
 }
+
+<ng-template #gardenTpl let-grow>
+  <div class="gd" [class.gd-grow]="grow" [style.--ascii-ink]="color(0)" [style.--ascii-accent]="color(1)" [style.--ascii-detail]="color(2)">
+    @for (g of garden; track $index) {
+      <app-ascii class="gd-piece" [piece]="g.piece" [style.left.%]="g.x" [style.bottom.%]="g.y" [style.--gd-s]="g.s" [style.--i]="$index" />
+    }
+  </div>
+</ng-template>
