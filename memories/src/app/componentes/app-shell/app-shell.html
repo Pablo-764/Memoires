@@ -6,7 +6,10 @@
   <app-sidebar [items]="nav()" [active]="activeIndex()" />
   <app-navbar />
 
-  <main id="contenido" tabindex="-1" class="vt-page mx-auto w-full max-w-5xl px-4 pb-32 pt-4 outline-none md:px-10 md:pb-12 md:pt-10">
+  <main id="contenido" tabindex="-1" class="vt-page page-sheet mx-auto w-full max-w-5xl px-4 pb-32 pt-6 outline-none md:my-4 md:px-10 md:pb-12 md:pt-10" [attr.data-page]="page()">
+    <span class="sheet-sticker sheet-star" aria-hidden="true"></span>
+    <span class="sheet-sticker sheet-squiggle" aria-hidden="true"></span>
+    <span class="sheet-sticker sheet-dot" aria-hidden="true"></span>
     <router-outlet />
   </main>
 

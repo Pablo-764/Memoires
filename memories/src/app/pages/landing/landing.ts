@@ -109,6 +109,11 @@ export class Landing {
     return i === this.previous() ? 'hero-photo is-previous' : 'hero-photo'
   }
 
+  // El logo de la portada lleva al inicio de la misma portada, nunca a la app
+  protected toTop() {
+    scrollTo({ top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' })
+  }
+
   protected scrollToSteps(e: Event) {
     e.preventDefault()
     const smooth = !window.matchMedia('(prefers-reduced-motion: reduce)').matches

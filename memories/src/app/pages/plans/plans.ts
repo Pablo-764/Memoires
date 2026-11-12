@@ -13,9 +13,14 @@ import { IntentBadge } from '../../componentes/intent-badge/intent-badge'
 import { PillGroup } from '../../directivas/pill-group'
 import { CreatePlanDialog } from '../../componentes/create-plan-dialog/create-plan-dialog'
 
+import { PolaroidBoard, type BoardItem } from '../../componentes/polaroid-board/polaroid-board'
+
+// Fotos para los planes que no traen la suya
+const FALLBACK = ['fotos/cafe.webp', 'fotos/correr.webp', 'fotos/juegos.webp', 'fotos/concierto.webp', 'fotos/biblioteca.webp']
+
 @Component({
   selector: 'app-plans',
-  imports: [NgTemplateOutlet, RouterLink, Avatar, Icon, IntentBadge, PillGroup, CreatePlanDialog],
+  imports: [NgTemplateOutlet, RouterLink, Avatar, Icon, IntentBadge, PillGroup, CreatePlanDialog, PolaroidBoard],
   styleUrl: './plans.css',
   templateUrl: './plans.html',
 })
@@ -37,6 +42,17 @@ export class Plans {
   protected readonly sizes = SIZE_ORDER
   protected readonly sizeInfo = PLAN_SIZES
   protected readonly audienceInfo = AUDIENCES
+
+  // Álbum: primero los planes propios y a los que te uniste; si no hay, los más recientes
+  protected readonly album = computed<BoardItem[]>(() => {
+    const all = this.store.plans().filter((p) => !this.store.blocked().includes(p.hostId))
+    const mine = all.filter((p) => p.hostId === 'me' || this.isJoined(p))
+    return (mine.length >= 3 ? mine : [...mine, ...all.filter((p) => !mine.includes(p))]).slice(0, 6).map((p, i) => ({
+      photo: p.photo?.src ?? FALLBACK[i % FALLBACK.length],
+      note: p.title,
+      tone: p.intent,
+    }))
+  })
 
   protected readonly visible = computed(() =>
     this.store.plans().filter((p) => !this.store.blocked().includes(p.hostId) && (this.filter() === 'all' || p.intent === this.filter()) && (this.sizeFilter() === 'all' || sizeOf(p.capacity) === this.sizeFilter())),

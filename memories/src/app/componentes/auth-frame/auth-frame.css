@@ -4,7 +4,7 @@
   padding: 2.4rem 1.9rem 1.9rem;
   border-radius: 14px;
   background: var(--paper-grain), var(--color-surface);
-  box-shadow: 0 0 0 1.5px var(--edge), 7px 7px 0 var(--edge);
+  box-shadow: 0 0 0 1.5px var(--edge), 7px 7px 0 var(--c-coral);
   rotate: -0.6deg;
 }
 
@@ -30,8 +30,8 @@
   background:
     radial-gradient(circle at 1px 1px, color-mix(in oklab, var(--color-ink) 14%, transparent) 1px, transparent 1.5px) 0 0 / 22px 22px,
     var(--paper-grain),
-    var(--color-raised);
-  box-shadow: 0 0 0 1.5px var(--edge), 7px 7px 0 var(--edge);
+    var(--c-cielo-soft);
+  box-shadow: 0 0 0 1.5px var(--edge), 7px 7px 0 var(--c-cielo);
 }
 
 .auth-board {

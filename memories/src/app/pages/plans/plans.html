@@ -15,6 +15,13 @@
   <button class="btn btn-primary" (click)="creating.set(true)"><app-icon name="calendar-plus" [size]="18" /> Crear plan</button>
 </div>
 
+<section class="mt-8" aria-label="Álbum de planes">
+  <p class="hand mb-3 text-[1.5rem] leading-tight text-ink-soft">tu álbum de planes: arrastra las fotos, son tuyas</p>
+  @for (k of [album().length]; track k) {
+    <app-polaroid-board [items]="album()" />
+  }
+</section>
+
 <div class="mt-6 flex flex-wrap items-end gap-x-6 gap-y-2">
 <div class="shape-bar" [appPillGroup]="filter()" role="group" aria-label="Filtrar planes">
   <span class="group-echo" aria-hidden="true"></span>

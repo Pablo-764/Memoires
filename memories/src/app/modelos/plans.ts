@@ -43,7 +43,7 @@ export const TIERS: Record<Tier, TierInfo> = {
     weeklyWords: 12000,
     filters: ['intent', 'city', 'age', 'interests'],
     decorations: 'some',
-    summary: 'El triple de matches y mensajes, más filtros y más de la mitad de los estilos de perfil.',
+    summary: 'El triple de matches y mensajes, más filtros y una buena parte de los estilos de perfil.',
   },
   lucidite: {
     name: 'Lucidité',
