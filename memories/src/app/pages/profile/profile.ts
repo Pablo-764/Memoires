@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms'
 import { Router, RouterLink } from '@angular/router'
 import { AppStore, type Profile as ProfileData } from '../../servicios/app-store'
 import { Celebrate } from '../../servicios/celebrate'
-import { BANNERS, EFFECTS, FRAMES, NAME_STYLES, bannerOf, canUse, effectOf, frameOf, groupsOf, nameStyleOf, type DecorTier } from '../../modelos/decor'
+import { BANNERS, EFFECTS, FRAMES, NAME_STYLES, THEMES, bannerOf, canUse, effectOf, frameOf, groupsOf, nameStyleOf, type DecorTier, type Theme } from '../../modelos/decor'
 import { fitImage } from '../../utilidades/image'
 import { CITIES, INTENTS, INTENT_ORDER, type Intent } from '../../modelos/intents'
 import { Avatar } from '../../componentes/avatar/avatar'
@@ -17,7 +17,7 @@ import { IntentPrefsEditor } from '../../componentes/intent-prefs/intent-prefs'
 import { InterestPicker } from '../../componentes/interest-picker/interest-picker'
 import { EMPTY_PREFS, GENDERS, GENDER_ORDER, usesGender, usesGroups, type IntentPrefs } from '../../modelos/plan-formats'
 
-type Tab = 'about' | 'banners' | 'frames' | 'effects' | 'names'
+type Tab = 'about' | 'themes' | 'banners' | 'frames' | 'effects' | 'names'
 
 @Component({
   selector: 'app-profile',
@@ -39,9 +39,12 @@ export class Profile {
   protected readonly bannerGroups = groupsOf(BANNERS)
   protected readonly frameGroups = groupsOf(FRAMES)
   protected readonly effectGroups = groupsOf(EFFECTS)
+  protected readonly themeGroups = groupsOf(THEMES)
+  protected readonly nameOf = nameStyleOf
 
   protected readonly tabs: { key: Tab; label: string; count?: number }[] = [
     { key: 'about', label: 'Sobre ti' },
+    { key: 'themes', label: 'Temas', count: THEMES.length },
     { key: 'banners', label: 'Fondos', count: BANNERS.length - 1 },
     { key: 'frames', label: 'Marcos', count: FRAMES.length - 1 },
     { key: 'effects', label: 'Efectos', count: EFFECTS.length - 1 },
@@ -54,6 +57,7 @@ export class Profile {
     { shape: 'pill', tone: 'friend' },
     { shape: 'drop', tone: 'plan' },
     { shape: 'ticket', tone: 'hobby' },
+    { shape: 'square', tone: 'accent' },
   ]
   protected readonly genderOrder = GENDER_ORDER
   protected readonly genderInfo = GENDERS
@@ -87,6 +91,20 @@ export class Profile {
   })
 
   private readonly saveBtn = viewChild<ElementRef<HTMLElement>>('saveBtn')
+
+  // Un tema se puede guardar si el plan incluye sus cuatro piezas
+  protected themeUsable(t: Theme) {
+    return [bannerOf(t.banner), frameOf(t.frame), effectOf(t.effect), nameStyleOf(t.name)].every((x) => this.usable(x))
+  }
+
+  protected themeActive(t: Theme) {
+    const d = this.draft()
+    return !d.customBanner && d.decoration === t.banner && d.frame === t.frame && d.effect === t.effect && d.nameStyle === t.name
+  }
+
+  protected applyTheme(t: Theme) {
+    this.patch({ decoration: t.banner, frame: t.frame, effect: t.effect, nameStyle: t.name, customBanner: undefined })
+  }
 
   protected usable(item: { tier: DecorTier }) {
     return canUse(this.store.tier(), item)

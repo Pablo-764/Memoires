@@ -177,6 +177,14 @@
   opacity: 0.7;
 }
 
+.fx-glyph {
+  display: block;
+  font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+  font-weight: 700;
+  line-height: 1;
+  text-shadow: 0 0 6px currentColor;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .fx,
   .fx-in { animation: none !important; }

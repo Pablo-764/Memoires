@@ -36,6 +36,7 @@ const TIMING: Record<string, [number, number]> = {
 export class Effect {
   readonly effect = input<string | undefined>('none')
   readonly count = input(12)
+  protected readonly glyphs = '01{}<>/=+*#;'
 
   protected readonly info = computed(() => effectOf(this.effect()))
   protected readonly particles = computed(() => {

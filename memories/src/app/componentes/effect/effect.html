@@ -14,7 +14,11 @@
       @if (info().icon; as icon) {
         <app-icon [name]="icon" [size]="p.size" [filled]="true" />
       } @else {
-        <span class="fx-shape" [class]="'fx-' + info().shape" [style.--z.px]="p.size"></span>
+        @if (info().shape === 'glyph') {
+          <span class="fx-glyph" [style.font-size.px]="p.size * 0.9">{{ glyphs[$index % glyphs.length] }}</span>
+        } @else {
+          <span class="fx-shape" [class]="'fx-' + info().shape" [style.--z.px]="p.size"></span>
+        }
       }
     </span>
   </span>

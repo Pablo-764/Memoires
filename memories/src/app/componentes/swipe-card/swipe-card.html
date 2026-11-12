@@ -27,7 +27,7 @@
     <div class="-mt-14 mb-3">
       <app-avatar [name]="person().name" [hue]="person().hue" [size]="104" [frame]="person().frame" class="ring-[5px] ring-surface" />
     </div>
-    <h2 class="flex items-center gap-2 text-[2.6rem] leading-none" [style.color]="name().color" [class.italic]="name().italic">
+    <h2 class="flex items-center gap-2 text-[2.6rem] leading-none" [style.color]="name().color" [class.italic]="name().italic" [attr.data-name-fx]="name().fx ?? null">
       {{ person().name }}, {{ person().age }}
       @if (person().verified) {
         <span role="img" aria-label="Perfil verificado" class="inline-flex text-hobby"><app-icon name="badge-check" [size]="22" /></span>
