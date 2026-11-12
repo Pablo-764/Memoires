@@ -1,7 +1,7 @@
 <ng-template #wall let-fill="fill">
   <div class="kt-wall" [class.kt-fill]="fill" [class.kt-outline]="!fill">
     @for (r of rows; track $index) {
-      <div class="kt-row" [style.--dir]="r.dir" [style.--tone]="r.tone">
+      <div #row class="kt-row" [style.--tone]="r.tone">
         <div class="kt-track" [style.animation-duration]="r.speed + 's'" [class.kt-reverse]="r.dir > 0">
           @for (copy of [0, 1]; track copy) {
             <span class="kt-run">
@@ -18,7 +18,13 @@
 </ng-template>
 
 <ng-container *ngTemplateOutlet="wall; context: { fill: false }" />
-<div class="kt-lens-mask">
-  <ng-container *ngTemplateOutlet="wall; context: { fill: true }" />
-</div>
-<div class="kt-lens"></div>
+
+<!-- Ventana de color: se mueve con el cursor y deja ver las mismas palabras rellenas.
+     Solo se crea con mouse; se desplaza con transform, sin repintar la página. -->
+@if (lens()) {
+  <div #lensBox class="kt-window">
+    <div #lensInner class="kt-window-inner">
+      <ng-container *ngTemplateOutlet="wall; context: { fill: true }" />
+    </div>
+  </div>
+}

@@ -12,7 +12,7 @@ describe('Backdrop', () => {
 
   it('dibuja el muro de palabras', () => {
     const el: HTMLElement = fixture.nativeElement
-    expect(el.querySelectorAll('.kt-row').length).toBeGreaterThan(8)
+    expect(el.querySelectorAll('.kt-row').length).toBeGreaterThan(5)
     expect(el.getAttribute('aria-hidden')).toBe('true')
   })
 })

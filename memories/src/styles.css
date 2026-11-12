@@ -6,6 +6,8 @@
 
 @import "@fontsource-variable/space-grotesk";
 
+@import "@fontsource-variable/caveat";
+
 /* Sistema de diseño de mémoires
    - Títulos en Syne ExtraBold: ancha, geométrica y con rasgos raros; da la voz atrevida.
    - Palabras destacadas en la cursiva de Fraunces con "wonk": contraste serif dentro del título.
@@ -24,6 +26,7 @@
   --font-display: "Syne Variable", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "Fraunces Variable", ui-serif, Georgia, serif;
   --font-sans: "Space Grotesk Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-hand: "Caveat Variable", "Segoe Print", cursive;
 
   --color-ink: #13202f;
   --color-ink-soft: #3c4958;
@@ -56,8 +59,8 @@
   --color-danger: #af2c1f;
   --color-danger-soft: #ffe6e1;
 
-  --radius-card: 24px;
-  --radius-field: 14px;
+  --radius-card: 12px;
+  --radius-field: 10px;
 
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
@@ -497,8 +500,8 @@ html.vt-list::view-transition-new(*) { animation-duration: 300ms; }
 }
 
 @keyframes photo-open {
-  from { clip-path: inset(100% 0 0 0 round 28px); }
-  to { clip-path: inset(0 0 0 0 round 28px); }
+  from { clip-path: inset(100% 0 0 0 round 10px); }
+  to { clip-path: inset(0 0 0 0 round 10px); }
 }
 
 /* Selector de intención: la píldora viaja y la foto se descubre */
@@ -546,8 +549,8 @@ html.vt-list::view-transition-new(*) { animation-duration: 300ms; }
 .photo-zoom { transition: transform 700ms var(--ease-out); }
 
 @media (hover: hover) and (pointer: fine) {
-  .lift:hover { transform: translateY(-4px); }
-  .card.lift:hover { box-shadow: inset 0 0 0 1px var(--color-line), var(--shadow-float); }
+  .lift:hover { transform: translate(-3px, -3px); rotate: 0deg; }
+  .card.lift:hover { box-shadow: 0 0 0 1.5px var(--edge), 7px 7px 0 var(--edge); }
   .lift:hover .photo-zoom { transform: scale(1.045); }
 }
 
@@ -1018,7 +1021,7 @@ app-avatar {
   .size-tile:hover,
   .spot:hover { --spot: 1; }
 
-  .card:hover:not(.lift) { box-shadow: inset 0 0 0 1px var(--color-line-strong); }
+  .card:hover:not(.lift) { box-shadow: 0 0 0 1.5px var(--edge), 5px 5px 0 var(--edge); }
 
   .btn-primary:hover:not(:disabled) {
     background-position: -30% 0;
@@ -1028,8 +1031,8 @@ app-avatar {
   .btn:hover:not(:disabled) app-icon { transform: rotate(-9deg) scale(1.14); }
 
   button[appchip]:hover:not([aria-pressed="true"]) {
-    transform: translateY(-2px);
-    box-shadow: inset 0 0 0 1.5px var(--color-ink-mute), 0 8px 18px -12px rgb(16 32 46 / 0.4);
+    transform: translate(-1px, -2px);
+    box-shadow: 0 0 0 1.5px var(--edge), 3px 3px 0 var(--edge);
   }
 
   .intent-tab:not(.is-on):hover::before { opacity: 1; scale: 1; }
@@ -1185,3 +1188,293 @@ app-avatar {
   [data-name-fx] { animation: none !important; }
   [data-name-fx="terminal"]::after { animation: none; }
 }
+
+/* =====================================================================
+   Álbum de recuerdos
+   La interfaz deja las tarjetas genéricas y se arma como un cuaderno:
+   papel con grano, tinta impresa con sombra desplazada, cinta adhesiva,
+   notas a mano, resaltador y ligeras inclinaciones de recorte.
+   ===================================================================== */
+:root {
+  --edge: var(--color-ink);
+  --edge-soft: color-mix(in oklab, var(--color-ink) 82%, var(--color-mist));
+  --paper-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.08 0 0 0 0 0.12 0 0 0 0 0.18 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --tape: rgb(255 214 120 / 0.62);
+  --marker: color-mix(in oklab, var(--color-friend) 38%, transparent);
+}
+
+.dark {
+  --edge: #4d6680;
+  --edge-soft: #384f66;
+  --tape: rgb(255 214 120 / 0.32);
+  --marker: color-mix(in oklab, var(--color-friend) 30%, transparent);
+}
+
+.hand { font-family: var(--font-hand); font-weight: 600; letter-spacing: 0; }
+
+@layer components {
+  .btn { border-radius: 10px; }
+
+  /* Botones de tinta: se hunden al presionar como un sello */
+  .btn-primary,
+  .btn-danger {
+    box-shadow: 0 0 0 1.5px var(--edge), 3px 3px 0 var(--edge);
+    transition: transform 140ms var(--ease-out), translate 260ms var(--ease-out), background-color 180ms ease, box-shadow 140ms var(--ease-out), background-position 0s;
+  }
+  .btn-primary:active:not(:disabled),
+  .btn-danger:active:not(:disabled) {
+    transform: translate(3px, 3px);
+    box-shadow: 0 0 0 1.5px var(--edge), 0 0 0 var(--edge);
+  }
+  .btn-ghost { box-shadow: inset 0 0 0 1.5px var(--edge-soft); }
+  .btn-soft { box-shadow: inset 0 0 0 1.5px var(--color-line-strong); }
+
+  @media (hover: hover) and (pointer: fine) {
+    .btn-primary:hover:not(:disabled, :active),
+    .btn-danger:hover:not(:disabled, :active) {
+      transform: translate(-1px, -1px);
+      box-shadow: 0 0 0 1.5px var(--edge), 5px 5px 0 var(--edge);
+    }
+    .btn-ghost:hover:not(:disabled) { box-shadow: inset 0 0 0 1.5px var(--edge), 3px 3px 0 var(--edge-soft); }
+  }
+
+  .field { border-radius: var(--radius-field); }
+  .field:focus { box-shadow: inset 0 0 0 2px var(--color-accent), 3px 3px 0 color-mix(in oklab, var(--color-accent) 35%, transparent); }
+
+  /* Tarjetas de papel impreso */
+  .card {
+    border-radius: var(--radius-card);
+    background-color: var(--color-surface);
+    box-shadow: 0 0 0 1.5px var(--edge-soft), 4px 4px 0 var(--edge-soft);
+  }
+}
+
+/* Grano de papel debajo de la luz que sigue al cursor */
+:where(.card, .size-tile, .spot) {
+  background-image:
+    radial-gradient(380px circle at var(--cx, 50%) var(--cy, 0%), color-mix(in oklab, var(--color-hobby) calc(var(--spot) * 9%), transparent), transparent 70%),
+    var(--paper-grain);
+}
+
+/* Recortes con ligera inclinación en las listas; se enderezan al pasar el cursor */
+:is(ul, ol, .stagger) > .card:nth-child(4n + 1) { rotate: -0.6deg; }
+:is(ul, ol, .stagger) > .card:nth-child(4n + 2) { rotate: 0.5deg; }
+:is(ul, ol, .stagger) > .card:nth-child(4n + 3) { rotate: -0.3deg; }
+:is(ul, ol, .stagger) > .card:nth-child(4n) { rotate: 0.7deg; }
+
+.card.lift { transition: transform 260ms var(--ease-out), rotate 360ms var(--ease-out), box-shadow 220ms var(--ease-out), --spot 420ms ease; }
+
+/* Cinta adhesiva sobre algunos recortes */
+:is(ul, ol) > .card:nth-child(3n + 2),
+.profile-preview { position: relative; }
+
+:is(ul, ol) > .card:nth-child(3n + 2)::after,
+.profile-preview::after,
+.sheet::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: 50%;
+  z-index: 5;
+  width: 74px;
+  height: 22px;
+  margin-left: -37px;
+  background:
+    repeating-linear-gradient(90deg, rgb(255 255 255 / 0.18) 0 4px, transparent 4px 9px),
+    var(--tape);
+  rotate: -3deg;
+  pointer-events: none;
+  -webkit-mask: linear-gradient(90deg, transparent 0, #000 3px calc(100% - 3px), transparent 100%);
+  mask: linear-gradient(90deg, transparent 0, #000 3px calc(100% - 3px), transparent 100%);
+}
+
+/* Títulos de página con trazo de resaltador que se dibuja al entrar */
+app-shell main h1:not([data-name-fx], .no-mark) {
+  width: fit-content;
+  background-image: linear-gradient(100deg, transparent 0.15em, var(--marker) 0.25em calc(100% - 0.2em), transparent calc(100% - 0.05em));
+  background-repeat: no-repeat;
+  background-position: 0 86%;
+  background-size: 100% 0.36em;
+  transition: background-size 900ms var(--ease-out) 200ms;
+  @starting-style { background-size: 0% 0.36em; }
+}
+
+/* El subtítulo bajo el título se escribe a mano */
+app-shell main h1 + p {
+  font-family: var(--font-hand);
+  font-size: 1.45rem;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: 0;
+  rotate: -1deg;
+  transform-origin: left;
+  color: var(--color-ink-soft);
+}
+
+/* Chips como etiquetas recortadas */
+button[appchip] { border-radius: 8px; }
+button[appchip]:nth-child(3n + 1) { rotate: -1.2deg; }
+button[appchip]:nth-child(3n + 2) { rotate: 0.8deg; }
+button[appchip][aria-pressed="true"] { box-shadow: 0 0 0 1.5px var(--edge), 3px 3px 0 var(--edge); }
+
+/* Tarjeta principal de Descubre: foto impresa */
+.swipe-card {
+  border-radius: 16px !important;
+  box-shadow: 0 0 0 1.5px var(--edge), 7px 7px 0 var(--edge) !important;
+}
+
+/* Hoja de diálogo con cinta */
+.sheet { box-shadow: 0 0 0 1.5px var(--edge), 7px 7px 0 var(--edge); }
+
+/* Avisos como notas */
+.toast-note { border-radius: 10px; box-shadow: 0 0 0 1.5px var(--edge), 4px 4px 0 var(--edge); }
+
+/* ---------- Cuaderno de la barra lateral ---------- */
+.notebook {
+  position: relative;
+  border-radius: 14px;
+  background:
+    linear-gradient(90deg, transparent 30px, color-mix(in oklab, var(--color-romance) 50%, transparent) 30px 31.5px, transparent 31.5px),
+    repeating-linear-gradient(180deg, transparent 0 33px, color-mix(in oklab, var(--color-accent) 13%, transparent) 33px 34px),
+    var(--paper-grain),
+    var(--color-surface);
+  box-shadow: 0 0 0 1.5px var(--edge), 5px 5px 0 var(--edge);
+}
+
+.dark .notebook {
+  background:
+    linear-gradient(90deg, transparent 30px, color-mix(in oklab, var(--color-romance) 35%, transparent) 30px 31.5px, transparent 31.5px),
+    repeating-linear-gradient(180deg, transparent 0 33px, color-mix(in oklab, var(--color-accent) 6%, transparent) 33px 34px),
+    var(--color-surface);
+}
+
+/* Perforaciones del cuaderno */
+.notebook::before {
+  content: "";
+  position: absolute;
+  left: 9px;
+  top: 18px;
+  bottom: 18px;
+  width: 12px;
+  background: radial-gradient(circle at 6px 50%, var(--color-mist) 0 4.5px, color-mix(in oklab, var(--edge) 40%, transparent) 4.5px 5.5px, transparent 6px) 0 0 / 12px 46px repeat-y;
+}
+
+.nb-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.6rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.97rem;
+  color: var(--color-ink-mute);
+  transition: color 180ms ease;
+}
+
+.nb-link app-icon { transition: transform 320ms cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+.nb-link.is-on { color: var(--color-ink); }
+
+.nb-link.is-on .nb-label {
+  background-image: linear-gradient(100deg, transparent 0.1em, var(--marker) 0.2em calc(100% - 0.15em), transparent);
+  background-repeat: no-repeat;
+  background-position: 0 90%;
+  background-size: 100% 0.62em;
+  transition: background-size 600ms var(--ease-out);
+  @starting-style { background-size: 0% 0.62em; }
+}
+
+.nb-arrow {
+  width: 34px;
+  height: 14px;
+  margin-left: auto;
+  color: var(--color-romance);
+  stroke-dasharray: 60;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 600ms var(--ease-out) 150ms;
+  @starting-style { stroke-dashoffset: 60; }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .nb-link:not(.is-on):hover { color: var(--color-ink); }
+  .nb-link:not(.is-on):hover app-icon { transform: rotate(-10deg) scale(1.12); }
+}
+
+/* Nota adhesiva: siempre amarilla, con texto oscuro en ambos temas */
+.sticky-note {
+  position: relative;
+  display: block;
+  padding: 1.1rem 1rem 0.95rem;
+  color: #13202f;
+  background:
+    linear-gradient(180deg, rgb(0 0 0 / 0.04), transparent 30%),
+    #ffe38f;
+  rotate: -2deg;
+  box-shadow: 2px 3px 0 rgb(19 32 47 / 0.25), 0 12px 18px -14px rgb(19 32 47 / 0.6);
+  transition: rotate 320ms var(--ease-out), transform 260ms var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .sticky-note:hover { rotate: 0deg; transform: translateY(-2px); }
+}
+
+.note-tape {
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  width: 70px;
+  height: 22px;
+  margin-left: -35px;
+  rotate: 4deg;
+  background:
+    repeating-linear-gradient(90deg, rgb(255 255 255 / 0.25) 0 4px, transparent 4px 9px),
+    rgb(160 200 255 / 0.6);
+}
+
+.note-meter {
+  display: block;
+  height: 8px;
+  margin-top: 0.6rem;
+  overflow: hidden;
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 1.5px #13202f;
+}
+
+.note-meter > span { background: #13202f; }
+
+/* ---------- Barra inferior en móvil ---------- */
+.tabbar {
+  border-radius: 14px;
+  background: var(--paper-grain), var(--color-surface);
+  box-shadow: 0 0 0 1.5px var(--edge), 4px 4px 0 var(--edge);
+}
+
+.tabbar-link { color: var(--color-ink-mute); border-radius: 10px; transition: color 180ms ease; }
+
+.tabbar-link.is-on { color: var(--color-ink); }
+
+.tabbar-link.is-on span {
+  background-image: linear-gradient(transparent 55%, var(--marker) 55% 92%, transparent 92%);
+}
+
+/* ---------- Optimización ----------
+   Lo que está fuera de pantalla en listas largas no se pinta ni se anima. */
+.decor-tile,
+.theme-card,
+.name-tile,
+:is(ul, ol) > li.card {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 180px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :is(ul, ol, .stagger) > .card,
+  button[appchip],
+  .sticky-note { rotate: none !important; }
+}
+
+/* Foto de portada impresa y tarjetas flotantes con tinta */
+.print-photo { box-shadow: 0 0 0 1.5px var(--edge), 8px 8px 0 var(--edge); }
+
+.print-edge { box-shadow: 0 0 0 1.5px var(--edge), 4px 4px 0 var(--edge); }
