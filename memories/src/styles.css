@@ -1626,25 +1626,25 @@ html[data-vt-kind="pop"]::view-transition-new(page) { animation: page-turn-back 
    Las secciones usan pares complementarios: su color y el opuesto del círculo.
    ===================================================================== */
 :root {
-  --c-coral: #f47d67; --c-coral-soft: #ffe3da; --c-coral-deep: #933525;
-  --c-ambar: #da950b; --c-ambar-soft: #ffe9cc; --c-ambar-deep: #814a00;
-  --c-lima: #89b645; --c-lima-soft: #e4f3d3; --c-lima-deep: #426400;
-  --c-menta: #00c296; --c-menta-soft: #d0f7e8; --c-menta-deep: #006e4d;
-  --c-cielo: #00b8e7; --c-cielo-soft: #cdf4ff; --c-cielo-deep: #00658b;
-  --c-indigo: #7c9fff; --c-indigo-soft: #e0edff; --c-indigo-deep: #3951a0;
-  --c-violeta: #c188ea; --c-violeta-soft: #f6e5ff; --c-violeta-deep: #6e3f8d;
-  --c-rosa: #ec79a9; --c-rosa-soft: #ffe1ee; --c-rosa-deep: #8d325c;
+  --c-coral: #f47d67; --c-coral-soft: #ffd5c7; --c-coral-deep: #933525;
+  --c-ambar: #da950b; --c-ambar-soft: #ffe0af; --c-ambar-deep: #814a00;
+  --c-lima: #89b645; --c-lima-soft: #d8f0bb; --c-lima-deep: #426400;
+  --c-menta: #00c296; --c-menta-soft: #b4f7df; --c-menta-deep: #006e4d;
+  --c-cielo: #00b8e7; --c-cielo-soft: #aef2ff; --c-cielo-deep: #00658b;
+  --c-indigo: #7c9fff; --c-indigo-soft: #d1e5ff; --c-indigo-deep: #3951a0;
+  --c-violeta: #c188ea; --c-violeta-soft: #f6d9ff; --c-violeta-deep: #6e3f8d;
+  --c-rosa: #ec79a9; --c-rosa-soft: #ffd2e9; --c-rosa-deep: #8d325c;
 }
 
 .dark {
-  --c-coral: #f68771; --c-coral-soft: #341914; --c-coral-deep: #ffbcac;
-  --c-ambar: #de9c31; --c-ambar-soft: #2e1e06; --c-ambar-deep: #f4c98e;
-  --c-lima: #91bb54; --c-lima-soft: #1b260d; --c-lima-deep: #c0dd9d;
-  --c-menta: #23c79d; --c-menta-soft: #04281e; --c-menta-deep: #93e5c8;
-  --c-cielo: #00bdea; --c-cielo-soft: #012631; --c-cielo-deep: #8cdffb;
-  --c-indigo: #85a6ff; --c-indigo-soft: #182137; --c-indigo-deep: #b8d0ff;
-  --c-violeta: #c690ec; --c-violeta-soft: #281b32; --c-violeta-deep: #e3c1fe;
-  --c-rosa: #ee83af; --c-rosa-soft: #321823; --c-rosa-deep: #ffb9d4;
+  --c-coral: #f68771; --c-coral-soft: #411811; --c-coral-deep: #ffbcac;
+  --c-ambar: #de9c31; --c-ambar-soft: #382100; --c-ambar-deep: #f4c98e;
+  --c-lima: #91bb54; --c-lima-soft: #1d2c04; --c-lima-deep: #c0dd9d;
+  --c-menta: #23c79d; --c-menta-soft: #003021; --c-menta-deep: #93e5c8;
+  --c-cielo: #00bdea; --c-cielo-soft: #002d3d; --c-cielo-deep: #8cdffb;
+  --c-indigo: #85a6ff; --c-indigo-soft: #192446; --c-indigo-deep: #b8d0ff;
+  --c-violeta: #c690ec; --c-violeta-soft: #301c3e; --c-violeta-deep: #e3c1fe;
+  --c-rosa: #ee83af; --c-rosa-soft: #3e1728; --c-rosa-deep: #ffb9d4;
 }
 
 /* Color de cada sección y su complementario */
