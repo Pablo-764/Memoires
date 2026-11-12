@@ -14,7 +14,7 @@
         <span class="avatar-upload-hint"><app-icon name="camera" [size]="22" /></span>
         <input type="file" accept="image/*" class="sr-only" (change)="upload($event, 'photo')" />
       </label>
-      <h2 class="text-[2.2rem] leading-none" [style.color]="name().color" [class.italic]="name().italic">{{ draft().name || 'Tu nombre' }}, {{ draft().age }}</h2>
+      <h2 class="text-[2.2rem] leading-none" [style.color]="name().color" [class.italic]="name().italic" [attr.data-name-fx]="name().fx ?? null">{{ draft().name || 'Tu nombre' }}, {{ draft().age }}</h2>
       <p class="mt-1 text-sm text-ink-mute">{{ draft().city }}</p>
       <div class="mt-3 flex flex-wrap gap-1.5">
         @for (i of draft().intents; track i) {
@@ -174,6 +174,36 @@
               </div>
             </div>
           }
+          @case ('themes') {
+            <p class="max-w-[52ch] text-sm text-ink-mute">
+              Cada tema combina fondo, marco, efecto y estilo de nombre. Están inspirados en géneros y estéticas del cine, las series y la ciencia
+              ficción, no en obras concretas. Después puedes cambiar cualquier pieza por separado.
+            </p>
+            @for (g of themeGroups; track g.group) {
+              <h3 class="mb-3 mt-7 text-2xl">{{ g.group }}</h3>
+              <div class="theme-grid stagger">
+                @for (t of g.items; track t.key) {
+                  @let nm = nameOf(t.name);
+                  <button type="button" class="theme-card" [attr.aria-pressed]="themeActive(t)" (click)="applyTheme(t)">
+                    <span class="theme-scene">
+                      <app-banner [decoration]="t.banner" [preview]="true" />
+                      <app-effect [effect]="t.effect" [count]="7" />
+                      <span class="theme-avatar">
+                        <app-avatar [name]="draft().name || 'Tú'" [hue]="260" [size]="40" [frame]="t.frame" [photo]="draft().photo" />
+                      </span>
+                      @if (!themeUsable(t)) {
+                        <span class="decor-lock"><app-icon name="lock" [size]="14" /></span>
+                      }
+                    </span>
+                    <span class="theme-body">
+                      <span class="font-display block text-[1.35rem] leading-tight" [style.color]="nm.color" [class.italic]="nm.italic" [attr.data-name-fx]="nm.fx ?? null">{{ t.label }}</span>
+                      <span class="mt-1 block text-xs text-ink-mute">{{ t.idea }}</span>
+                    </span>
+                  </button>
+                }
+              </div>
+            }
+          }
           @case ('banners') {
             <label class="upload-tile">
               <app-icon name="image-plus" [size]="22" />
@@ -237,7 +267,7 @@
             <div class="grid gap-2 sm:grid-cols-2">
               @for (n of nameStyles; track n.key) {
                 <button type="button" class="name-tile" [attr.aria-pressed]="draft().nameStyle === n.key" (click)="patch({ nameStyle: n.key })">
-                  <span class="font-display text-[1.7rem]" [style.color]="n.color" [class.italic]="n.italic">{{ draft().name || 'Tu nombre' }}</span>
+                  <span class="font-display text-[1.7rem]" [style.color]="n.color" [class.italic]="n.italic" [attr.data-name-fx]="n.fx ?? null">{{ draft().name || 'Tu nombre' }}</span>
                   <span class="flex items-center gap-1.5 text-xs text-ink-mute">
                     {{ n.label }}
                     @if (!usable(n)) {

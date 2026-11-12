@@ -28,7 +28,7 @@
         </div>
       </div>
 
-      <h1 class="enter mt-4 flex flex-wrap items-center gap-3 text-[clamp(3rem,7vw,5rem)] leading-none" [style.color]="name().color" [class.italic]="name().italic">
+      <h1 class="enter mt-4 flex flex-wrap items-center gap-3 text-[clamp(3rem,7vw,5rem)] leading-none" [style.color]="name().color" [class.italic]="name().italic" [attr.data-name-fx]="name().fx ?? null">
         {{ v.name }}, {{ v.age }}
         @if (v.verified) {
           <span role="img" aria-label="Perfil verificado" class="inline-flex text-hobby"><app-icon name="badge-check" [size]="30" /></span>

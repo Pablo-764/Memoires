@@ -57,6 +57,82 @@
       @case ('pattern') {
         <span class="bn-pattern bn-far" [style.background]="info().css"></span>
       }
+      @case ('city') {
+        <span class="bn-glow bn-far" [style.--c]="color(1)"></span>
+        <span class="bn-skyline bn-skyline-back bn-far" [style.--c]="color(2)"></span>
+        <span class="bn-skyline bn-skyline-front bn-near" [style.--c]="color(0)"></span>
+        <div class="bn-layer bn-rain-tilt bn-near"><span class="bn-rain"></span></div>
+      }
+      @case ('hyper') {
+        <span class="bn-warp bn-far" [style.--c]="color(0)"></span>
+        <span class="bn-warp bn-warp-b bn-near" [style.--c]="color(1)"></span>
+        <span class="bn-core"></span>
+      }
+      @case ('code') {
+        @for (col of codeColumns; track $index) {
+          <span class="bn-code" [style.left.%]="col.left" [style.animation-duration.s]="col.speed" [style.animation-delay.s]="col.delay" [style.color]="color(0)">{{ col.text }}</span>
+        }
+        <span class="bn-scan"></span>
+      }
+      @case ('planet') {
+        <span class="bn-stars bn-stars-a bn-far"></span>
+        <span class="bn-planet bn-near" [style.--c]="color(0)" [style.--c2]="color(1)"></span>
+        <span class="bn-planet-ring bn-near" [style.--c]="color(2)"></span>
+        <span class="bn-shoot"></span>
+      }
+      @case ('portal') {
+        <span class="bn-vortex bn-far" [style.--c]="color(0)" [style.--c2]="color(1)"></span>
+        <span class="bn-vortex bn-vortex-b bn-near" [style.--c]="color(2)" [style.--c2]="color(1)"></span>
+        <span class="bn-hole"></span>
+      }
+      @case ('synth') {
+        <span class="bn-synth-sun bn-far" [style.--c]="color(0)" [style.--c2]="color(1)"></span>
+        <div class="bn-floor"><span class="bn-grid" [style.--c]="color(2)"></span></div>
+      }
+      @case ('crt') {
+        <span class="bn-bars bn-far"></span>
+        <span class="bn-static"></span>
+        <span class="bn-lines"></span>
+        <span class="bn-roll"></span>
+      }
+      @case ('spotlight') {
+        @for (i of [0, 1, 2]; track i) {
+          <span class="bn-beam" [class]="'bn-beam-' + i" [style.--c]="color(i)"></span>
+        }
+        <span class="bn-stage"></span>
+      }
+      @case ('noir') {
+        <span class="bn-blinds bn-far"></span>
+        <div class="bn-layer bn-rain-tilt bn-near"><span class="bn-rain"></span></div>
+        <span class="bn-vignette"></span>
+      }
+      @case ('film') {
+        <span class="bn-flicker"></span>
+        <span class="bn-scratch"></span>
+        <span class="bn-scratch bn-scratch-b"></span>
+        <span class="bn-vignette"></span>
+      }
+      @case ('comic') {
+        <span class="bn-burst bn-far" [style.--c]="color(2)"></span>
+        <span class="bn-halftone" [style.--c]="color(0)"></span>
+        <span class="bn-pop bn-near" [style.--c]="color(1)" [style.--ink]="color(0)">{{ popWord() }}</span>
+      }
+      @case ('fog') {
+        <span class="bn-moon bn-far" [style.--c]="color(0)"></span>
+        <span class="bn-hills bn-near"></span>
+        <span class="bn-mist"></span>
+        <span class="bn-mist bn-mist-b"></span>
+      }
+      @case ('castle') {
+        <span class="bn-sun bn-far" [style.--c]="color(0)" [style.--c2]="color(0)"></span>
+        <span class="bn-castle bn-near" [style.--c]="color(1)"></span>
+        <span class="bn-embers" [style.--c]="color(0)"></span>
+      }
+      @case ('anime') {
+        <span class="bn-rays-diag bn-far" [style.--c]="color(1)"></span>
+        <span class="bn-cloud bn-cloud-a bn-far" [style.--c]="color(0)"></span>
+        <span class="bn-cloud bn-cloud-b bn-near" [style.--c]="color(0)"></span>
+      }
     }
     @if (scene() !== 'static') {
       <span class="bn-grain"></span>

@@ -83,3 +83,31 @@
 .name-tile:active { transform: scale(0.98); }
 
 .name-tile[aria-pressed="true"] { box-shadow: inset 0 0 0 2.5px var(--color-ink); }
+
+/* Temas: tarjeta con escena viva, avatar con su marco y el nombre con su estilo */
+.theme-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(13.5rem, 1fr)); gap: 0.9rem; }
+
+.theme-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 22px;
+  text-align: left;
+  background: var(--color-surface);
+  box-shadow: inset 0 0 0 1.5px var(--color-line);
+  transition: transform 240ms var(--ease-out), box-shadow 220ms ease;
+}
+
+.theme-card:active { transform: scale(0.97); }
+
+.theme-card[aria-pressed="true"] { box-shadow: inset 0 0 0 2.5px var(--color-ink), var(--shadow-lift); }
+
+@media (hover: hover) and (pointer: fine) {
+  .theme-card:hover { transform: translateY(-4px); box-shadow: inset 0 0 0 1.5px var(--color-line-strong), var(--shadow-float); }
+}
+
+.theme-scene { position: relative; display: block; height: 6.5rem; overflow: hidden; }
+
+.theme-avatar { position: absolute; left: 0.9rem; bottom: 0.7rem; z-index: 2; display: block; }
+
+.theme-body { display: block; padding: 0.7rem 0.95rem 0.9rem; }

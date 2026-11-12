@@ -1062,3 +1062,126 @@ app-avatar {
   app-avatar,
   .intent-tab::before { transition: opacity 160ms ease; }
 }
+
+/* ---------- Nombres con efecto (temas) ----------
+   El color base llega en línea desde el estilo de nombre; aquí solo va el efecto. */
+[data-name-fx] { transition: none; }
+
+[data-name-fx="neon"] {
+  text-shadow: 0 0 4px currentColor, 0 0 14px currentColor, 0 0 28px color-mix(in oklab, currentColor 60%, transparent);
+  animation: name-flicker 4s steps(1) infinite;
+}
+
+@keyframes name-flicker {
+  0%, 18%, 22%, 62%, 64%, 100% { opacity: 1; }
+  20%, 63% { opacity: 0.55; }
+}
+
+[data-name-fx="hologram"] {
+  background-image: linear-gradient(100deg, currentColor 20%, #ff6fb5 40%, currentColor 55%, #b26bff 75%, currentColor 90%);
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: name-slide 3.5s linear infinite;
+}
+
+[data-name-fx="chrome"] {
+  background-image: linear-gradient(180deg, color-mix(in oklab, currentColor 30%, #fff) 0 45%, currentColor 50%, color-mix(in oklab, currentColor 70%, #000) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 0 color-mix(in oklab, currentColor 40%, transparent));
+}
+
+[data-name-fx="marquee"] {
+  background-image: linear-gradient(100deg, currentColor 30%, #fff6c9 48%, currentColor 66%);
+  background-size: 260% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 8px color-mix(in oklab, #ffd36b 60%, transparent));
+  animation: name-slide 2.8s var(--ease-in-out) infinite;
+}
+
+@keyframes name-slide {
+  from { background-position: 100% 0; }
+  to { background-position: -100% 0; }
+}
+
+[data-name-fx="terminal"] {
+  font-family: ui-monospace, "Cascadia Code", Consolas, monospace !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.03em;
+  text-shadow: 0 0 8px color-mix(in oklab, currentColor 60%, transparent);
+}
+
+[data-name-fx="terminal"]::after {
+  content: "_";
+  animation: name-caret 1s steps(1) infinite;
+}
+
+@keyframes name-caret { 50% { opacity: 0; } }
+
+[data-name-fx="glitch"] { animation: name-glitch 2.6s steps(1) infinite; }
+
+@keyframes name-glitch {
+  0%, 86%, 100% { text-shadow: none; translate: 0 0; }
+  88% { text-shadow: -3px 0 #ff2e93, 3px 0 #00e5ff; translate: 2px 0; }
+  90% { text-shadow: 3px 0 #ff2e93, -3px 0 #00e5ff; translate: -2px 1px; }
+  92% { text-shadow: -2px 0 #ff2e93, 2px 0 #00e5ff; translate: 1px -1px; }
+}
+
+[data-name-fx="noir"],
+[data-name-fx="film"],
+[data-name-fx="rune"],
+[data-name-fx="drama"] {
+  font-family: var(--font-serif) !important;
+  font-style: italic;
+  font-weight: 600 !important;
+  font-variation-settings: "SOFT" 0, "WONK" 1;
+}
+
+[data-name-fx="noir"] { text-shadow: 6px 6px 14px rgb(0 0 0 / 0.35); }
+
+[data-name-fx="film"] { animation: name-film 0.3s steps(2) infinite; }
+
+@keyframes name-film {
+  0% { opacity: 0.88; }
+  50% { opacity: 1; }
+}
+
+[data-name-fx="rune"] {
+  text-shadow: 0 0 10px color-mix(in oklab, currentColor 55%, transparent);
+  animation: name-glow 2.8s var(--ease-in-out) infinite alternate;
+}
+
+@keyframes name-glow {
+  from { text-shadow: 0 0 4px color-mix(in oklab, currentColor 40%, transparent); }
+  to { text-shadow: 0 0 16px color-mix(in oklab, currentColor 80%, transparent); }
+}
+
+[data-name-fx="drama"] { text-shadow: 0 3px 0 color-mix(in oklab, currentColor 25%, transparent), 0 10px 22px color-mix(in oklab, currentColor 35%, transparent); }
+
+[data-name-fx="comic"] {
+  font-weight: 800 !important;
+  letter-spacing: -0.02em;
+  -webkit-text-stroke: 1.5px #13202f;
+  text-shadow: 3px 3px 0 #13202f;
+  rotate: -2deg;
+}
+
+[data-name-fx="spooky"] {
+  text-shadow: 0 0 12px color-mix(in oklab, currentColor 60%, transparent);
+  animation: name-wobble 3.2s var(--ease-in-out) infinite alternate;
+}
+
+@keyframes name-wobble {
+  from { transform: skewX(-4deg) translateY(0); }
+  to { transform: skewX(4deg) translateY(-2px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-name-fx] { animation: none !important; }
+  [data-name-fx="terminal"]::after { animation: none; }
+}

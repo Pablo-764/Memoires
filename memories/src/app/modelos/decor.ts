@@ -4,7 +4,10 @@ import type { Tier } from './plans'
 export type DecorTier = 'free' | 'grand' | 'lucidite'
 
 // Escena animada que se dibuja encima del color base de cada fondo
-export type BannerScene = 'static' | 'mesh' | 'aurora' | 'stars' | 'galaxy' | 'sun' | 'flow' | 'waves' | 'rain' | 'rings' | 'pattern'
+export type BannerScene =
+  | 'static' | 'mesh' | 'aurora' | 'stars' | 'galaxy' | 'sun' | 'flow' | 'waves' | 'rain' | 'rings' | 'pattern'
+  // Escenas temáticas (solo la idea visual de cada género, sin obras concretas)
+  | 'city' | 'hyper' | 'code' | 'planet' | 'portal' | 'synth' | 'crt' | 'spotlight' | 'noir' | 'film' | 'comic' | 'fog' | 'castle' | 'anime'
 
 export interface Banner {
   key: string
@@ -36,7 +39,7 @@ export interface Frame {
 
 export type EffectDir = 'up' | 'down' | 'twinkle' | 'drift' | 'orbit' | 'burst' | 'float' | 'rain' | 'bubble' | 'flip'
 // Figura de la partícula cuando no lleva icono
-export type EffectShape = 'dot' | 'ring' | 'star' | 'petal' | 'confetti' | 'streamer' | 'streak' | 'glow' | 'balloon'
+export type EffectShape = 'dot' | 'ring' | 'star' | 'petal' | 'confetti' | 'streamer' | 'streak' | 'glow' | 'balloon' | 'glyph'
 
 export interface Effect {
   key: string
@@ -49,11 +52,15 @@ export interface Effect {
   tier: DecorTier
 }
 
+// Efecto animado del nombre (neón, holograma, terminal…)
+export type NameFx = 'neon' | 'hologram' | 'terminal' | 'chrome' | 'glitch' | 'marquee' | 'noir' | 'film' | 'comic' | 'spooky' | 'rune' | 'drama'
+
 export interface NameStyle {
   key: string
   label: string
   color: string | null
   italic?: boolean
+  fx?: NameFx
   tier: DecorTier
 }
 
@@ -147,6 +154,24 @@ export const BANNERS: Banner[] = [
   b('analogo-fuego', 'Análogo fuego', 'Armonías', 'flow', 'linear-gradient(115deg, #ff4d4d, #ff8a3d, #ffc23d, #ff8a3d, #ff4d4d)'),
   b('dividido', 'Complementario dividido', 'Armonías', 'mesh', 'linear-gradient(135deg, #2b1a5c, #4a2f9a)', ['#c8e83a', '#ffb03a', '#7a4ff0']),
   b('monocromo', 'Monocromo', 'Armonías', 'waves', 'linear-gradient(180deg, #bae1fb, #6ea8ec)', ['#ffffff88', '#1b5296', '#0e2743']),
+
+  // Cine, series y ciencia ficción: solo la idea de cada estética
+  b('ciudad-neon', 'Ciudad neón', 'Ciencia ficción', 'city', 'linear-gradient(180deg, #12002b, #2a0a4a 55%, #ff2e93)', ['#00e5ff', '#ff2e93', '#7a2cff']),
+  b('hiperespacio', 'Hiperespacio', 'Ciencia ficción', 'hyper', 'radial-gradient(circle at 50% 50%, #1b2a6b, #05061a 70%)', ['#bae1fb', '#ffffff']),
+  b('terminal', 'Terminal', 'Ciencia ficción', 'code', 'linear-gradient(180deg, #010d06, #02200f)', ['#3dff8a', '#b8ffd2']),
+  b('planeta', 'Planeta lejano', 'Ciencia ficción', 'planet', 'radial-gradient(120% 120% at 20% 0%, #1e1450, #05061a)', ['#ff9a5e', '#7a2cff', '#ffd9a8']),
+  b('portal', 'Portal', 'Ciencia ficción', 'portal', 'radial-gradient(circle, #0a2a1a, #02060f 75%)', ['#3dffb0', '#7a2cff', '#bafff0']),
+  b('ochentero', 'Ochentero', 'Series y programas', 'synth', 'linear-gradient(180deg, #120533, #4a0e5c 55%, #ff5fa2)', ['#ffd36b', '#ff2e93', '#00e5ff']),
+  b('tele-antigua', 'Tele de antes', 'Series y programas', 'crt', 'linear-gradient(180deg, #2a2a2a, #111)', ['#ffffff']),
+  b('en-vivo', 'En vivo', 'Series y programas', 'spotlight', 'radial-gradient(120% 90% at 50% 100%, #3a0f5c, #0b0420 70%)', ['#ffd36b', '#ff6fb5', '#6ee7ff']),
+  b('telenovela', 'Telenovela', 'Series y programas', 'mesh', 'linear-gradient(160deg, #3a0010, #8a0f2e)', ['#ff3d6e', '#ffb3c6', '#5a0018']),
+  b('cine-negro', 'Cine negro', 'Cine', 'noir', 'linear-gradient(160deg, #3a3a3a, #0c0c0c)', ['#ffffff']),
+  b('funcion', 'Función de medianoche', 'Cine', 'film', 'radial-gradient(120% 100% at 50% 40%, #c9a06a, #5a3a1a 80%)', ['#2a1a0a']),
+  b('vineta', 'Viñeta', 'Cine', 'comic', 'linear-gradient(135deg, #ffd23d, #ff7a3d)', ['#13202f', '#ff2e4d', '#ffffff']),
+  b('embrujada', 'Noche embrujada', 'Fantasía y terror', 'fog', 'linear-gradient(180deg, #1a0b2e, #3a1c4a 60%, #0b0614)', ['#d8ffe8', '#ffb347']),
+  b('reino', 'Reino encantado', 'Fantasía y terror', 'castle', 'linear-gradient(180deg, #2b1b4d, #a24b6a 60%, #ffb36b)', ['#ffd36b', '#1a0f2e']),
+  b('cielo-anime', 'Cielo de anime', 'Anime y caricatura', 'anime', 'linear-gradient(180deg, #2f8cff, #8ccfff 60%, #e6f6ff)', ['#ffffff', '#fff6c9']),
+  b('sabado', 'Sábado de caricaturas', 'Anime y caricatura', 'comic', 'linear-gradient(135deg, #6ee7ff, #b26bff)', ['#13202f', '#ffd23d', '#ffffff']),
 ]
 
 // Colores con versión para tema claro y nocturno: siempre se distinguen sobre la superficie
@@ -254,6 +279,18 @@ export const FRAMES: Frame[] = [
   f('analogo-fuego', 'Análogo fuego', 'Armonías', 'conic-gradient(#ff4d4d, #ff8a3d, #ffc23d, #ff8a3d, #ff4d4d)', { width: 0.09, anim: 'frame-spin' }),
   f('dividido', 'Complementario dividido', 'Armonías', 'conic-gradient(#7a4ff0, #c8e83a, #ffb03a, #7a4ff0)', { width: 0.09, anim: 'frame-spin-slow' }),
   f('monocromo', 'Monocromo', 'Armonías', 'conic-gradient(#0e2743, #1b5296, #6ea8ec, #bae1fb, #0e2743)', { width: 0.09, anim: 'frame-spin' }),
+
+  // Temáticos
+  f('neon-tubo', 'Tubo de neón', 'Temáticos', '#ff2e93', { width: 0.05, fx: 'glow' }),
+  f('hud', 'Visor', 'Temáticos', '#00e5ff', { width: 0.035, fx: 'double', accent: '#00e5ff' }),
+  f('fosforo', 'Fósforo', 'Temáticos', '#3dff8a', { width: 0.04, fx: 'ripple' }),
+  f('portal', 'Portal', 'Temáticos', 'conic-gradient(#3dffb0, #7a2cff, #3dffb0)', { width: 0.09, anim: 'frame-spin', fx: 'glow' }),
+  f('pelicula', 'Rollo de película', 'Temáticos', ld('#13202f', '#e6ecf3'), { width: 0.12, fx: 'dash', anim: 'frame-spin-slow' }),
+  f('vineta', 'Viñeta', 'Temáticos', '#13202f', { width: 0.09, fx: 'double', accent: '#ffd23d' }),
+  f('calabaza', 'Calabaza', 'Temáticos', '#ff8a1f', { width: 0.07, fx: 'glow' }),
+  f('runa', 'Runa', 'Temáticos', 'linear-gradient(135deg, #ffe7a8, #c9930f)', { width: 0.07, fx: 'sparkle', accent: '#ffd36b' }),
+  f('foco', 'Reflector', 'Temáticos', 'linear-gradient(135deg, #fff6c9, #ffd36b)', { width: 0.07, fx: 'shimmer' }),
+  f('ochentero', 'Ochentero', 'Temáticos', 'linear-gradient(135deg, #00e5ff, #ff2e93)', { width: 0.07, fx: 'glow', anim: 'frame-spin' }),
 ]
 
 const PASTEL = ['#ff9fb6', '#ffba67', '#59dac1', '#cab0ff']
@@ -318,9 +355,22 @@ export const EFFECTS: Effect[] = [
   e('idiomas', 'Idiomas', 'Pasatiempos', 'languages', 'drift', ['#ffffff', '#cab0ff']),
   e('estudio', 'Estudio', 'Pasatiempos', 'graduation-cap', 'up', ['#ffffff', '#93c6ff']),
   e('amistad', 'Amistad', 'Clásicos', 'handshake', 'float', ['#ffba67', '#ffffff']),
+
+  // Temáticos
+  e('codigo', 'Código', 'Temáticos', null, 'rain', ['#3dff8a', '#b8ffd2'], { shape: 'glyph' }),
+  e('fugaces', 'Estrellas fugaces', 'Temáticos', null, 'rain', ['#ffffff', '#bae1fb'], { shape: 'streak' }),
+  e('cohetes', 'Cohetes', 'Temáticos', 'rocket', 'up', ['#ffffff', '#ff9a5e']),
+  e('ovnis', 'Ovnis', 'Temáticos', 'ufo', 'drift', ['#3dffb0', '#bae1fb']),
+  e('fantasmas', 'Fantasmas', 'Temáticos', 'ghost', 'drift', ['#ffffffdd', '#d8ffe8dd']),
+  e('murcielagos', 'Murciélagos', 'Temáticos', 'bat', 'drift', ['#1a0b2e', '#3a1c4a']),
+  e('brasas', 'Brasas', 'Temáticos', null, 'up', ['#ffb347', '#ff6a1f', '#ffd36b'], { shape: 'glow' }),
+  e('palomitas', 'Palomitas', 'Temáticos', 'popcorn', 'flip', ['#fff6c9', '#ffffff']),
+  e('teles', 'Teles', 'Temáticos', 'tv', 'float', ['#ffffff', '#ffd36b']),
+  e('teatro', 'Teatro', 'Temáticos', 'masks', 'float', ['#ffd36b', '#ffffff']),
 ]
 
 const n = (key: string, label: string, color: string | null, tier: DecorTier = 'lucidite', italic = false): NameStyle => ({ key, label, color, tier, italic })
+const fx = (key: string, label: string, color: string, effect: NameFx, italic = false): NameStyle => ({ key, label, color, tier: 'lucidite', italic, fx: effect })
 
 // Colores de nombre en OKLCH: misma luminosidad en todos los tonos, uno por cada 25-30 grados del círculo
 export const NAME_STYLES: NameStyle[] = [
@@ -346,7 +396,68 @@ export const NAME_STYLES: NameStyle[] = [
   n('cielo-cursiva', 'Cielo cursiva', ld('#006da6', '#6ed0ff'), 'lucidite', true),
   n('coral-cursiva', 'Coral cursiva', ld('#a43c2f', '#ffa696'), 'lucidite', true),
   n('orquidea-cursiva', 'Orquídea cursiva', ld('#913f82', '#f4a6e3'), 'lucidite', true),
+
+  // Con efecto animado
+  fx('neon', 'Neón', ld('#d1006b', '#ff6fb5'), 'neon'),
+  fx('holograma', 'Holograma', ld('#0b7fa3', '#6ee7ff'), 'hologram'),
+  fx('terminal', 'Terminal', ld('#0a7a3a', '#3dff8a'), 'terminal'),
+  fx('cromo', 'Cromo', ld('#2a61b1', '#bae1fb'), 'chrome'),
+  fx('falla', 'Falla', ld('#13202f', '#e6ecf3'), 'glitch'),
+  fx('marquesina', 'Marquesina', ld('#995700', '#ffd36b'), 'marquee'),
+  fx('cine-negro', 'Cine negro', ld('#13202f', '#e6ecf3'), 'noir', true),
+  fx('sepia', 'Sepia', ld('#6e4a1f', '#e6c9a0'), 'film', true),
+  fx('vineta', 'Viñeta', '#ffd23d', 'comic'),
+  fx('embrujado', 'Embrujado', ld('#3f7a52', '#b8ffd2'), 'spooky'),
+  fx('runa', 'Runa', ld('#8a5a00', '#ffd36b'), 'rune', true),
+  fx('drama', 'Drama', ld('#9f1239', '#ff8fa8'), 'drama', true),
 ]
+
+// Temas: combinan fondo, marco, efecto y nombre de una sola vez.
+// Están inspirados en géneros y estéticas, nunca en obras, personajes ni marcas concretas.
+export interface Theme {
+  key: string
+  label: string
+  group: string
+  idea: string
+  banner: string
+  frame: string
+  effect: string
+  name: string
+}
+
+const t = (key: string, label: string, group: string, idea: string, banner: string, frame: string, effect: string, name: string): Theme => ({
+  key,
+  label,
+  group,
+  idea,
+  banner,
+  frame,
+  effect,
+  name,
+})
+
+export const THEMES: Theme[] = [
+  t('neon-nocturno', 'Neón nocturno', 'Ciencia ficción', 'Ciudades lluviosas con letreros de neón', 'ciudad-neon', 'neon-tubo', 'lluvia', 'neon'),
+  t('hiperespacio', 'Hiperespacio', 'Ciencia ficción', 'Naves que saltan entre estrellas', 'hiperespacio', 'hud', 'fugaces', 'holograma'),
+  t('terminal', 'Terminal', 'Ciencia ficción', 'Pantallas verdes y código que cae', 'terminal', 'fosforo', 'codigo', 'terminal'),
+  t('planeta', 'Planeta lejano', 'Ciencia ficción', 'Exploración de mundos con anillos', 'planeta', 'saturno', 'cohetes', 'cromo'),
+  t('portal', 'Portal', 'Ciencia ficción', 'Viajes en el tiempo y otras dimensiones', 'portal', 'portal', 'ovnis', 'falla'),
+  t('ochentero', 'Ochentero', 'Series y programas', 'Atardeceres de neón y cuadrícula infinita', 'ochentero', 'ochentero', 'destellos', 'cromo'),
+  t('tele-antigua', 'Tele de antes', 'Series y programas', 'Comedias de foro con risas grabadas', 'tele-antigua', 'tinta', 'teles', 'falla'),
+  t('en-vivo', 'En vivo', 'Series y programas', 'Concursos, reflectores y confeti', 'en-vivo', 'foco', 'confeti', 'marquesina'),
+  t('telenovela', 'Telenovela', 'Series y programas', 'Romances intensos y miradas dramáticas', 'telenovela', 'rubi', 'petalos', 'drama'),
+  t('cine-negro', 'Cine negro', 'Cine', 'Detectives, persianas y lluvia en blanco y negro', 'cine-negro', 'tinta', 'lluvia', 'cine-negro'),
+  t('funcion', 'Función de medianoche', 'Cine', 'Película vieja con grano y palomitas', 'funcion', 'pelicula', 'palomitas', 'sepia'),
+  t('vineta', 'Viñeta', 'Cine', 'Historietas de héroes con onomatopeyas', 'vineta', 'vineta', 'fuegos', 'vineta'),
+  t('embrujada', 'Noche embrujada', 'Fantasía y terror', 'Neblina, luna llena y algo que se mueve', 'embrujada', 'calabaza', 'fantasmas', 'embrujado'),
+  t('murcielagos', 'Medianoche gótica', 'Fantasía y terror', 'Castillos oscuros y alas en la noche', 'embrujada', 'noche', 'murcielagos', 'drama'),
+  t('reino', 'Reino encantado', 'Fantasía y terror', 'Castillos, magia y brasas al atardecer', 'reino', 'runa', 'brasas', 'runa'),
+  t('cielo-anime', 'Cielo de anime', 'Anime y caricatura', 'Nubes enormes y pétalos al viento', 'cielo-anime', 'hada', 'sakura', 'rosa-cursiva'),
+  t('sabado', 'Sábado de caricaturas', 'Anime y caricatura', 'Colores planos, risas y golpes de onomatopeya', 'sabado', 'vineta', 'risas', 'vineta'),
+  t('teatro', 'Gran estreno', 'Cine', 'Alfombra, reflectores y telón', 'en-vivo', 'oro', 'teatro', 'marquesina'),
+]
+
+export const themeOf = (key?: string) => THEMES.find((x) => x.key === key)
 
 export const TOTAL_STYLES = BANNERS.length + FRAMES.length + EFFECTS.length + NAME_STYLES.length - 4
 

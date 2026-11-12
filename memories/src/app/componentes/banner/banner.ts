@@ -8,7 +8,7 @@ import { bannerOf } from '../../modelos/decor'
  */
 @Component({
   selector: 'app-banner',
-  styleUrl: './banner.css',
+  styleUrls: ['./banner.css', './banner-temas.css'],
   templateUrl: './banner.html',
   host: {
     class: 'absolute inset-0 block overflow-hidden',
@@ -24,6 +24,15 @@ export class Banner {
 
   protected readonly info = computed(() => bannerOf(this.decoration()))
   protected readonly scene = computed(() => (this.custom() ? 'photo' : this.info().scene))
+  // Columnas de caracteres para la escena de terminal (siempre las mismas)
+  protected readonly codeColumns = Array.from({ length: 12 }, (_, i) => ({
+    left: i * 8.4 + 1,
+    speed: 3 + ((i * 37) % 5),
+    delay: -((i * 53) % 7),
+    text: Array.from({ length: 16 }, (_, j) => '01{}<>/=+*#;$'[(i * 7 + j * 5) % 13]).join(''),
+  }))
+  // Onomatopeya de la escena de historieta, distinta por fondo
+  protected readonly popWord = computed(() => (this.info().key === 'sabado' ? '¡JA!' : '¡ZAS!'))
   protected readonly color = (i: number) => {
     const c = this.info().colors
     return c.length ? c[i % c.length] : '#ffffff'
