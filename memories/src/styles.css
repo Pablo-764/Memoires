@@ -1518,3 +1518,103 @@ button[appchip][aria-pressed="true"] { box-shadow: 0 0 0 1.5px var(--edge), 3px 
 .print-photo { box-shadow: 0 0 0 1.5px var(--edge), 8px 8px 0 var(--edge); }
 
 .print-edge { box-shadow: 0 0 0 1.5px var(--edge), 4px 4px 0 var(--edge); }
+
+/* ---------- Títulos que reaccionan al cursor ---------- */
+.pr-word { display: inline-block; white-space: nowrap; }
+
+.pr-ch { display: inline-block; transform-origin: 50% 80%; }
+
+/* ---------- Cambio de página como hoja de álbum ----------
+   Al avanzar, la página nueva entra barriendo con el borde inclinado de una hoja;
+   al regresar, lo mismo desde el otro lado. La anterior se oscurece un poco. */
+@keyframes page-turn-in {
+  0% { clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%); }
+  55% { clip-path: polygon(38% 0, 100% 0, 100% 100%, 58% 100%); }
+  100% { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+}
+
+@keyframes page-turn-back {
+  0% { clip-path: polygon(0 0, 0 0, 0 100%, 0 100%); }
+  55% { clip-path: polygon(0 0, 62% 0, 42% 100%, 0 100%); }
+  100% { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+}
+
+@keyframes page-under {
+  to { transform: translateX(-3%) scale(0.985); opacity: 0.55; }
+}
+
+@keyframes page-under-back {
+  to { transform: translateX(3%) scale(0.985); opacity: 0.55; }
+}
+
+html[data-vt-kind="push"]::view-transition-old(page) { animation: page-under 560ms var(--ease-in-out) both; }
+
+html[data-vt-kind="push"]::view-transition-new(page) { animation: page-turn-in 620ms var(--ease-in-out) both; }
+
+html[data-vt-kind="pop"]::view-transition-old(page) { animation: page-under-back 560ms var(--ease-in-out) both; }
+
+html[data-vt-kind="pop"]::view-transition-new(page) { animation: page-turn-back 620ms var(--ease-in-out) both; }
+
+/* ---------- Rastro de polaroids (portada) ---------- */
+.trail-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.trail-card {
+  position: absolute;
+  width: 128px;
+  margin: 0;
+  padding: 7px 7px 5px;
+  background: #fffdf8;
+  box-shadow: 0 1px 0 rgb(0 0 0 / 0.08), 0 16px 26px -14px rgb(19 32 47 / 0.6);
+  will-change: transform, opacity;
+}
+
+.trail-card img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; }
+
+.trail-card figcaption {
+  padding: 4px 2px 0;
+  font-family: var(--font-hand);
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1;
+  color: #13202f;
+}
+
+/* ---------- Cómo funciona: páginas del álbum que se apilan ---------- */
+.album-page {
+  position: sticky;
+  top: calc(5.5rem + var(--i) * 1.4rem);
+  margin-bottom: 2.2rem;
+  padding: 2.2rem 2rem;
+  border-radius: 14px;
+  background:
+    linear-gradient(90deg, transparent 30px, color-mix(in oklab, var(--color-romance) 40%, transparent) 30px 31.5px, transparent 31.5px),
+    repeating-linear-gradient(180deg, transparent 0 31px, color-mix(in oklab, var(--color-accent) 10%, transparent) 31px 32px),
+    var(--paper-grain),
+    var(--color-surface);
+  box-shadow: 0 0 0 1.5px var(--edge), 6px 6px 0 var(--edge);
+  rotate: calc((var(--i) - 1) * 0.8deg);
+}
+
+.album-page > :first-child { padding-left: 1.2rem; }
+
+@supports (animation-timeline: view()) {
+  .album-page {
+    animation: album-in linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 70%;
+  }
+}
+
+@keyframes album-in {
+  from { opacity: 0; transform: translateY(60px) rotate(calc((var(--i) - 1) * 3deg)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .album-page { animation: none; rotate: none; }
+}
