@@ -69,6 +69,7 @@ Todo texto pasa 4.5:1 y los bordes de controles 3:1 en ambos temas. Peores casos
 | Palabras destacadas | Fraunces itálica | En el acento del tema |
 | Texto | Space Grotesk | Grotesca legible |
 | Notas a mano | Caveat | Subtítulos, polaroids, etiquetas flotantes |
+| Datos y arte ASCII | Space Mono Bold | Microetiquetas con datos reales (`.mono-tag`: matches por semana, palabras del chat, cupo `3/6`, fecha y hora); nunca numeraciones de adorno |
 
 Las cuatro son libres (SIL OFL) y se instalan desde Fontsource.
 
@@ -80,7 +81,7 @@ Las cuatro son libres (SIL OFL) y se instalan desde Fontsource.
 
 ## Piezas
 
-- **Hoja de sección** (`.page-sheet`): papel beige o morado con grano y una luz suave (`--paper-light`): brillo lila o naranja arriba a la derecha y sombra tibia abajo a la izquierda. Lleva stickers (estrella, garabato, punto) en la pareja del tema.
+- **Hoja de sección** (`.page-sheet`): papel beige o morado con grano y una luz suave (`--paper-light`): brillo lila o naranja arriba a la derecha y sombra tibia abajo a la izquierda.
 - **Hilo** (`app-thread`): trazo a mano que une dos avatares. En "Cómo funciona" cruza las tres hojas de lado y se dibuja con el scroll; corto en cada conexión (la persona y tú).
 - **Álbum horizontal** ("Cómo funciona"): en escritorio la sección mide 300vh, su contenido queda fijo y el scroll vertical pasa las tres hojas de lado (`animation-timeline`, con respaldo en JS). Indicador de puntos y "1/3" en el acento. En móvil es un carrusel con `scroll-snap`; con movimiento reducido, las hojas se apilan. Cada hoja se puede enfocar con teclado.
 - **Tramado** (fotos de Planes): semitono de dos tintas; un solo detalle (la cinta de la esquina) en el color de la intención. Al pasar el cursor se ve la foto a color.
@@ -90,28 +91,41 @@ Las cuatro son libres (SIL OFL) y se instalan desde Fontsource.
 - **Ver con Lucidité** (Suscripción): interruptor que cruza el perfil propio sin y con el tema Celestial (fondo, marco con alas, efecto y nombre).
 - **Conexiones**: cada tarjeta tiene borrar chat, eliminar conexión (con confirmación) y una agarradera para moverla. Al arrastrarla se inclina según la velocidad, como las fotos del tablero, las demás se hacen a un lado (FLIP) y al soltar se acomoda con rebote. Con teclado, las flechas la mueven una posición. Un botón quita de una vez las conexiones sin mensajes.
 
+- **Objeto inflado de texto** (`app-inflado`, render en `utilidades/inflado-render.ts`, frases en `datos/inflados.ts`): globo de cromo dibujado con letras (ASCII). Cada celda de pantalla muestra la letra de las frases que cae en ese punto de la superficie; de frente es una letra por celda, así el texto se lee entero. Se mece unos 22° en lugar de girar completo. Formas por intención: corazón, taza, boleto y estrella, cubiertas de palabras bonitas ("eres mi lugar favorito", "un café contigo", "un atardecer juntos"…) con el nombre de Arleth entre ellas, siempre en su propio color. Letras de la sombra a la luz: violeta oscuro → violeta en el claro, naranja → durazno en el oscuro. Al aparecer se escribe hasta llenarse (2 s); al cambiar de intención se desinfla y se vuelve a llenar (600 ms). Con movimiento reducido o en equipos modestos, cuadro fijo. Va en el héroe, en la conexión nueva, al final de la bienvenida (estrella con tus intereses) y en la colección de efectos "Inflados" de Lucidité (cubierto con el nombre de la persona).
+- **Arleth**: su nombre aparece en las frases del inflado, en el fondo tipográfico, en la persona de ejemplo de la intención Pareja (19 años, ya conectada contigo y con una conversación iniciada), en el ramo ASCII de los fondos "Jardín de texto" (y la variante "Jardín de Arleth"), en un plan cumplido ("flores para Arleth"), en la 404, en Descanso, en el álbum de "Cómo funciona", en la bienvenida y en el pie.
+- **Planes cumplidos** (Planes): polaroids arrastrables de los planes a los que fuiste, con la foto en tramado (o la nota a mano en grande si no hay foto), la fecha en Space Mono y las iniciales de quienes fueron. Flechas para moverlas; cuadrícula fija con movimiento reducido; si no hay, una cámara ASCII que se decodifica.
+- **Seguridad** (portada): borde superior de papel rasgado que se abre un poco con el scroll.
+- **Pie**: columnas de producto, legal, contacto y equipo.
+- **Un solo botón sólido por vista**: en la portada, "Crear cuenta" del encabezado y Lucidité en precios van en contorno.
+
 ## Un momento animado por página
 
 Cada página tiene un solo protagonista en movimiento; lo demás son transiciones de 150 a 250 ms.
 
 | Página | Protagonista |
 |---|---|
-| Portada | El hilo que cruza el álbum |
+| Portada | El objeto inflado del héroe (el hilo del álbum queda como movimiento ligado al scroll) |
 | Descubre | Las etiquetas flotantes |
 | Conexiones | El hilo corto de cada conexión |
+| Planes | El tablero de planes cumplidos |
+| Conexión nueva | El objeto inflado de esa intención |
 | Ajustes | La mancha de tinta |
 | Descanso | El vapor de la taza ASCII |
 | 404 | La flor que se endereza |
 
-Por esta regla se quitaron la presión en los títulos y el rastro de fotos del héroe.
+Por esta regla se quitaron la presión en los títulos, el rastro de fotos del héroe, las fotos del héroe y el tablero "Tu álbum" de la portada (ahora vive en Planes).
 
 ## Arte ASCII
 
-- Segunda voz gráfica: dibujos de línea "a máquina de escribir", hechos a mano, en Space Mono (solo para el arte, nunca para texto de lectura).
+- Segunda voz gráfica: dibujos de línea "a máquina de escribir", hechos a mano, en Space Mono Bold (solo para el arte, nunca para texto de lectura).
+- Solo piezas grandes y detalladas (de 7 a 16 líneas y hasta 54 columnas, con letra de 7 a 13 px); nada de glifos sueltos ni dibujos de 3 líneas.
 - Datos en `datos/ascii.ts`; el componente `app-ascii` los pinta. En cada línea, `{…}` marca la única parte en el color de la intención y `«…»` el detalle suave.
 - Color: trazo en el acento (violeta o naranja), detalle en lila o durazno, una parte en la intención.
 - Cada `<pre>` lleva `aria-hidden` y una descripción oculta ("Ilustración: …").
-- Dónde: estados vacíos (Conexiones, búsqueda, chat sin mensajes, Planes sin resultados), Descanso (taza con vapor), 404 (flor marchita que se endereza al pasar el cursor) y tarjetas de planes sin foto (una pieza por intención).
+- Modo `decode`: el dibujo se escribe carácter por carácter, cada uno pasa por `. : + *` y se fija en el orden del trazo. Se usa en los estados vacíos y en las esquinas de Descubre; nunca en títulos.
+- Dónde: las cuatro esquinas de Descubre en pantallas anchas, a 10.5 px, que se vuelven a escribir al cambiar lo que se busca: Todo (cerezas, rosa, ramo de Arleth, maceta), Pareja (cerezas, rosa, ramo, corazón con el nombre de Arleth), Amistad (tetera, taza, pan dulce, maceta), Plan (globo, boletos "¿vamos?" con Arleth, tienda bajo las estrellas, lupa) y Pasatiempo (guitarra, paleta, dado, notas); el color de la parte destacada sigue a la intención; estados vacíos (Conexiones, búsqueda, chat sin mensajes, Planes sin resultados), Descanso (taza con vapor), 404 (flor marchita que se endereza al pasar el cursor) y tarjetas de planes sin foto (una pieza por intención).
+- **Planes sin foto**: la pieza sale de las palabras del plan (correr, juegos, concierto, lectura, café, comida); si no hay coincidencia, la de su intención.
+- **Modo álbum de texto** (Ajustes, se recuerda en el navegador): los fondos se vuelven jardín de texto con sus colores, los marcos un aro de `*` y `+`, y los efectos caracteres. Nunca toca las fotos.
 - **Jardín de texto** (fondos de perfil): flores, cerezas y una taza acomodadas lejos del avatar. Variantes Papel y Noche (Grand), Menta y Que crece (Lucidité; las piezas se revelan de abajo hacia arriba una vez).
 
 ## Fuera de este sistema

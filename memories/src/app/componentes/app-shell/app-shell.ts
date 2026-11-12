@@ -12,10 +12,11 @@ import { Modal } from '../modal/modal'
 import { Navbar } from '../navbar/navbar'
 import { Sidebar } from '../sidebar/sidebar'
 import { TabBar } from '../tab-bar/tab-bar'
+import { Inflado } from '../inflado/inflado'
 
 @Component({
   selector: 'app-shell',
-  imports: [RouterOutlet, Avatar, Modal, Navbar, Sidebar, TabBar],
+  imports: [Inflado, RouterOutlet, Avatar, Modal, Navbar, Sidebar, TabBar],
   styleUrl: './app-shell.css',
   templateUrl: './app-shell.html',
 })

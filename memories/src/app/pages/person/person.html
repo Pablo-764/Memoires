@@ -2,7 +2,7 @@
   <article class="-mx-4 -mt-4 md:mx-0 md:mt-0">
     <div class="relative h-56 overflow-hidden md:h-72 md:rounded-[32px]">
       <app-banner [decoration]="v.decoration" [custom]="v.customBanner" />
-      <app-effect [effect]="v.effect" [count]="18" />
+      <app-effect [effect]="v.effect" [count]="18" [name]="v.name" />
       <button class="glass-icon absolute left-3 top-3" aria-label="Volver" (click)="back()"><app-icon name="arrow-left" [size]="19" /></button>
       @if (!isMe()) {
         <div class="absolute right-3 top-3 flex gap-1">

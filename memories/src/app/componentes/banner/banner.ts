@@ -1,4 +1,5 @@
 import { Component, DestroyRef, ElementRef, afterNextRender, computed, inject, input } from '@angular/core'
+import { TextAlbum } from '../../servicios/text-album'
 import { bannerOf } from '../../modelos/decor'
 import { NgTemplateOutlet } from '@angular/common'
 import { AsciiArt } from '../ascii-art/ascii-art'
@@ -26,7 +27,13 @@ export class Banner {
   readonly preview = input(false)
 
   protected readonly info = computed(() => bannerOf(this.decoration()))
-  protected readonly scene = computed(() => (this.custom() ? 'photo' : this.info().scene))
+  private readonly textAlbum = inject(TextAlbum)
+  protected readonly scene = computed(() => {
+    if (this.custom()) return 'photo'
+    const scene = this.info().scene
+    // Modo álbum de texto: las escenas se dibujan con caracteres (el fondo liso se queda igual)
+    return this.textAlbum.on() && scene !== 'static' && scene !== 'garden-grow' ? 'garden' : scene
+  })
   // Columnas de caracteres para la escena de terminal (siempre las mismas)
   protected readonly codeColumns = Array.from({ length: 12 }, (_, i) => ({
     left: i * 8.4 + 1,
@@ -39,10 +46,10 @@ export class Banner {
   protected readonly runeInner = 'ΣΘΠΓΛΞΦΩ'.split('')
   // Jardín de texto: de 3 a 5 piezas acomodadas lejos de la esquina del avatar
   protected readonly garden = [
-    { piece: 'cerezas', x: 5, y: 52, s: 0.8 },
-    { piece: 'flor', x: 34, y: 8, s: 1 },
-    { piece: 'taza', x: 58, y: 12, s: 0.9 },
-    { piece: 'flor', x: 80, y: 6, s: 0.75 },
+    { piece: 'cerezas', x: 4, y: 40, s: 0.8 },
+    { piece: 'flor', x: 33, y: 6, s: 1 },
+    { piece: 'ramo-arleth', x: 55, y: 4, s: 1 },
+    { piece: 'flor', x: 82, y: 6, s: 0.8 },
   ]
   protected readonly petals = [0, 1, 2, 3, 4, 5, 6, 7]
   protected readonly shards = [0, 1, 2, 3, 4, 5, 6]

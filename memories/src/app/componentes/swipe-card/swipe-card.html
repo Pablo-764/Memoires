@@ -11,7 +11,7 @@
   <div class="relative min-h-0 flex-[0.7] md:flex-[1.15]">
     <app-banner [decoration]="person().decoration" />
     @if (active()) {
-      <app-effect [effect]="person().effect" [count]="14" />
+      <app-effect [effect]="person().effect" [count]="14" [name]="person().name" />
     }
     <span #like class="absolute left-5 top-5 rounded-full bg-plan px-4 py-1.5 font-display text-xl text-on-accent opacity-0">Me interesa</span>
     <span #pass class="absolute right-5 top-5 rounded-full bg-accent px-4 py-1.5 font-display text-xl text-on-accent opacity-0">Pasar</span>

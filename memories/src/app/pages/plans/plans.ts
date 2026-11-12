@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router'
 import { AppStore } from '../../servicios/app-store'
 import { Celebrate } from '../../servicios/celebrate'
 import { runListTransition } from '../../utilidades/list-transition'
-import { personById, type Plan } from '../../datos/mock'
+import { PAST_PLANS, personById, type Plan } from '../../datos/mock'
 import { INTENTS, INTENT_ORDER, INTENT_SHAPE, type Intent } from '../../modelos/intents'
 import { AUDIENCES, PLAN_SIZES, SIZE_ORDER, sizeOf, type PlanSize } from '../../modelos/plan-formats'
 import { Avatar } from '../../componentes/avatar/avatar'
@@ -15,10 +15,9 @@ import { CreatePlanDialog } from '../../componentes/create-plan-dialog/create-pl
 
 import { PolaroidBoard, type BoardItem } from '../../componentes/polaroid-board/polaroid-board'
 import { AsciiArt } from '../../componentes/ascii-art/ascii-art'
-import { ASCII_BY_INTENT } from '../../datos/ascii'
+import { asciiForPlan } from '../../datos/ascii'
 
 // Fotos para los planes que no traen la suya
-const FALLBACK = ['fotos/cafe.webp', 'fotos/correr.webp', 'fotos/juegos.webp', 'fotos/concierto.webp', 'fotos/biblioteca.webp']
 
 @Component({
   selector: 'app-plans',
@@ -45,23 +44,23 @@ export class Plans {
   protected readonly sizeInfo = PLAN_SIZES
   protected readonly audienceInfo = AUDIENCES
 
-  // Álbum: primero los planes propios y a los que te uniste; si no hay, los más recientes
-  protected readonly album = computed<BoardItem[]>(() => {
-    const all = this.store.plans().filter((p) => !this.store.blocked().includes(p.hostId))
-    const mine = all.filter((p) => p.hostId === 'me' || this.isJoined(p))
-    return (mine.length >= 3 ? mine : [...mine, ...all.filter((p) => !mine.includes(p))]).slice(0, 6).map((p, i) => ({
-      photo: p.photo?.src ?? FALLBACK[i % FALLBACK.length],
+  // Planes cumplidos: foto en tramado (o la nota a mano si no hay), fecha e iniciales de quienes fueron
+  protected readonly album = computed<BoardItem[]>(() =>
+    PAST_PLANS.filter((p) => !p.people.some((id) => this.store.blocked().includes(id))).map((p) => ({
+      photo: p.photo,
       note: p.title,
       tone: p.intent,
-    }))
-  })
+      date: `${p.date} ${p.time}`,
+      people: p.people.map((id) => (id === 'me' ? 'TÚ' : (personById(id)?.name[0] ?? '?'))),
+    })),
+  )
 
   protected readonly visible = computed(() =>
     this.store.plans().filter((p) => !this.store.blocked().includes(p.hostId) && (this.filter() === 'all' || p.intent === this.filter()) && (this.sizeFilter() === 'all' || sizeOf(p.capacity) === this.sizeFilter())),
   )
 
   // Dibujo de la tarjeta cuando el plan no tiene foto
-  protected readonly asciiFor = (i: Intent) => ASCII_BY_INTENT[i]
+  protected readonly asciiFor = (text: string, i: Intent) => asciiForPlan(text, i)
 
   protected setFilter(next: Intent | 'all') {
     runListTransition(this.appRef, () => this.filter.set(next))

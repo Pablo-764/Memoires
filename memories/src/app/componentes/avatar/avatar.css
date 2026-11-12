@@ -155,3 +155,21 @@
   .af-ripple { opacity: 0; }
   .af-spark { opacity: 0.8; }
 }
+
+/* Marco de caracteres del modo álbum de texto */
+.at-ring {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.at-char {
+  position: absolute;
+  top: calc(var(--t) * -1.1 - var(--s) * 0.06);
+  left: 50%;
+  translate: -50% 0;
+  font-family: var(--font-mono);
+  font-size: calc(var(--s) * 0.17);
+  font-weight: 700;
+  line-height: 1;
+}

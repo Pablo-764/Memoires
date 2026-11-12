@@ -6,15 +6,17 @@
 .ascii-pre {
   margin: 0;
   font-family: var(--font-mono);
-  font-size: 13px;
+  font-size: clamp(9px, 1vw, 11px);
+  font-weight: 700;
   line-height: 1;
   letter-spacing: 0;
   white-space: pre;
 }
 
-:host([data-size="sm"]) .ascii-pre { font-size: clamp(9px, 1.1vw, 11px); }
+:host([data-size="sm"]) .ascii-pre { font-size: clamp(7px, 0.75vw, 9px); }
 
-:host([data-size="lg"]) .ascii-pre { font-size: clamp(14px, 2.2vw, 20px); }
+/* Las piezas son grandes y detalladas: la letra es chica para que quepan */
+:host([data-size="lg"]) .ascii-pre { font-size: clamp(9px, 1.2vw, 13px); }
 
 .ascii-line {
   display: block;

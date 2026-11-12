@@ -11,7 +11,7 @@ describe('AsciiArt', () => {
     expect(el.querySelector('pre')?.getAttribute('aria-hidden')).toBe('true')
     expect(el.textContent).toContain('Ilustración: una taza de café con vapor')
     expect(el.getAttribute('data-intent')).toBe('friend')
-    expect(el.querySelectorAll('.ascii-line').length).toBe(6)
+    expect(el.querySelectorAll('.ascii-line').length).toBe(16)
   })
 
   it('separa las marcas de intención y de detalle', () => {

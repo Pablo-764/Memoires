@@ -15,13 +15,6 @@
   <button class="btn btn-primary" (click)="creating.set(true)"><app-icon name="calendar-plus" [size]="18" /> Crear plan</button>
 </div>
 
-<section class="mt-8" aria-label="Álbum de planes">
-  <p class="hand mb-3 text-[1.5rem] leading-tight text-ink-soft">tu álbum de planes: arrastra las fotos, son tuyas</p>
-  @for (k of [album().length]; track k) {
-    <app-polaroid-board [items]="album()" />
-  }
-</section>
-
 <div class="mt-6 flex flex-wrap items-end gap-x-6 gap-y-2">
 <div class="shape-bar" [appPillGroup]="filter()" role="group" aria-label="Filtrar planes">
   <span class="group-echo" aria-hidden="true"></span>
@@ -57,7 +50,7 @@
           </div>
         } @else if (!first) {
           <div class="grid aspect-[16/8] place-items-center">
-            <app-ascii [piece]="asciiFor(p.intent)" [intent]="p.intent" size="sm" />
+            <app-ascii [piece]="asciiFor(p.title + ' ' + p.description, p.intent)" [intent]="p.intent" size="sm" [decorative]="true" />
           </div>
         }
       </div>
@@ -65,12 +58,12 @@
         <div class="plan-feature">
           <div class="flex items-center gap-3">
             <app-intent-badge [intent]="p.intent" size="md" />
-            <span class="text-sm text-white/80">{{ p.when }}. {{ sizeLabel(p) }}. {{ audienceLabel(p) }}.</span>
+            <span class="text-sm text-white/80"><span class="mono-tag">{{ p.when }}</span> · {{ sizeLabel(p) }}. {{ audienceLabel(p) }}.</span>
           </div>
           <h2 class="mt-3 max-w-[18ch] text-[clamp(2.4rem,5vw,3.8rem)] text-white">{{ p.title }}</h2>
           <p class="mt-2 max-w-[52ch] text-white/85">{{ p.description }}</p>
           <div class="mt-5 flex flex-wrap items-center justify-between gap-3">
-            <p class="text-sm text-white/80">{{ p.place }}. {{ p.attendees.length }} de {{ p.capacity }} lugares ocupados.</p>
+            <p class="text-sm text-white/80">{{ p.place }} · <span class="mono-tag">{{ p.attendees.length }}/{{ p.capacity }}</span> lugares</p>
             <ng-container [ngTemplateOutlet]="join" [ngTemplateOutletContext]="{ $implicit: p }" />
           </div>
         </div>
@@ -82,9 +75,9 @@
           </div>
           <p class="mt-2 text-ink-soft">{{ p.description }}</p>
           <dl class="mt-4 grid gap-1.5 text-sm text-ink-soft">
-            <div class="flex items-center gap-2"><app-icon name="clock" [size]="16" class="text-ink-mute" /><dt class="sr-only">Cuándo</dt><dd>{{ p.when }}</dd></div>
+            <div class="flex items-center gap-2"><app-icon name="clock" [size]="16" class="text-ink-mute" /><dt class="sr-only">Cuándo</dt><dd class="mono-tag">{{ p.when }}</dd></div>
             <div class="flex items-center gap-2"><app-icon name="map-pin" [size]="16" class="text-ink-mute" /><dt class="sr-only">Dónde</dt><dd>{{ p.place }}</dd></div>
-            <div class="flex items-center gap-2"><app-icon name="users" [size]="16" class="text-ink-mute" /><dt class="sr-only">Lugares</dt><dd>{{ sizeLabel(p) }}: {{ p.attendees.length }} de {{ p.capacity }} lugares ocupados</dd></div>
+            <div class="flex items-center gap-2"><app-icon name="users" [size]="16" class="text-ink-mute" /><dt class="sr-only">Lugares</dt><dd>{{ sizeLabel(p) }} · <span class="mono-tag">{{ p.attendees.length }}/{{ p.capacity }}</span> lugares</dd></div>
             <div class="flex items-center gap-2"><app-icon name="handshake" [size]="16" class="text-ink-mute" /><dt class="sr-only">Con quién</dt><dd>{{ audienceLabel(p) }}</dd></div>
           </dl>
           <div class="mt-5 flex items-center justify-between gap-3">
@@ -111,12 +104,23 @@
 
 @if (!visible().length) {
   <div class="card swap-in mt-6 flex flex-col items-center p-10 text-center">
-    <app-ascii piece="mantel" size="lg" class="mb-5" />
+    <app-ascii piece="mantel" size="lg" class="mb-5" mode="decode" />
     <h2 class="text-[1.85rem]">No hay planes con estos filtros</h2>
     <p class="mt-2 text-ink-soft">Cambia los filtros o arma uno tú: alguien más querrá ir.</p>
     <button class="btn btn-primary mt-6" (click)="creating.set(true)">Crear plan</button>
   </div>
 }
+
+<!-- Planes cumplidos: el protagonista de la página -->
+<section class="mt-14" aria-labelledby="cumplidos">
+  <div class="mb-4 flex flex-wrap items-end justify-between gap-3">
+    <h2 id="cumplidos" class="text-[clamp(2.2rem,4vw,3rem)] leading-none">Planes cumplidos</h2>
+    <p class="hand text-[1.45rem] leading-tight text-ink-soft">cada plan que se cumple termina aquí</p>
+  </div>
+  @for (k of [album().length]; track k) {
+    <app-polaroid-board [items]="album()" />
+  }
+</section>
 
 @if (creating()) {
   <app-create-plan-dialog (closed)="creating.set(false)" />

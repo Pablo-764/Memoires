@@ -2,7 +2,6 @@ import { Component, computed, inject, signal } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { Router } from '@angular/router'
 import { AppStore } from '../../servicios/app-store'
-import { Celebrate } from '../../servicios/celebrate'
 import { CITIES, INTENTS, INTENT_ORDER, type Intent } from '../../modelos/intents'
 import { ChoiceChip } from '../../componentes/choice-chip/choice-chip'
 import { Icon } from '../../componentes/icon/icon'
@@ -11,17 +10,17 @@ import { Logo } from '../../componentes/logo/logo'
 import { IntentPrefsEditor } from '../../componentes/intent-prefs/intent-prefs'
 import { InterestPicker } from '../../componentes/interest-picker/interest-picker'
 import { EMPTY_PREFS, GENDERS, GENDER_ORDER, usesGender, usesGroups, type Gender, type IntentPrefs } from '../../modelos/plan-formats'
+import { Inflado } from '../../componentes/inflado/inflado'
 
 @Component({
   selector: 'app-onboarding',
-  imports: [FormsModule, ChoiceChip, Icon, IntentBadge, IntentPrefsEditor, InterestPicker, Logo],
+  imports: [Inflado, FormsModule, ChoiceChip, Icon, IntentBadge, IntentPrefsEditor, InterestPicker, Logo],
   styleUrl: './onboarding.css',
   templateUrl: './onboarding.html',
 })
 export class Onboarding {
   private readonly store = inject(AppStore)
   private readonly router = inject(Router)
-  private readonly celebrate = inject(Celebrate)
 
   protected readonly me = this.store.me
   protected readonly catalog = INTENTS
@@ -35,6 +34,7 @@ export class Onboarding {
   protected readonly direction = signal<'forward' | 'back'>('forward')
   protected readonly intents = signal<Intent[]>(this.me().intents)
   protected readonly interests = signal<string[]>(this.me().interests)
+  protected readonly done = signal(false)
   protected readonly gender = signal<Gender | 'unsaid'>(this.me().gender)
   protected readonly prefs = signal<Partial<Record<Intent, IntentPrefs>>>(this.me().intentPrefs)
   protected readonly prefIntents = computed(() => this.intents().filter((i) => usesGroups(i) || usesGender(i)))
@@ -74,6 +74,8 @@ export class Onboarding {
       return
     }
     this.store.completeOnboarding({ city: this.city(), bio: this.bio().trim(), intents: this.intents(), interests: this.interests(), gender: this.gender(), intentPrefs: this.prefs() })
-    this.celebrate.play('welcome', { giant: true }).then(() => this.router.navigateByUrl('/app/descubre'))
+    // Primer momento personal: tu estrella cubierta con tus intereses; luego, a Descubre
+    this.done.set(true)
+    window.setTimeout(() => this.router.navigateByUrl('/app/descubre'), matchMedia('(prefers-reduced-motion: reduce)').matches ? 1400 : 3400)
   }
 }

@@ -183,3 +183,31 @@
 @media (prefers-reduced-motion: reduce) {
   .float-tag { animation: none; }
 }
+
+/* ---------- Dibujos ASCII en las esquinas ----------
+   Grandes y detallados, detrás del contenido; solo cuando hay espacio a los lados de la tarjeta. */
+.disc-art { display: none; }
+
+@media (min-width: 1280px) {
+  .disc-art {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  .disc-art app-ascii {
+    position: absolute;
+    opacity: 0.9;
+  }
+
+  .disc-art ::ng-deep .ascii-pre { font-size: 10.5px; }
+
+  .disc-art-tl { top: 5.5rem; left: 2rem; rotate: -4deg; }
+  .disc-art-tr { top: 5rem; right: 2.2rem; rotate: 3deg; }
+  .disc-art-bl { bottom: 2.5rem; left: 2.2rem; rotate: 2deg; }
+  .disc-art-br { bottom: 2.5rem; right: 2rem; rotate: -3deg; }
+}

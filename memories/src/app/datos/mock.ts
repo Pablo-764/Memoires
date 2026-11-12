@@ -27,7 +27,7 @@ export interface Person {
 const BASE_PEOPLE: Person[] = [
   { id: 'p1', name: 'Mariana', age: 24, city: 'Guadalajara', bio: 'Llegué hace dos meses por la maestría. Busco con quién correr los domingos en Los Colomos.', intents: ['friend', 'plan'], interests: ['Correr', 'Café', 'Lectura', 'Senderismo'], hue: 18, likesYou: true, verified: true, languages: ['Español', 'Inglés'], availability: 'Fines de semana', decoration: 'dusk', frame: 'oro', effect: 'flores', nameStyle: 'coral', groupSizes: ['small', 'large'], gender: 'woman' },
   { id: 'p2', name: 'Diego', age: 27, city: 'Guadalajara', bio: 'Desarrollador, fan de los juegos de mesa. Organizo una noche de Catan cada quince días.', intents: ['hobby', 'friend'], interests: ['Juegos de mesa', 'Programación', 'Videojuegos', 'Café'], hue: 220, likesYou: true, verified: true, languages: ['Español'], availability: 'Entre semana', decoration: 'plano', frame: 'neon', effect: 'destellos', nameStyle: 'cielo', groupSizes: ['small'], gender: 'man' },
-  { id: 'p3', name: 'Valeria', age: 25, city: 'Guadalajara', bio: 'Fotógrafa de paisajes. Me encantaría encontrar a alguien para escapadas a Tapalpa.', intents: ['romance', 'plan'], interests: ['Fotografía', 'Senderismo', 'Viajes', 'Música en vivo'], hue: 330, likesYou: false, verified: true, languages: ['Español', 'Francés'], availability: 'Fines de semana', decoration: 'aurora', frame: 'aurora', effect: 'estrellas', nameStyle: 'lavanda-cursiva', groupSizes: ['duo'], gender: 'woman' },
+  { id: 'p3', name: 'Arleth', age: 19, city: 'Guadalajara', bio: 'Fotografío atardeceres y flores silvestres. Me encantaría encontrar a alguien para ver estrellas en Tapalpa.', intents: ['romance', 'plan'], interests: ['Fotografía', 'Flores', 'Atardeceres', 'Música en vivo'], hue: 330, likesYou: true, verified: true, languages: ['Español', 'Francés'], availability: 'Fines de semana', decoration: 'aurora', frame: 'aurora', effect: 'estrellas', nameStyle: 'lavanda-cursiva', groupSizes: ['duo'], gender: 'woman' },
   { id: 'p4', name: 'Andrés', age: 22, city: 'Guadalajara', bio: 'Estudiante de diseño. Dibujo en cafés y siempre ando buscando exposiciones nuevas.', intents: ['hobby', 'friend', 'romance'], interests: ['Dibujo', 'Café', 'Teatro', 'Cine'], hue: 150, likesYou: false, verified: false, languages: ['Español'], availability: 'Cualquier día', decoration: 'cuaderno', frame: 'halo', effect: 'hojas', nameStyle: 'none', groupSizes: ['duo', 'small'], gender: 'nonbinary' },
   { id: 'p5', name: 'Sofía', age: 29, city: 'Guadalajara', bio: 'Me cambié de Monterrey por trabajo. Quiero gente para ir a conciertos y probar restaurantes.', intents: ['friend', 'plan', 'romance'], interests: ['Conciertos', 'Cocina', 'Música en vivo', 'Viajes'], hue: 40, likesYou: true, verified: true, languages: ['Español', 'Inglés'], availability: 'Fines de semana', decoration: 'confetti', frame: 'arcoiris', effect: 'corazones', nameStyle: 'rosa', groupSizes: ['duo', 'small'], gender: 'woman' },
   { id: 'p6', name: 'Emiliano', age: 26, city: 'Guadalajara', bio: 'Practico japonés y veo demasiado anime. Busco compañeros de intercambio de idiomas.', intents: ['hobby'], interests: ['Anime', 'Idiomas', 'Videojuegos', 'Lectura'], hue: 265, likesYou: false, verified: true, languages: ['Español', 'Japonés'], availability: 'Entre semana', decoration: 'galaxia', frame: 'orbita', effect: 'lunas', nameStyle: 'uva', groupSizes: ['small'], gender: 'man' },
@@ -62,6 +62,28 @@ const BASE_PLANS: Plan[] = [
 
 export const PLANS: Plan[] = [...BASE_PLANS, ...BOT_PLANS]
 
+// Planes a los que ya fuiste (datos de prueba mientras no hay backend)
+export interface PastPlan {
+  id: string
+  title: string
+  intent: Intent
+  // Fecha y hora en que se cumplió
+  date: string
+  time: string
+  // Quiénes fueron (ids de personas; 'me' eres tú)
+  people: string[]
+  photo?: string
+}
+
+export const PAST_PLANS: PastPlan[] = [
+  { id: 'pp1', title: 'café con Mariana', intent: 'friend', date: '2026-10-18', time: '10:30', people: ['me', 'p1'], photo: 'fotos/cafe.webp' },
+  { id: 'pp2', title: 'corrimos 5 km', intent: 'plan', date: '2026-10-26', time: '08:00', people: ['me', 'p1', 'p8', 'p5'], photo: 'fotos/correr.webp' },
+  { id: 'pp3', title: 'noche de juegos: gané', intent: 'hobby', date: '2026-11-01', time: '19:30', people: ['me', 'p2', 'p4'], photo: 'fotos/juegos.webp' },
+  { id: 'pp4', title: 'tacos después del cine', intent: 'plan', date: '2026-11-06', time: '21:00', people: ['me', 'p4'] },
+  { id: 'pp6', title: 'flores para Arleth', intent: 'romance', date: '2026-11-11', time: '18:00', people: ['me', 'p3'] },
+  { id: 'pp5', title: 'club de lectura, cap. 3', intent: 'hobby', date: '2026-11-09', time: '17:00', people: ['me', 'p3', 'p2'], photo: 'fotos/biblioteca.webp' },
+]
+
 export interface Message {
   id: string
   from: 'me' | string
@@ -70,6 +92,11 @@ export interface Message {
 }
 
 const BASE_MESSAGES: Record<string, Message[]> = {
+  p3: [
+    { id: 'a1', from: 'p3', text: '¡Hola! Me encantaron tus fotos. ¿Vamos a ver el atardecer el sábado?', at: Date.now() - 1000 * 60 * 30 },
+    { id: 'a2', from: 'me', text: 'Me encantaría, Arleth. Llevo flores.', at: Date.now() - 1000 * 60 * 25 },
+    { id: 'a3', from: 'p3', text: 'Trato hecho: yo llevo el café y tú las flores.', at: Date.now() - 1000 * 60 * 20 },
+  ],
   p2: [
     { id: 'm1', from: 'p2', text: '¡Hola! Vi que también te gustan los juegos de mesa. ¿Has jugado Catan?', at: Date.now() - 1000 * 60 * 60 * 5 },
     { id: 'm2', from: 'me', text: 'Sí, aunque siempre pierdo por no cambiar ovejas, jaja.', at: Date.now() - 1000 * 60 * 60 * 4.8 },

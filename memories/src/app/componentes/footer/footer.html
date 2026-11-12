@@ -1,10 +1,41 @@
 <footer class="border-t border-line">
-  <div class="mx-auto flex max-w-6xl flex-col gap-4 px-5 py-8 text-sm text-ink-mute sm:flex-row sm:items-center sm:justify-between">
-    <app-logo class="text-ink" />
-    <nav class="flex gap-5">
-      <a routerLink="/privacidad" class="link-soft">Aviso de privacidad</a>
-      <a routerLink="/entrar" class="link-soft">Iniciar sesión</a>
+  <div class="mx-auto grid max-w-6xl gap-10 px-5 py-14 text-sm sm:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1fr_1.2fr]">
+    <div>
+      <a routerLink="/" aria-label="Inicio de mémoires"><app-logo class="text-ink" /></a>
+      <p class="mt-3 max-w-[30ch] text-ink-soft">Di qué buscas y conoce a quien busca lo mismo en tu ciudad.</p>
+    </div>
+    <nav aria-labelledby="pie-producto">
+      <h2 id="pie-producto" class="pie-title">Producto</h2>
+      <ul class="pie-list">
+        <li><a routerLink="/" fragment="como-funciona" class="link-soft">Cómo funciona</a></li>
+        <li><a routerLink="/" fragment="precios" class="link-soft">Precios</a></li>
+        <li><a routerLink="/" fragment="seguridad" class="link-soft">Seguridad</a></li>
+      </ul>
     </nav>
-    <p>Proyecto integrador de Programación Web 2</p>
+    <nav aria-labelledby="pie-legal">
+      <h2 id="pie-legal" class="pie-title">Legal</h2>
+      <ul class="pie-list">
+        <li><a routerLink="/privacidad" class="link-soft">Aviso de privacidad</a></li>
+        <li><a routerLink="/" fragment="seguridad" class="link-soft">Reportar un perfil</a></li>
+        <li><a routerLink="/entrar" class="link-soft">Iniciar sesión</a></li>
+      </ul>
+    </nav>
+    <div>
+      <h2 class="pie-title">Contacto</h2>
+      <ul class="pie-list text-ink-soft">
+        <li>Guadalajara, Jalisco</li>
+        <li>Soporte desde Ajustes en la app</li>
+      </ul>
+    </div>
+    <div>
+      <h2 class="pie-title">Equipo</h2>
+      <ul class="pie-list text-ink-soft">
+        <li>Proyecto integrador de Programación Web 2</li>
+        <li>CETI Plantel Colomos, grupo 7A</li>
+      </ul>
+    </div>
+  </div>
+  <div class="border-t border-line">
+    <p class="mx-auto max-w-6xl px-5 py-5 font-mono text-xs text-ink-mute">© 2026 mémoires · hecho con cariño para Arleth · demostración académica, sin cobros reales</p>
   </div>
 </footer>

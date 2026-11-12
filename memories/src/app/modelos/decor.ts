@@ -46,7 +46,7 @@ export interface Frame {
   tier: DecorTier
 }
 
-export type EffectDir = 'up' | 'down' | 'twinkle' | 'drift' | 'orbit' | 'burst' | 'float' | 'rain' | 'bubble' | 'flip'
+export type EffectDir = 'up' | 'down' | 'twinkle' | 'drift' | 'orbit' | 'burst' | 'float' | 'rain' | 'bubble' | 'flip' | 'inflado'
 // Figura de la partícula cuando no lleva icono
 export type EffectShape = 'dot' | 'ring' | 'star' | 'petal' | 'confetti' | 'streamer' | 'streak' | 'glow' | 'balloon' | 'glyph'
 
@@ -170,6 +170,7 @@ export const BANNERS: Banner[] = [
   b('jardin-papel', 'Papel', 'Jardín de texto', 'garden', 'linear-gradient(180deg, #fbf6ef, #efe6d6)', ['#6e3ead', '#93506c', '#a993d6'], 'grand'),
   b('jardin-noche', 'Noche', 'Jardín de texto', 'garden', 'linear-gradient(180deg, #251c36, #110a1d)', ['#fc984c', '#f2a3c1', '#dac6b8'], 'grand'),
   b('jardin-menta', 'Menta', 'Jardín de texto', 'garden', 'linear-gradient(180deg, #e2f5ef, #c9ebe0)', ['#0d7a66', '#93506c', '#6fae9c']),
+  b('jardin-arleth', 'Jardín de Arleth', 'Jardín de texto', 'garden', 'linear-gradient(180deg, #fdeaf1, #f6d3e2)', ['#93506c', '#6e3ead', '#c98aa6'], 'grand'),
   b('jardin-crece', 'Que crece', 'Jardín de texto', 'garden-grow', 'linear-gradient(180deg, #f5f0e0, #e8dcbc)', ['#7a681c', '#93506c', '#b5a46c']),
 ]
 
@@ -312,6 +313,12 @@ const e = (key: string, label: string, group: string, icon: IconName | null, dir
 
 export const EFFECTS: Effect[] = [
   { key: 'none', label: 'Sin efecto', group: 'Clásicos', icon: null, dir: 'up', colors: [], shape: 'dot', tier: 'free' },
+  // Inflados: un objeto de cromo junto al nombre, cubierto con el nombre de la persona.
+  // Colores: cuerpo (sombra y luz), reflejo y texto
+  e('inflado-corazon', 'Corazón inflado', 'Inflados', null, 'inflado', ['#ff8fb8', '#d6336c', '#fff4f8', '#6b0f35'], { shape: 'balloon' }),
+  e('inflado-taza', 'Taza inflada', 'Inflados', null, 'inflado', ['#ffd9a8', '#c7671b', '#fffaf2', '#5a2a05'], { shape: 'balloon' }),
+  e('inflado-boleto', 'Boleto inflado', 'Inflados', null, 'inflado', ['#a8f0dc', '#13866f', '#f2fffb', '#063d33'], { shape: 'balloon' }),
+  e('inflado-estrella', 'Estrella inflada', 'Inflados', null, 'inflado', ['#c9e4ff', '#3a6fb0', '#f7fbff', '#0d2a4d'], { shape: 'balloon' }),
   e('corazones', 'Corazones', 'Clásicos', 'heart', 'up', ['#ff5c8a', '#ff9fb6', '#ffd1e0'], { tier: 'grand' }),
   e('destellos', 'Destellos', 'Brillos', 'sparkles', 'twinkle', ['#ffffff', '#ffba67'], { tier: 'grand' }),
   e('estrellas', 'Estrellas', 'Brillos', 'star', 'twinkle', ['#ffba67', '#fff1b8'], { tier: 'grand' }),

@@ -1,10 +1,28 @@
-<div class="pb-area" aria-label="Fotos de ejemplo: puedes arrastrarlas">
+<div class="pb-area" [class.is-still]="still" role="group" aria-label="Planes cumplidos: puedes arrastrar las fotos o moverlas con las flechas">
   @for (s of snaps(); track $index) {
-    <figure #card class="pb-card" [style.--tone]="'var(--color-' + s.tone + ')'">
+    <figure #card class="pb-card" tabindex="0" [style.--tone]="'var(--color-' + s.tone + ')'" [attr.data-intent]="s.tone">
       <span class="pb-tape" aria-hidden="true"></span>
-      <img [src]="s.photo" alt="" draggable="false" loading="lazy" decoding="async" />
-      <figcaption class="hand">{{ s.note }}</figcaption>
+      @if (s.photo) {
+        <div class="pb-ht">
+          <div class="pb-ht-src" aria-hidden="true"><img [src]="s.photo" alt="" draggable="false" loading="lazy" decoding="async" /></div>
+        </div>
+      } @else {
+        <div class="pb-blank hand" aria-hidden="true">{{ s.note }}</div>
+      }
+      <figcaption>
+        <span class="hand block">{{ s.note }}</span>
+        @if (s.date) {
+          <span class="pb-meta">{{ s.date }}@if (s.people?.length) { · {{ s.people!.join(' ') }} }</span>
+        }
+      </figcaption>
+    </figure>
+  } @empty {
+    <figure class="pb-card pb-empty">
+      <div class="pb-blank hand" aria-hidden="true">aquí irá tu primera foto</div>
+      <figcaption class="hand">tu primer plan cumplido aparecerá aquí, como las flores de Arleth</figcaption>
     </figure>
   }
-  <p class="pb-hint hand" aria-hidden="true">← arrástralas y lánzalas</p>
+  @if (snaps().length) {
+    <p class="pb-hint hand" aria-hidden="true">← arrástralas y lánzalas</p>
+  }
 </div>

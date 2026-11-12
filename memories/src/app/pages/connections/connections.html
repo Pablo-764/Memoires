@@ -14,14 +14,14 @@
 
 @if (all().length === 0) {
   <div class="card mt-8 flex flex-col items-center p-10 text-center">
-    <app-ascii piece="maceta" size="lg" class="mb-5" />
+    <app-ascii piece="maceta" size="lg" class="mb-5" mode="decode" />
     <h2 class="text-[1.85rem]">Aún no tienes conexiones</h2>
     <p class="mt-2 text-ink-soft">Cuando a alguien que te interesa también le intereses tú, aparecerá aquí.</p>
     <a routerLink="/app/descubre" class="btn btn-primary mt-6">Ir a Descubre</a>
   </div>
 } @else if (rows().length === 0) {
   <div class="swap-in mt-12 flex flex-col items-center text-center">
-    <app-ascii piece="lupa" class="mb-4" />
+    <app-ascii piece="lupa" class="mb-4" mode="decode" />
     <p class="text-ink-soft">Nada coincide con “{{ query() }}”.</p>
   </div>
 } @else {

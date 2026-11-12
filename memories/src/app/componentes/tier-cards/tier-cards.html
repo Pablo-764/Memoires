@@ -26,7 +26,7 @@
       </ul>
       <button
         class="btn mt-6 w-full"
-        [class]="isLuc ? 'btn-primary' : t === 'free' ? 'btn-ghost' : 'btn-primary'"
+        [class]="isLuc ? 'btn-ghost' : t === 'free' ? 'btn-ghost' : 'btn-primary'"
         [disabled]="current() === t"
         (click)="choose.emit(t)"
       >

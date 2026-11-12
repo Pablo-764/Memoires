@@ -2,9 +2,13 @@ import { Component, DestroyRef, ElementRef, afterNextRender, computed, inject, i
 
 // Lo que se pega en la mesa: foto, nota a mano y color de la cinta
 export interface BoardItem {
-  photo: string
+  // Foto del plan (se imprime en tramado); si no hay, la polaroid lleva la nota a mano
+  photo?: string
   note: string
   tone: string
+  // Fecha del plan (se muestra en Space Mono) e iniciales de quienes fueron
+  date?: string
+  people?: string[]
 }
 
 interface Snap extends BoardItem {
@@ -24,14 +28,6 @@ const LAYOUT = [
   { x: 46, y: 50, r: -6 },
 ]
 
-const SNAPS: Snap[] = [
-  { photo: 'fotos/cafe.webp', note: 'café con Abril, sábado', tone: 'friend', x: 6, y: 10, r: -7 },
-  { photo: 'fotos/correr.webp', note: 'corrimos 8 km (yo 5)', tone: 'plan', x: 30, y: 30, r: 5 },
-  { photo: 'fotos/concierto.webp', note: 'el concierto que nadie quería ir', tone: 'romance', x: 55, y: 6, r: -4 },
-  { photo: 'fotos/juegos.webp', note: 'noche de juegos: gané', tone: 'hobby', x: 74, y: 34, r: 8 },
-  { photo: 'fotos/biblioteca.webp', note: 'club de lectura, cap. 3', tone: 'accent', x: 16, y: 52, r: 3 },
-]
-
 interface Body {
   el: HTMLElement
   x: number
@@ -44,7 +40,8 @@ interface Body {
 
 /**
  * Tablero de polaroids: se pueden arrastrar y lanzar; siguen con inercia, giran un poco
- * según la velocidad y rebotan en los bordes. Todo se mueve con transform.
+ * según la velocidad y rebotan en los bordes. Todo se mueve con transform. Con teclado,
+ * las flechas mueven la foto enfocada; con movimiento reducido quedan en cuadrícula fija.
  */
 @Component({
   selector: 'app-polaroid-board',
@@ -53,20 +50,19 @@ interface Body {
   host: { class: 'block' },
 })
 export class PolaroidBoard {
-  // Fotos a mostrar; si no se pasan, se usan las de ejemplo de la portada
-  readonly items = input<BoardItem[] | null>(null)
-  protected readonly snaps = computed<Snap[]>(() => {
-    const list = this.items()
-    return list ? list.slice(0, LAYOUT.length).map((it, i) => ({ ...it, ...LAYOUT[i] })) : SNAPS
-  })
+  // Fotos a mostrar (planes cumplidos)
+  readonly items = input<BoardItem[]>([])
+  protected readonly snaps = computed<Snap[]>(() => this.items().slice(0, LAYOUT.length).map((it, i) => ({ ...it, ...LAYOUT[i] })))
+  protected readonly still = typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches
   private readonly board = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement
   private readonly cards = viewChildren<ElementRef<HTMLElement>>('card')
 
   constructor() {
     const destroyRef = inject(DestroyRef)
     afterNextRender(() => {
-      const still = matchMedia('(prefers-reduced-motion: reduce)').matches
-      const area = this.board.querySelector<HTMLElement>('.pb-area')!
+      const still = this.still
+      const area = this.board.querySelector<HTMLElement>('.pb-area')
+      if (!area || still) return
       let bounds = area.getBoundingClientRect()
       const snaps = this.snaps()
       const bodies: Body[] = this.cards().map(({ nativeElement: el }, i) => {
@@ -157,6 +153,20 @@ export class PolaroidBoard {
         if (!frame) frame = requestAnimationFrame(step)
       }
       const resize = () => (bounds = area.getBoundingClientRect())
+      // Teclado: las flechas mueven la foto enfocada 24 px
+      const key = (e: KeyboardEvent) => {
+        const el = (e.target as Element).closest<HTMLElement>('.pb-card')
+        const b = bodies.find((x) => x.el === el)
+        const dx = e.key === 'ArrowLeft' ? -24 : e.key === 'ArrowRight' ? 24 : 0
+        const dy = e.key === 'ArrowUp' ? -24 : e.key === 'ArrowDown' ? 24 : 0
+        if (!b || (!dx && !dy)) return
+        e.preventDefault()
+        b.x = Math.max(0, Math.min(bounds.width - b.el.offsetWidth * 0.8, b.x + dx))
+        b.y = Math.max(0, Math.min(bounds.height - b.el.offsetHeight * 0.85, b.y + dy))
+        b.el.style.zIndex = String(++z)
+        place(b)
+      }
+      area.addEventListener('keydown', key)
 
       area.addEventListener('pointerdown', down)
       area.addEventListener('pointermove', move)

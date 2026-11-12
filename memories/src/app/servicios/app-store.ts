@@ -56,6 +56,8 @@ interface State {
   minutesToday: number
   limitMinutes: number
   snoozedUntilMinute: number
+  // Ya se agregó a Arleth como conexión en esta sesión guardada
+  arleth?: boolean
 }
 
 const KEY = 'afin-demo-v1'
@@ -121,8 +123,8 @@ const INITIAL: State = {
   tier: 'free',
   matchesUsed: 0,
   wordsUsed: 0,
-  decisions: {},
-  connections: ['p2', ...BOT_CONNECTIONS],
+  decisions: { p3: 'like' },
+  connections: ['p3', 'p2', ...BOT_CONNECTIONS],
   messages: SEED_MESSAGES,
   joinedPlans: [],
   plans: PLANS,
@@ -133,6 +135,7 @@ const INITIAL: State = {
   minutesToday: 0,
   limitMinutes: 60,
   snoozedUntilMinute: 0,
+  arleth: true,
 }
 
 // Las cuentas anteriores guardaban estas preferencias solo para planes
@@ -154,7 +157,16 @@ function load(): State {
       ...(saved.plans ?? []).filter((p) => !PLANS.some((seed) => seed.id === p.id)),
       ...PLANS.map((seed) => ({ ...seed, ...saved.plans?.find((p) => p.id === seed.id) })),
     ]
-    return { ...INITIAL, ...saved, plans, me: migrate(saved.me) }
+    // Arleth ya es una conexión también en las sesiones guardadas (una sola vez)
+    const withArleth = saved.arleth
+      ? {}
+      : {
+          arleth: true,
+          connections: (saved.blocked ?? []).includes('p3') ? saved.connections : ['p3', ...(saved.connections ?? []).filter((c) => c !== 'p3')],
+          decisions: { ...saved.decisions, p3: 'like' as const },
+          messages: { ...SEED_MESSAGES, ...saved.messages, p3: saved.messages?.['p3']?.length ? saved.messages['p3'] : SEED_MESSAGES['p3'] },
+        }
+    return { ...INITIAL, ...saved, ...withArleth, plans, me: migrate(saved.me) }
   } catch {
     return INITIAL
   }

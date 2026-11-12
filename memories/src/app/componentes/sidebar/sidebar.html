@@ -24,7 +24,7 @@
         <span class="hand block text-lg leading-none">tu plan:</span>
         <span class="font-display text-2xl" [class.italic]="store.tier() === 'lucidite'">{{ tierInfo().name }}</span>
         <span class="mt-1 block text-sm">
-          {{ left() === null ? 'Matches ilimitados' : 'Te quedan ' + left() + ' matches esta semana' }}
+          @if (left() === null) { Matches ilimitados } @else { <span class="mono-tag">{{ left() }} matches/semana</span> }
         </span>
         @if (left() !== null) {
           <span class="note-meter">
