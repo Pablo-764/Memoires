@@ -38,7 +38,14 @@
   .decor-tile:hover { transform: translateY(-3px); }
 }
 
-.decor-swatch { position: relative; display: block; height: 4rem; overflow: hidden; border-radius: 14px; }
+.decor-swatch { position: relative; display: block; height: 4rem; overflow: hidden; border-radius: 8px; }
+
+/* Ahorro: las animaciones de las miniaturas solo corren al pasar el cursor */
+.decor-tile:not(:hover) app-avatar ::ng-deep *,
+.theme-card:not(:hover) app-avatar ::ng-deep * { animation-play-state: paused !important; }
+
+.decor-tile:hover app-effect.is-preview ::ng-deep :is(.fx, .fx-in),
+.theme-card:hover app-effect.is-preview ::ng-deep :is(.fx, .fx-in) { animation-play-state: running; }
 
 .fx-tile { background: #1d3753; }
 

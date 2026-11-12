@@ -2,7 +2,7 @@
   @for (t of store.toasts(); track t.id) {
     <button
       animate.leave="toast-out"
-      class="rise-in pointer-events-auto rounded-full px-5 py-3 text-sm font-medium text-on-accent shadow-(--shadow-float)"
+      class="toast-note rise-in pointer-events-auto px-5 py-3 text-sm font-semibold text-on-accent"
       [class]="t.tone === 'danger' ? 'bg-danger' : t.tone === 'ok' ? 'bg-plan' : 'bg-accent'"
       (click)="store.dismissToast(t.id)"
     >

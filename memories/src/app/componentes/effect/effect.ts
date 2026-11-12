@@ -31,11 +31,13 @@ const TIMING: Record<string, [number, number]> = {
   imports: [Icon],
   styleUrl: './effect.css',
   templateUrl: './effect.html',
-  host: { class: 'pointer-events-none absolute inset-0 block overflow-hidden', 'aria-hidden': 'true' },
+  host: { class: 'pointer-events-none absolute inset-0 block overflow-hidden', 'aria-hidden': 'true', '[class.is-preview]': 'preview()' },
 })
 export class Effect {
   readonly effect = input<string | undefined>('none')
   readonly count = input(12)
+  // Miniatura del selector: quieta hasta que se pasa el cursor
+  readonly preview = input(false)
   protected readonly glyphs = '01{}<>/=+*#;'
 
   protected readonly info = computed(() => effectOf(this.effect()))

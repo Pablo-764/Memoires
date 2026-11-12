@@ -60,7 +60,7 @@
 
     <figure>
       <div class="relative">
-        <div class="enter-photo relative aspect-[4/5] overflow-hidden rounded-[28px] bg-raised">
+        <div class="enter-photo print-photo relative aspect-[4/5] overflow-hidden rounded-[10px] bg-raised">
           @for (i of order; track i) {
             <img
               [src]="photos[i].src"
@@ -68,13 +68,15 @@
               width="1100"
               height="1650"
               [attr.fetchpriority]="i === 'friend' ? 'high' : null"
+              [attr.loading]="i === 'friend' ? null : 'lazy'"
+              decoding="async"
               [class]="photoState(i)"
               [style.object-position]="photos[i].position"
             />
           }
         </div>
         @for (p of featured(); track p.id) {
-          <div class="float-card absolute -bottom-7 left-4 right-4 flex items-center gap-3 rounded-[22px] bg-surface p-3.5 pr-5 shadow-(--shadow-float) sm:left-5 sm:right-auto sm:max-w-[20rem] lg:-left-10">
+          <div class="float-card absolute -bottom-7 left-4 right-4 flex items-center gap-3 rounded-[12px] bg-surface p-3.5 pr-5 print-edge sm:left-5 sm:right-auto sm:max-w-[20rem] lg:-left-10">
             <app-avatar [name]="p.name" [hue]="p.hue" [size]="52" [frame]="p.frame" />
             <div class="min-w-0">
               <div class="flex flex-wrap items-center gap-x-2 gap-y-1">

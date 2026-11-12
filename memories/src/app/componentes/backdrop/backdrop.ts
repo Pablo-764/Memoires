@@ -1,4 +1,4 @@
-import { Component, DestroyRef, ElementRef, ViewEncapsulation, afterNextRender, computed, inject } from '@angular/core'
+import { Component, DestroyRef, ElementRef, ViewEncapsulation, afterNextRender, computed, inject, signal, viewChild, viewChildren } from '@angular/core'
 import { NgTemplateOutlet } from '@angular/common'
 import { AppStore } from '../../servicios/app-store'
 
@@ -19,11 +19,9 @@ const LINES = [
   'pareja / amistad / un plan / pasatiempo',
   'café / conciertos / senderismo / cine / lectura',
   'di qué buscas / conoce a quien busca lo mismo',
-  'juegos de mesa / fotografía / yoga / museos',
   'mémoires / mémoires / mémoires',
   'correr / cocinar / karaoke / ajedrez / viajes',
   'hoy busco / hoy busco / hoy busco',
-  'pintura / baile / series / voluntariado / anime',
   'alguien con quien ir / alguien con quien hablar',
 ]
 const TONES = ['romance', 'friend', 'plan', 'hobby', 'accent']
@@ -32,16 +30,19 @@ const TONES = ['romance', 'friend', 'plan', 'hobby', 'accent']
 const ROWS: Row[] = LINES.map((line, i) => ({
   words: line.split(' / ').map((text, j) => ({ text, serif: (i + j) % 2 === 1 })),
   tone: `var(--color-${TONES[i % TONES.length]})`,
-  speed: 70 + ((i * 17) % 45),
+  speed: 80 + ((i * 17) % 45),
   dir: i % 2 ? 1 : -1,
 }))
 
-const INTERACTIVE = 'a, button, input, textarea, select, label, summary, [role="button"], [role="tab"], [role="radio"], [contenteditable], .card, app-modal'
+// Radio de la ventana de color (px)
+const R = 210
 
 /**
  * Fondo tipográfico: un muro de palabras gigantes en contorno que se desliza en diagonal.
- * Bajo el cursor, una lupa revela las mismas palabras rellenas de color; al desplazar la
- * página las filas se recorren y se inclinan con la velocidad; un clic abre la lupa.
+ * Con mouse, una ventana sin borde deja ver las mismas palabras rellenas de color;
+ * al desplazar la página las filas se recorren y se inclinan con la velocidad.
+ * Rendimiento: todo se mueve con transform escrito directo en cada elemento (sin variables
+ * heredadas que recalculen estilos), y la capa de color solo existe con puntero fino.
  */
 @Component({
   selector: 'app-backdrop',
@@ -54,7 +55,11 @@ const INTERACTIVE = 'a, button, input, textarea, select, label, summary, [role="
 export class Backdrop {
   protected readonly store = inject(AppStore)
   protected readonly rows = ROWS
+  protected readonly lens = signal(false)
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement
+  private readonly rowEls = viewChildren<ElementRef<HTMLElement>>('row')
+  private readonly lensBox = viewChild<ElementRef<HTMLElement>>('lensBox')
+  private readonly lensInner = viewChild<ElementRef<HTMLElement>>('lensInner')
 
   protected readonly glow = computed(() => {
     const tone = this.store.backdropTone() ?? (this.store.loggedIn() ? this.store.preferredIntent() : 'hobby')
@@ -66,7 +71,9 @@ export class Backdrop {
     afterNextRender(() => {
       const fine = matchMedia('(hover: hover) and (pointer: fine)')
       const still = matchMedia('(prefers-reduced-motion: reduce)')
-      const s = this.host.style
+      const syncLens = () => this.lens.set(fine.matches && !still.matches)
+      syncLens()
+
       const target = { x: innerWidth / 2, y: innerHeight * 0.35 }
       const pos = { ...target }
       let scroll = scrollY
@@ -76,20 +83,34 @@ export class Backdrop {
 
       const paint = () => {
         frame = 0
-        const k = still.matches ? 1 : 0.16
-        pos.x += (target.x - pos.x) * k
-        pos.y += (target.y - pos.y) * k
-        // El desplazamiento se suaviza; la inclinación sale de la velocidad
+        const reduced = still.matches
+        pos.x += (target.x - pos.x) * (reduced ? 1 : 0.18)
+        pos.y += (target.y - pos.y) * (reduced ? 1 : 0.18)
         const prev = shown
-        shown += (scroll - shown) * (still.matches ? 1 : 0.12)
-        const v = shown - prev
-        skew += (Math.max(-14, Math.min(14, v * 0.5)) - skew) * 0.2
-        s.setProperty('--mx', `${pos.x.toFixed(1)}px`)
-        s.setProperty('--my', `${pos.y.toFixed(1)}px`)
-        s.setProperty('--sy', shown.toFixed(1))
-        s.setProperty('--skew', `${still.matches ? 0 : skew.toFixed(2)}deg`)
+        shown += (scroll - shown) * (reduced ? 1 : 0.14)
+        skew += (Math.max(-12, Math.min(12, (shown - prev) * 0.45)) - skew) * 0.2
+        if (Math.abs(skew) < 0.02) skew = 0
+
+        // Filas: recorrido por scroll e inclinación por velocidad, directo en cada fila
+        if (!reduced) {
+          this.rowEls().forEach(({ nativeElement: el }, i) => {
+            const dir = ROWS[i % ROWS.length].dir
+            el.style.transform = `translate3d(${(shown * dir * 0.3).toFixed(1)}px, 0, 0) skewX(${skew.toFixed(2)}deg)`
+          })
+        }
+
+        // Ventana: se mueve con el cursor y su interior en sentido contrario
+        const box = this.lensBox()?.nativeElement
+        const inner = this.lensInner()?.nativeElement
+        if (box && inner) {
+          const x = pos.x - R
+          const y = pos.y - R
+          box.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)`
+          inner.style.transform = `translate3d(${(-x).toFixed(1)}px, ${(-y).toFixed(1)}px, 0)`
+        }
+
         const moving =
-          Math.abs(target.x - pos.x) > 0.4 || Math.abs(target.y - pos.y) > 0.4 || Math.abs(scroll - shown) > 0.4 || Math.abs(skew) > 0.05
+          Math.abs(target.x - pos.x) > 0.3 || Math.abs(target.y - pos.y) > 0.3 || Math.abs(scroll - shown) > 0.3 || skew !== 0
         if (moving) frame = requestAnimationFrame(paint)
       }
       const schedule = () => {
@@ -97,7 +118,7 @@ export class Backdrop {
       }
 
       const onMove = (e: PointerEvent) => {
-        if (e.pointerType !== 'mouse' || !fine.matches) return
+        if (e.pointerType !== 'mouse') return
         this.host.classList.add('is-live')
         target.x = e.clientX
         target.y = e.clientY
@@ -108,32 +129,24 @@ export class Backdrop {
         scroll = scrollY
         schedule()
       }
-      // Clic en una zona vacía: la lupa se abre un instante
-      let burst = 0
-      const onDown = (e: PointerEvent) => {
-        if (e.button !== 0 || still.matches) return
-        const t = e.target as Element | null
-        if (!t || t.closest(INTERACTIVE) || getSelection()?.toString()) return
-        target.x = e.clientX
-        target.y = e.clientY
-        this.host.classList.add('is-live', 'is-burst')
+      const onMedia = () => {
+        syncLens()
         schedule()
-        clearTimeout(burst)
-        burst = window.setTimeout(() => this.host.classList.remove('is-burst'), 520)
       }
 
-      paint()
+      schedule()
       addEventListener('pointermove', onMove, { passive: true })
-      addEventListener('pointerdown', onDown, { passive: true })
       addEventListener('scroll', onScroll, { passive: true })
       document.documentElement.addEventListener('pointerleave', onLeave)
+      fine.addEventListener('change', onMedia)
+      still.addEventListener('change', onMedia)
       destroyRef.onDestroy(() => {
         cancelAnimationFrame(frame)
-        clearTimeout(burst)
         removeEventListener('pointermove', onMove)
-        removeEventListener('pointerdown', onDown)
         removeEventListener('scroll', onScroll)
         document.documentElement.removeEventListener('pointerleave', onLeave)
+        fine.removeEventListener('change', onMedia)
+        still.removeEventListener('change', onMedia)
       })
     })
   }

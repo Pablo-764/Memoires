@@ -187,7 +187,7 @@
                   <button type="button" class="theme-card" [attr.aria-pressed]="themeActive(t)" (click)="applyTheme(t)">
                     <span class="theme-scene">
                       <app-banner [decoration]="t.banner" [preview]="true" />
-                      <app-effect [effect]="t.effect" [count]="7" />
+                      <app-effect [effect]="t.effect" [count]="7" [preview]="true" />
                       <span class="theme-avatar">
                         <app-avatar [name]="draft().name || 'Tú'" [hue]="260" [size]="40" [frame]="t.frame" [photo]="draft().photo" />
                       </span>
@@ -252,7 +252,7 @@
               @for (e of g.items; track e.key) {
                 <button type="button" class="decor-tile" [attr.aria-pressed]="draft().effect === e.key" (click)="patch({ effect: e.key })">
                   <span class="decor-swatch fx-tile">
-                    <app-effect [effect]="e.key" [count]="6" />
+                    <app-effect [effect]="e.key" [count]="6" [preview]="true" />
                     @if (!usable(e)) {
                       <span class="decor-lock"><app-icon name="lock" [size]="14" /></span>
                     }
