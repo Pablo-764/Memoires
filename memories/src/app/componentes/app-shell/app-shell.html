@@ -7,9 +7,6 @@
   <app-navbar />
 
   <main id="contenido" tabindex="-1" class="vt-page page-sheet mx-auto w-full max-w-5xl px-4 pb-32 pt-6 outline-none md:my-4 md:px-10 md:pb-12 md:pt-10" [attr.data-page]="page()">
-    <span class="sheet-sticker sheet-star" aria-hidden="true"></span>
-    <span class="sheet-sticker sheet-squiggle" aria-hidden="true"></span>
-    <span class="sheet-sticker sheet-dot" aria-hidden="true"></span>
     <router-outlet />
   </main>
 
@@ -31,8 +28,9 @@
   @if (matchPerson(); as person) {
     <app-modal title="¡Es una conexión!" (closed)="store.clearMatch()">
       <div class="text-center">
+        <app-inflado class="mx-auto -mb-6 w-48" [intent]="person.intents[0]" [turns]="1" [decorative]="true" />
         <div class="my-4 flex justify-center">
-          <div class="relative flex items-center">
+          <div class="relative flex items-center" [attr.data-intent]="person.intents[0]">
             <span class="match-ring" aria-hidden="true"></span>
             <app-avatar [name]="displayName()" [hue]="260" [size]="84" [frame]="store.me().frame" [photo]="store.me().photo" class="match-left ring-4 ring-surface" />
             <app-avatar [name]="person.name" [hue]="person.hue" [size]="84" [frame]="person.frame" class="match-right -ml-5 ring-4 ring-surface" />

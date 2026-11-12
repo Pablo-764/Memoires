@@ -1,4 +1,5 @@
-import { Component, computed, input } from '@angular/core'
+import { Component, computed, inject, input } from '@angular/core'
+import { TextAlbum } from '../../servicios/text-album'
 import { frameOf } from '../../modelos/decor'
 
 @Component({
@@ -38,5 +39,7 @@ export class Avatar {
   protected readonly ring10 = Array.from({ length: 10 }, (_, i) => i * 36)
   protected readonly ring8 = Array.from({ length: 8 }, (_, i) => i * 45 + 22.5)
   protected readonly ring6 = Array.from({ length: 6 }, (_, i) => i * 60)
+  protected readonly ring12 = Array.from({ length: 12 }, (_, i) => i * 30)
+  protected readonly textAlbum = inject(TextAlbum)
   protected readonly glyphs = 'ΨΩΔΛΞΦΣΘΠΓΨΩ'.split('')
 }

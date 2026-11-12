@@ -52,8 +52,19 @@ export class Chat {
   private readonly end = viewChild<ElementRef<HTMLElement>>('end')
   private readonly sendBtn = viewChild<ElementRef<HTMLElement>>('sendBtn')
   private readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput')
+  private readonly msgBox = viewChild<ElementRef<HTMLTextAreaElement>>('msgBox')
 
   constructor() {
+    // La caja de mensaje crece con el texto (sin barra de scroll hasta llegar al tope).
+    // Donde el navegador no soporta field-sizing, se ajusta la altura a mano.
+    const autoSize = typeof CSS === 'undefined' || !CSS.supports('field-sizing', 'content')
+    afterRenderEffect(() => {
+      this.text()
+      const el = this.msgBox()?.nativeElement
+      if (!el || !autoSize) return
+      el.style.height = 'auto'
+      el.style.height = `${el.scrollHeight}px`
+    })
     effect(() => {
       const p = this.person()
       this.store.ambient.set(p ? `color-mix(in oklab, oklch(0.7 0.12 ${p.hue}) 14%, var(--color-mist))` : null)

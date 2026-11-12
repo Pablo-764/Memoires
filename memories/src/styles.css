@@ -8,7 +8,7 @@
 
 @import "@fontsource-variable/caveat";
 
-@import "@fontsource/space-mono/400.css";
+@import "@fontsource/space-mono/700.css";
 
 /* Sistema de diseño de mémoires
    - Títulos en Syne ExtraBold: ancha, geométrica y con rasgos raros; da la voz atrevida.
@@ -1642,45 +1642,6 @@ html[data-vt-kind="pop"]::view-transition-new(page) { animation: page-turn-back 
   }
 }
 
-/* Stickers de la hoja: figuras planas en la pareja del tema que se mecen */
-.sheet-sticker { position: absolute; z-index: -1; pointer-events: none; }
-
-.sheet-star {
-  top: 1.1rem;
-  right: 1.4rem;
-  width: 4.2rem;
-  height: 4.2rem;
-  background: var(--offset);
-  clip-path: polygon(50% 0, 61% 33%, 96% 35%, 68% 56%, 79% 91%, 50% 70%, 21% 91%, 32% 56%, 4% 35%, 39% 33%);
-  animation: sticker-wobble 6s var(--ease-in-out) infinite alternate;
-}
-
-.sheet-squiggle {
-  top: 5.6rem;
-  right: 5.2rem;
-  width: 5.5rem;
-  height: 1.6rem;
-  background: var(--color-accent);
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 88 24'%3E%3Cpath d='M3 14c9-12 14 10 23 0s14 10 23 0 14 10 23 0 9 6 13 2' fill='none' stroke='black' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E") 0 0 / 100% 100%;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 88 24'%3E%3Cpath d='M3 14c9-12 14 10 23 0s14 10 23 0 14 10 23 0 9 6 13 2' fill='none' stroke='black' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E") 0 0 / 100% 100%;
-  animation: sticker-wobble 5s var(--ease-in-out) infinite alternate-reverse;
-}
-
-.sheet-dot {
-  bottom: 2rem;
-  right: 2rem;
-  width: 3rem;
-  height: 3rem;
-  border-radius: 50%;
-  border: 5px solid var(--color-accent);
-  box-shadow: 6px 6px 0 var(--offset);
-}
-
-@keyframes sticker-wobble {
-  from { transform: rotate(-8deg) scale(0.96); }
-  to { transform: rotate(10deg) scale(1.04); }
-}
-
 /* Subtítulo de cada sección en la tinta suave */
 .page-sheet h1 + p { color: var(--color-ink-soft); }
 
@@ -1740,9 +1701,52 @@ button[appchip][aria-pressed="true"] {
 .kt-outline .kt-row:nth-child(odd) { -webkit-text-stroke-color: color-mix(in oklab, var(--color-accent) 26%, transparent); }
 .kt-outline .kt-row:nth-child(even) { -webkit-text-stroke-color: color-mix(in oklab, var(--offset) 60%, transparent); }
 
-@media (prefers-reduced-motion: reduce) {
-  .sheet-star,
-  .sheet-squiggle { animation: none; }
+.pb-area { box-shadow: 0 0 0 1.5px var(--edge), 8px 8px 0 var(--offset) !important; }
+
+/* ---------- Interruptor ---------- */
+.ink-switch {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  color: var(--color-ink);
 }
 
-.pb-area { box-shadow: 0 0 0 1.5px var(--edge), 8px 8px 0 var(--offset) !important; }
+.ink-switch-track {
+  position: relative;
+  flex-shrink: 0;
+  width: 3.2rem;
+  height: 1.8rem;
+  margin-top: 0.1rem;
+  border-radius: 999px;
+  background: var(--color-line);
+  box-shadow: inset 0 0 0 1.5px var(--color-line-strong);
+  transition: background-color 220ms ease, box-shadow 220ms ease;
+}
+
+.ink-switch-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 1.35rem;
+  height: 1.35rem;
+  border-radius: 999px;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-lift);
+  transition: transform 260ms var(--ease-out);
+}
+
+.ink-switch[aria-checked="true"] .ink-switch-track { background: var(--color-accent); box-shadow: none; }
+
+.ink-switch[aria-checked="true"] .ink-switch-thumb { transform: translateX(1.4rem); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ink-switch-thumb { transition: none; }
+}
+
+/* Microetiqueta en Space Mono: solo para datos reales (cupos, fechas, contadores) */
+.mono-tag {
+  font-family: var(--font-mono);
+  font-size: 0.82em;
+  letter-spacing: 0.01em;
+  font-variant-numeric: tabular-nums;
+}

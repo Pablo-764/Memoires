@@ -5,7 +5,14 @@
     {{ initial() }}
   }
 </span>
-@if (frameInfo().key !== 'none') {
+@if (textAlbum.on() && frameInfo().key !== 'none') {
+  <!-- Modo álbum de texto: el marco se dibuja con caracteres alrededor del aro -->
+  <span class="at-ring" [style.--t.px]="thickness()">
+    @for (a of ring12; track a; let k = $index) {
+      <span class="ao-slot" [style.--a]="a + 'deg'"><span class="at-char" [style.color]="k % 2 ? accent2() : accent()">{{ k % 2 ? '+' : '*' }}</span></span>
+    }
+  </span>
+} @else if (frameInfo().key !== 'none') {
   @let fx = frameInfo().fx;
   @if (fx === 'glow') {
     <span class="af-glow" [style.background]="frameInfo().bg" [style.--t.px]="thickness()"></span>

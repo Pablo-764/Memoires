@@ -35,7 +35,7 @@
       </p>
       @if (!thread().length) {
         <div class="swap-in mb-6 flex flex-col items-center text-center">
-          <app-ascii piece="dos-tazas" [intent]="p.intents[0]" />
+          <app-ascii piece="dos-tazas" [intent]="p.intents[0]" mode="decode" />
           <p class="hand mt-3 text-[1.4rem] text-ink-soft">dos tazas y nadie ha dicho hola</p>
         </div>
       }
@@ -64,11 +64,11 @@
       </div>
       <form class="flex items-end gap-2" (ngSubmit)="submit()">
         <label for="msg" class="sr-only">Mensaje</label>
-        <textarea id="msg" name="msg" rows="1" class="field max-h-32 min-h-12 flex-1 resize-none py-3" [placeholder]="'Escribe a ' + p.name + '…'" [(ngModel)]="text" (keydown)="onKeydown($event)"></textarea>
+        <textarea #msgBox id="msg" name="msg" rows="1" class="msg-box field min-h-12 flex-1 resize-none py-3" [placeholder]="'Escribe a ' + p.name + '…'" [(ngModel)]="text" (keydown)="onKeydown($event)"></textarea>
         <button #sendBtn class="btn btn-primary size-12 min-h-0 shrink-0 p-0" [disabled]="!text().trim()" aria-label="Enviar mensaje"><app-icon name="send" [size]="19" /></button>
       </form>
       @if (words() > 0) {
-        <p class="mt-1.5 text-xs text-ink-mute">{{ words() }} {{ words() === 1 ? 'palabra' : 'palabras' }}</p>
+        <p class="mono-tag mt-1.5 text-xs text-ink-mute">{{ words() }} {{ words() === 1 ? 'palabra' : 'palabras' }}</p>
       }
     </div>
 

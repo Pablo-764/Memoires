@@ -19,10 +19,11 @@ const LINES = [
   'pareja / amistad / un plan / pasatiempo',
   'café / conciertos / senderismo / cine / lectura',
   'di qué buscas / conoce a quien busca lo mismo',
-  'mémoires / mémoires / mémoires',
+  'mémoires / Arleth / mémoires / Arleth',
   'correr / cocinar / karaoke / ajedrez / viajes',
   'hoy busco / hoy busco / hoy busco',
   'alguien con quien ir / alguien con quien hablar',
+  'flores para Arleth / estrellas / atardeceres / Arleth',
 ]
 const TONES = ['romance', 'friend', 'plan', 'hobby', 'accent']
 

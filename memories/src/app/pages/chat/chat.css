@@ -24,3 +24,12 @@
 }
 
 .msg-hit { border-radius: 4px; padding: 0 2px; color: var(--color-on-accent); background: var(--color-accent); }
+
+/* Caja de mensaje: crece línea por línea mientras escribes; solo al llegar al tope aparece el scroll */
+.msg-box {
+  field-sizing: content;
+  max-height: min(45vh, 20rem);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  transition: height 120ms ease;
+}

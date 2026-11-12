@@ -91,46 +91,7 @@
   .auth-polaroid:hover { rotate: 0deg; scale: 1.04; z-index: 5; }
 }
 
-/* Sello circular que gira */
-.auth-seal {
-  position: absolute;
-  right: 8%;
-  bottom: 10%;
-  width: clamp(7rem, 11vw, 9rem);
-  translate: calc(var(--px) * -44px) calc(var(--py) * -44px);
-  transition: translate 700ms var(--ease-out);
-  rotate: -12deg;
-}
-
-.auth-seal-disc { fill: var(--color-accent); }
-
-.auth-seal-text {
-  fill: var(--color-on-accent);
-  font-family: var(--font-display);
-  font-size: 12.5px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  transform-origin: 70px 70px;
-  animation: auth-spin 18s linear infinite;
-}
-
-.auth-seal-heart { fill: var(--color-on-accent); }
-
-@keyframes auth-spin { to { transform: rotate(360deg); } }
-
-.auth-note {
-  position: absolute;
-  left: 9%;
-  bottom: 9%;
-  font-size: 1.7rem;
-  line-height: 1.05;
-  color: var(--color-ink-soft);
-  rotate: -4deg;
-}
 
 @media (prefers-reduced-motion: reduce) {
   .auth-polaroid { animation: none; transition: none; translate: none; }
-  .auth-seal { translate: none; }
-  .auth-seal-text { animation: none; }
 }

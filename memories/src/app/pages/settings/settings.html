@@ -6,6 +6,13 @@
     <div>
       <p class="text-sm text-ink-soft">Elige el modo claro, el nocturno, o que siga la configuración de tu dispositivo.</p>
       <div class="mt-4 max-w-sm"><app-theme-segmented /></div>
+      <button type="button" role="switch" class="ink-switch mt-6" [attr.aria-checked]="textAlbum.on()" (click)="textAlbum.set(!textAlbum.on())">
+        <span class="ink-switch-track" aria-hidden="true"><span class="ink-switch-thumb"></span></span>
+        <span class="text-left">
+          <span class="block font-semibold">Álbum de texto</span>
+          <span class="block text-sm text-ink-soft">Los fondos, marcos y efectos de perfil se dibujan con caracteres. Las fotos no cambian.</span>
+        </span>
+      </button>
     </div>
   </section>
 

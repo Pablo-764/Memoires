@@ -2,7 +2,7 @@
   <div class="profile-preview card overflow-hidden lg:sticky lg:top-10">
     <div class="relative h-44">
       <app-banner [decoration]="draft().decoration" [custom]="draft().customBanner" />
-      <app-effect [effect]="draft().effect" [count]="12" />
+      <app-effect [effect]="draft().effect" [count]="12" [name]="draft().name || 'mémoires'" />
       <label class="glass-icon absolute right-3 top-3 cursor-pointer" aria-label="Subir fondo propio">
         <app-icon name="image-plus" [size]="18" />
         <input type="file" accept="image/*" class="sr-only" (change)="upload($event, 'customBanner')" />

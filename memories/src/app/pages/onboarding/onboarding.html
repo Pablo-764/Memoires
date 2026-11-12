@@ -91,3 +91,13 @@
     </button>
   </div>
 </div>
+
+@if (done()) {
+  <div class="fade-in fixed inset-0 z-50 grid place-items-center bg-mist px-5" role="status">
+    <div class="flex w-full max-w-sm flex-col items-center text-center">
+      <app-inflado class="w-full max-w-[18rem]" [intent]="intents().includes('hobby') || !intents().length ? 'hobby' : intents()[0]" [interests]="interests()" [turns]="1" [res]="280" [decorative]="true" />
+      <h2 class="mt-4 text-[2.6rem] leading-none">Ya estás dentro</h2>
+      <p class="hand mt-2 text-[1.5rem] text-ink-soft">tu forma, cubierta con lo que te gusta (y un saludo de Arleth)</p>
+    </div>
+  </div>
+}

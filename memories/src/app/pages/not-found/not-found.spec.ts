@@ -9,6 +9,6 @@ describe('NotFound', () => {
     await fixture.whenStable()
     const el: HTMLElement = fixture.nativeElement
     expect(el.querySelector('h1')?.textContent).toContain('Esta página no existe')
-    expect(el.textContent).toContain('Ilustración: una flor que se endereza')
+    expect(el.textContent).toContain('Ilustración: una rosa que se endereza')
   })
 })

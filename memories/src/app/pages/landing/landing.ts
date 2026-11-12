@@ -10,23 +10,16 @@ import { IntentBadge } from '../../componentes/intent-badge/intent-badge'
 import { Logo } from '../../componentes/logo/logo'
 import { Footer } from '../../componentes/footer/footer'
 import { Reveal } from '../../directivas/reveal'
-import { PolaroidBoard } from '../../componentes/polaroid-board/polaroid-board'
+import { Inflado } from '../../componentes/inflado/inflado'
 import { ThemeIconButton } from '../../componentes/theme-icon-button/theme-icon-button'
 import { TierCards } from '../../componentes/tier-cards/tier-cards'
 import { Thread } from '../../componentes/thread/thread'
-
-const HERO_PHOTOS: Record<Intent, { src: string; alt: string; credit: string; position: string }> = {
-  friend: { src: 'fotos/cafe.webp', alt: 'Dos personas conversan en una mesa de un café iluminado por lámparas de papel', credit: 'tommao wang', position: '50% 70%' },
-  plan: { src: 'fotos/correr.webp', alt: 'Tres personas corren por una banqueta soleada', credit: 'Nathan Nuyda', position: '50% 50%' },
-  hobby: { src: 'fotos/juegos.webp', alt: 'Dos personas juegan un juego de mesa', credit: '2H Media', position: '50% 50%' },
-  romance: { src: 'fotos/concierto.webp', alt: 'Público frente a un escenario iluminado', credit: 'Yvette de Wit', position: '50% 50%' },
-}
 
 const COLOR_KEY: Record<Intent, string> = { friend: 'friend', plan: 'plan', hobby: 'hobby', romance: 'romance' }
 
 @Component({
   selector: 'app-landing',
-  imports: [RouterLink, NgTemplateOutlet, Avatar, Footer, IntentBadge, Logo, PolaroidBoard, Reveal, ThemeIconButton, Thread, TierCards],
+  imports: [RouterLink, NgTemplateOutlet, Avatar, Footer, IntentBadge, Logo, Inflado, Reveal, ThemeIconButton, Thread, TierCards],
   styleUrl: './landing.css',
   templateUrl: './landing.html',
 })
@@ -35,11 +28,11 @@ export class Landing {
   protected readonly store = inject(AppStore)
   protected readonly intents = INTENTS
   protected readonly order = INTENT_ORDER
-  protected readonly photos = HERO_PHOTOS
   protected readonly intent = signal<Intent>('friend')
-  protected readonly previous = signal<Intent | null>(null)
   protected readonly sample = computed(() => PEOPLE.filter((p) => p.intents.includes(this.intent()) && p.city === 'Guadalajara'))
   protected readonly featured = computed(() => this.sample().slice(0, 1))
+  // Para la estrella de pasatiempo: los intereses de la persona de ejemplo
+  protected readonly featuredInterests = computed(() => this.featured()[0]?.interests ?? [])
   protected readonly pillColor = computed(() => `var(--color-${COLOR_KEY[this.intent()]})`)
 
   protected readonly plainWords = ['Di', 'qué', 'buscas.', 'Conoce', 'a', 'quien', 'busca']
@@ -61,7 +54,7 @@ export class Landing {
   protected readonly steps = [
     ['Dices qué buscas.', 'Eliges una o varias intenciones y los intereses que te definen. Puedes cambiarlas cuando quieras.', 'sin presión, lo cambias cuando sea'],
     ['Ves a gente afín, y por qué.', 'Te mostramos personas de tu ciudad con tu misma intención y te decimos qué tienen en común.', 'nada de adivinar: te decimos qué comparten'],
-    ['Hablan si los dos quieren.', 'El chat solo se abre cuando a ambos les interesa conocerse.', 'y el hilo por fin se une'],
+    ['Hablan si los dos quieren.', 'El chat solo se abre cuando a ambos les interesa conocerse.', 'y el hilo por fin se une, como las flores de Arleth'],
   ]
 
   protected readonly safety = [
@@ -168,13 +161,7 @@ export class Landing {
 
   protected choose(next: Intent) {
     if (next === this.intent()) return
-    this.previous.set(this.intent())
     this.intent.set(next)
-  }
-
-  protected photoState(i: Intent) {
-    if (i === this.intent()) return 'hero-photo is-active'
-    return i === this.previous() ? 'hero-photo is-previous' : 'hero-photo'
   }
 
   // El logo de la portada lleva al inicio de la misma portada, nunca a la app

@@ -195,3 +195,11 @@
   .fx-orbit,
   .fx-burst { transform: rotate(var(--a)) translateX(var(--r)); }
 }
+
+/* Inflado: un objeto chico arriba a la derecha del fondo */
+.fx-inflado {
+  position: absolute;
+  top: 8%;
+  right: 5%;
+  width: min(34%, 7.5rem);
+}

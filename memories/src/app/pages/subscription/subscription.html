@@ -31,7 +31,7 @@
       <div class="relative h-28">
         <app-banner [decoration]="luc.banner" [preview]="true" />
         @if (showLuc()) {
-          <app-effect [effect]="luc.effect" [count]="12" />
+          <app-effect [effect]="luc.effect" [count]="12" [name]="myName()" />
         }
       </div>
       <div class="px-5 pb-5">

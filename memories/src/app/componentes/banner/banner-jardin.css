@@ -9,7 +9,7 @@
 
 .gd-piece {
   position: absolute;
-  font-size: calc(7.4cqh * var(--gd-s, 1));
+  font-size: calc(4.6cqh * var(--gd-s, 1));
 }
 
 .gd-piece ::ng-deep .ascii-pre { font-size: inherit; }

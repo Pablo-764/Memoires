@@ -13,10 +13,12 @@ import { Modal } from '../../componentes/modal/modal'
 import { PillGroup } from '../../directivas/pill-group'
 import { SwipeCard } from '../../componentes/swipe-card/swipe-card'
 import { FiltersPanel } from '../../componentes/filters-panel/filters-panel'
+import { AsciiArt } from '../../componentes/ascii-art/ascii-art'
+import { CORNERS_BY_SEARCH } from '../../datos/ascii'
 
 @Component({
   selector: 'app-discover',
-  imports: [RouterLink, ChoiceChip, Modal, Icon, PillGroup, SwipeCard, FiltersPanel],
+  imports: [AsciiArt, RouterLink, ChoiceChip, Modal, Icon, PillGroup, SwipeCard, FiltersPanel],
   styleUrl: './discover.css',
   templateUrl: './discover.html',
 })
@@ -57,6 +59,13 @@ export class Discover {
   })
   protected readonly deck = computed(() => this.suggestions().slice(0, 3))
   protected readonly current = computed(() => this.suggestions()[0])
+  // Dibujos de las esquinas: dependen de lo que se busca
+  protected readonly corners = computed(() => CORNERS_BY_SEARCH[this.store.filters().intent])
+  protected readonly cornerIntent = computed(() => {
+    const i = this.store.filters().intent
+    return i === 'any' ? null : i
+  })
+  protected readonly cornerClass = ['disc-art-tl', 'disc-art-tr', 'disc-art-bl', 'disc-art-br']
   protected readonly limits = computed(() => TIERS[this.store.tier()])
   protected readonly ambient = computed(() => {
     const person = this.current()?.person

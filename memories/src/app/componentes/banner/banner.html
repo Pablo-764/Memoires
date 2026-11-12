@@ -241,7 +241,7 @@
 <ng-template #gardenTpl let-grow>
   <div class="gd" [class.gd-grow]="grow" [style.--ascii-ink]="color(0)" [style.--ascii-accent]="color(1)" [style.--ascii-detail]="color(2)">
     @for (g of garden; track $index) {
-      <app-ascii class="gd-piece" [piece]="g.piece" [style.left.%]="g.x" [style.bottom.%]="g.y" [style.--gd-s]="g.s" [style.--i]="$index" />
+      <app-ascii class="gd-piece" [piece]="g.piece" [style.left.%]="g.x" [style.bottom.%]="g.y" [style.--gd-s]="g.s" [style.--i]="$index" [decorative]="true" />
     }
   </div>
 </ng-template>

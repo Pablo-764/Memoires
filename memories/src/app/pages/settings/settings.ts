@@ -6,6 +6,7 @@ import { ChoiceChip } from '../../componentes/choice-chip/choice-chip'
 import { Icon } from '../../componentes/icon/icon'
 import { Modal } from '../../componentes/modal/modal'
 import { ThemeSegmented } from '../../componentes/theme-segmented/theme-segmented'
+import { TextAlbum } from '../../servicios/text-album'
 
 
 @Component({
@@ -15,6 +16,7 @@ import { ThemeSegmented } from '../../componentes/theme-segmented/theme-segmente
   templateUrl: './settings.html',
 })
 export class Settings {
+  protected readonly textAlbum = inject(TextAlbum)
   protected readonly store = inject(AppStore)
   private readonly router = inject(Router)
   protected readonly limits = [30, 60, 90, 120]

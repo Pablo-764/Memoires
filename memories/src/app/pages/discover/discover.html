@@ -1,3 +1,9 @@
+<!-- Dibujos ASCII grandes en las esquinas; cambian con lo que se busca y se vuelven a escribir -->
+<div class="disc-art" aria-hidden="true">
+  @for (piece of corners(); track piece + $index; let i = $index) {
+    <app-ascii [class]="cornerClass[i]" [piece]="piece" [intent]="cornerIntent()" mode="decode" [decorative]="true" />
+  }
+</div>
 <div class="mx-auto flex flex-col">
   <div class="flex items-center justify-center gap-2">
     <div class="shape-bar" [appPillGroup]="store.filters().intent" role="group" aria-label="Qué buscas">

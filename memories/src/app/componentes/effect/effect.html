@@ -1,3 +1,6 @@
+@if (inflado(); as f) {
+  <app-inflado class="fx-inflado" [intent]="f.shape" [phrases]="[name()]" [colors]="f.colors" [mode]="preview() ? 'still' : 'spin'" [res]="150" [decorative]="true" />
+}
 @for (p of particles(); track $index) {
   <span
     class="fx"
@@ -11,7 +14,9 @@
     [style.--r]="p.radius + 'cqmin'"
   >
     <span class="fx-in" [style.animation-duration.s]="p.sway" [style.animation-delay.s]="p.delay">
-      @if (info().icon; as icon) {
+      @if (textAlbum.on()) {
+        <span class="fx-glyph" [style.font-size.px]="p.size * 0.9">{{ textGlyphs[$index % textGlyphs.length] }}</span>
+      } @else if (info().icon; as icon) {
         <app-icon [name]="icon" [size]="p.size" [filled]="true" />
       } @else {
         @if (info().shape === 'glyph') {
