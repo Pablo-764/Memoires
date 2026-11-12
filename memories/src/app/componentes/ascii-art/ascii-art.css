@@ -1,0 +1,28 @@
+:host {
+  display: inline-block;
+  color: var(--ascii-ink, var(--color-accent));
+}
+
+.ascii-pre {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1;
+  letter-spacing: 0;
+  white-space: pre;
+}
+
+:host([data-size="sm"]) .ascii-pre { font-size: clamp(9px, 1.1vw, 11px); }
+
+:host([data-size="lg"]) .ascii-pre { font-size: clamp(14px, 2.2vw, 20px); }
+
+.ascii-line {
+  display: block;
+  min-height: 1em;
+}
+
+/* La única parte en el color de la intención */
+.a { color: var(--ascii-accent, var(--intent-c)); }
+
+/* Detalle en el tono suave del tema */
+.d { color: var(--ascii-detail); }

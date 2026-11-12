@@ -10,6 +10,8 @@ export type BannerScene =
   | 'city' | 'hyper' | 'code' | 'planet' | 'portal' | 'synth' | 'crt' | 'spotlight' | 'noir' | 'film' | 'comic' | 'fog' | 'castle' | 'anime'
   // Líneas de colección: escenas con más capas, cada una con variantes de color
   | 'lava' | 'glitch' | 'runes' | 'blackhole' | 'sumi' | 'crystal' | 'lightning' | 'caustics' | 'royal' | 'pixel' | 'hexgrid' | 'frost'
+  // Jardín de texto: dibujos ASCII hechos a mano; la variante que crece es solo de Lucidité
+  | 'garden' | 'garden-grow'
 
 export interface Banner {
   key: string
@@ -164,6 +166,11 @@ export const BANNERS: Banner[] = [
   b('colmena-cian', 'Cian', 'Colmena', 'hexgrid', 'radial-gradient(circle at 50% 60%, #002a33, #000a0e 75%)', ['#00e5ff', '#bafcff']),
   b('escarcha', 'Escarcha', 'Escarcha', 'frost', 'linear-gradient(180deg, #bfe3ff, #6fa8dc)', ['#ffffff', '#e6f6ff'], 'grand'),
   b('escarcha-aurora', 'Aurora helada', 'Escarcha', 'frost', 'linear-gradient(180deg, #123a5c, #2f8f9a)', ['#ffffff', '#b8ffe9']),
+  // Jardín de texto: el dibujo es el mismo; cada variante cambia el trazo, el acento y el detalle
+  b('jardin-papel', 'Papel', 'Jardín de texto', 'garden', 'linear-gradient(180deg, #fbf6ef, #efe6d6)', ['#6e3ead', '#93506c', '#a993d6'], 'grand'),
+  b('jardin-noche', 'Noche', 'Jardín de texto', 'garden', 'linear-gradient(180deg, #251c36, #110a1d)', ['#fc984c', '#f2a3c1', '#dac6b8'], 'grand'),
+  b('jardin-menta', 'Menta', 'Jardín de texto', 'garden', 'linear-gradient(180deg, #e2f5ef, #c9ebe0)', ['#0d7a66', '#93506c', '#6fae9c']),
+  b('jardin-crece', 'Que crece', 'Jardín de texto', 'garden-grow', 'linear-gradient(180deg, #f5f0e0, #e8dcbc)', ['#7a681c', '#93506c', '#b5a46c']),
 ]
 
 // Colores con versión para tema claro y nocturno: siempre se distinguen sobre la superficie

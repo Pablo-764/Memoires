@@ -322,6 +322,37 @@ export class AppStore {
     })
   }
 
+  // Quita la conexión y su conversación; la persona no vuelve a Descubre porque ya hubo decisión
+  removeConnection(id: string) {
+    this.patch((s) => {
+      const messages = { ...s.messages }
+      delete messages[id]
+      return { connections: s.connections.filter((c) => c !== id), messages }
+    })
+  }
+
+  // Borra los mensajes de una conversación; la conexión sigue
+  clearChat(id: string) {
+    this.patch((s) => ({ messages: { ...s.messages, [id]: [] } }))
+  }
+
+  // Quita de una vez las conexiones en las que nadie ha escrito; devuelve cuántas fueron
+  removeSilentConnections() {
+    const s = this.state()
+    const silent = s.connections.filter((c) => !s.messages[c]?.length)
+    if (silent.length) this.patch({ connections: s.connections.filter((c) => !silent.includes(c)) })
+    return silent.length
+  }
+
+  // Nuevo orden de las conexiones (solo acepta las mismas personas)
+  setConnectionOrder(ids: string[]) {
+    this.patch((s) => {
+      const known = ids.filter((id) => s.connections.includes(id))
+      const rest = s.connections.filter((id) => !known.includes(id))
+      return { connections: [...known, ...rest] }
+    })
+  }
+
   block(id: string) {
     this.patch((s) => ({
       blocked: [...new Set([...s.blocked, id])],

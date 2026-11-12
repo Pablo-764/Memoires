@@ -23,4 +23,4 @@
   .bubble-in { transform: none; transition: opacity 200ms ease; }
 }
 
-.msg-hit { border-radius: 4px; padding: 0 2px; color: #13202f; background: #ffba67; }
+.msg-hit { border-radius: 4px; padding: 0 2px; color: var(--color-on-accent); background: var(--color-accent); }

@@ -13,13 +13,13 @@ interface Theme {
 }
 
 const THEMES: Record<CelebrationTheme, Theme> = {
-  romance: { main: 'heart', icons: ['heart'], backdrop: '#9f3b59', colors: ['#ffffff', '#ffd1e0', '#ff9fb6'], filled: true },
-  friend: { main: 'handshake', icons: ['handshake', 'smile', 'users', 'coffee'], backdrop: '#b46a12', colors: ['#ffffff', '#fff1b8', '#ffe08a'], filled: false },
-  plan: { main: 'ticket', icons: ['ticket', 'calendar-check', 'map-pin', 'footprints'], backdrop: '#007b63', colors: ['#ffffff', '#c9f2e6', '#59dac1'], filled: false },
-  hobby: { main: 'gamepad-2', icons: ['gamepad-2', 'puzzle', 'dices', 'palette', 'music'], backdrop: '#6e4ea5', colors: ['#ffffff', '#dfe2ff', '#cab0ff'], filled: false },
-  pass: { main: 'x', icons: ['x'], backdrop: '#3c4958', colors: ['#97a3b1', '#bec8d4'], filled: false },
-  block: { main: 'ban', icons: ['shield-check', 'ban'], backdrop: '#13202f', colors: ['#ffa392', '#af2c1f'], filled: false },
-  report: { main: 'flag', icons: ['flag', 'shield-check'], backdrop: '#13202f', colors: ['#ffba67', '#ffa392'], filled: false },
+  romance: { main: 'heart', icons: ['heart'], backdrop: '#93506c', colors: ['#ffffff', '#fdeaf1', '#f2a3c1'], filled: true },
+  friend: { main: 'handshake', icons: ['handshake', 'smile', 'users', 'coffee'], backdrop: '#7a681c', colors: ['#ffffff', '#f5f0e0', '#d2bd70'], filled: false },
+  plan: { main: 'ticket', icons: ['ticket', 'calendar-check', 'map-pin', 'footprints'], backdrop: '#0d7a66', colors: ['#ffffff', '#e2f5ef', '#71d3ba'], filled: false },
+  hobby: { main: 'gamepad-2', icons: ['gamepad-2', 'puzzle', 'dices', 'palette', 'music'], backdrop: '#346e9c', colors: ['#ffffff', '#e4f2fe', '#86c5fa'], filled: false },
+  pass: { main: 'x', icons: ['x'], backdrop: '#524569', colors: ['#d2c0f5', '#ede5fe'], filled: false },
+  block: { main: 'ban', icons: ['shield-check', 'ban'], backdrop: '#2e1f46', colors: ['#f68678', '#ffebe8'], filled: false },
+  report: { main: 'flag', icons: ['flag', 'shield-check'], backdrop: '#2e1f46', colors: ['#d2c0f5', '#f68678'], filled: false },
   save: { main: 'sparkles', icons: ['sparkles', 'star'], backdrop: '#1b5296', colors: ['#ffba67', '#cab0ff', '#ff9fb6'], filled: true },
   grand: { main: 'star', icons: ['star', 'sparkles'], backdrop: '#1b5296', colors: ['#ffffff', '#ffba67', '#cab0ff'], filled: true },
   lucidite: { main: 'moon-star', icons: ['moon-star', 'star', 'sparkles', 'gem'], backdrop: '#0e2743', colors: ['#ffffff', '#ffba67', '#bae1fb'], filled: true },

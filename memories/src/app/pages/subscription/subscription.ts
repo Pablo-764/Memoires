@@ -6,10 +6,14 @@ import { Icon } from '../../componentes/icon/icon'
 import { Meter } from '../../componentes/meter/meter'
 import { Modal } from '../../componentes/modal/modal'
 import { TierCards } from '../../componentes/tier-cards/tier-cards'
+import { Avatar } from '../../componentes/avatar/avatar'
+import { Banner } from '../../componentes/banner/banner'
+import { Effect } from '../../componentes/effect/effect'
+import { THEMES, TOTAL_STYLES, nameStyleOf } from '../../modelos/decor'
 
 @Component({
   selector: 'app-subscription',
-  imports: [Icon, Meter, Modal, TierCards],
+  imports: [Avatar, Banner, Effect, Icon, Meter, Modal, TierCards],
   styleUrl: './subscription.css',
   templateUrl: './subscription.html',
 })
@@ -21,6 +25,14 @@ export class Subscription {
   protected readonly info = computed(() => TIERS[this.store.tier()])
   protected readonly checkout = signal<Tier | null>(null)
   protected readonly paying = signal<'paypal' | 'gpay' | null>(null)
+
+  // Vista previa de Lucidité con un tema mítico sobre el perfil propio
+  protected readonly showLuc = signal(false)
+  protected readonly lucTheme = THEMES.find((t) => t.key === 'col-celestial')!
+  protected readonly luc = this.lucTheme
+  protected readonly lucName = nameStyleOf(this.lucTheme.name)
+  protected readonly totalStyles = TOTAL_STYLES
+  protected readonly myName = computed(() => this.store.me().name || 'Tú')
 
   protected readonly cta = (t: Tier) => (t === 'free' ? 'Cancelar suscripción' : `Cambiar a ${TIERS[t].name}`)
 

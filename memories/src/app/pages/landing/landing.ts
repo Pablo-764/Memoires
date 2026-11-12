@@ -1,4 +1,5 @@
 import { Component, DestroyRef, ElementRef, afterNextRender, afterRenderEffect, computed, effect, inject, signal, viewChild } from '@angular/core'
+import { NgTemplateOutlet } from '@angular/common'
 import { Router, RouterLink } from '@angular/router'
 import { AppStore } from '../../servicios/app-store'
 import { PEOPLE } from '../../datos/mock'
@@ -9,11 +10,10 @@ import { IntentBadge } from '../../componentes/intent-badge/intent-badge'
 import { Logo } from '../../componentes/logo/logo'
 import { Footer } from '../../componentes/footer/footer'
 import { Reveal } from '../../directivas/reveal'
-import { Pressure } from '../../directivas/pressure'
-import { StickerTrail } from '../../directivas/sticker-trail'
 import { PolaroidBoard } from '../../componentes/polaroid-board/polaroid-board'
 import { ThemeIconButton } from '../../componentes/theme-icon-button/theme-icon-button'
 import { TierCards } from '../../componentes/tier-cards/tier-cards'
+import { Thread } from '../../componentes/thread/thread'
 
 const HERO_PHOTOS: Record<Intent, { src: string; alt: string; credit: string; position: string }> = {
   friend: { src: 'fotos/cafe.webp', alt: 'Dos personas conversan en una mesa de un café iluminado por lámparas de papel', credit: 'tommao wang', position: '50% 70%' },
@@ -26,7 +26,7 @@ const COLOR_KEY: Record<Intent, string> = { friend: 'friend', plan: 'plan', hobb
 
 @Component({
   selector: 'app-landing',
-  imports: [RouterLink, Avatar, Footer, IntentBadge, Logo, PolaroidBoard, Pressure, Reveal, StickerTrail, ThemeIconButton, TierCards],
+  imports: [RouterLink, NgTemplateOutlet, Avatar, Footer, IntentBadge, Logo, PolaroidBoard, Reveal, ThemeIconButton, Thread, TierCards],
   styleUrl: './landing.css',
   templateUrl: './landing.html',
 })
@@ -40,8 +40,6 @@ export class Landing {
   protected readonly previous = signal<Intent | null>(null)
   protected readonly sample = computed(() => PEOPLE.filter((p) => p.intents.includes(this.intent()) && p.city === 'Guadalajara'))
   protected readonly featured = computed(() => this.sample().slice(0, 1))
-  protected readonly accent = computed(() => `var(--color-${COLOR_KEY[this.intent()]})`)
-  protected readonly wash = computed(() => `color-mix(in oklab, var(--color-${COLOR_KEY[this.intent()]}-soft) 58%, transparent)`)
   protected readonly pillColor = computed(() => `var(--color-${COLOR_KEY[this.intent()]})`)
 
   protected readonly plainWords = ['Di', 'qué', 'buscas.', 'Conoce', 'a', 'quien', 'busca']
@@ -49,14 +47,21 @@ export class Landing {
 
   private readonly group = viewChild.required<ElementRef<HTMLElement>>('group')
   private readonly pill = viewChild.required<ElementRef<HTMLElement>>('pill')
+  private readonly albumEl = viewChild.required<ElementRef<HTMLElement>>('album')
+  private readonly trackEl = viewChild.required<ElementRef<HTMLElement>>('track')
+  private readonly pagesEl = viewChild.required<ElementRef<HTMLElement>>('pages')
+  // Avance del álbum de 0 a 1 y página que se ve
+  protected readonly albumP = signal(0)
+  protected readonly albumStep = computed(() => Math.min(this.steps.length - 1, Math.round(this.albumP() * (this.steps.length - 1))))
+  private albumWide: MediaQueryList | null = null
 
   protected readonly diego = PEOPLE.find((p) => p.id === 'p2')!
   protected readonly mariana = PEOPLE.find((p) => p.id === 'p1')!
 
   protected readonly steps = [
-    ['Dices qué buscas.', 'Eliges una o varias intenciones y los intereses que te definen. Puedes cambiarlas cuando quieras.'],
-    ['Ves a gente afín, y por qué.', 'Te mostramos personas de tu ciudad con tu misma intención y te decimos qué tienen en común.'],
-    ['Hablan si los dos quieren.', 'El chat solo se abre cuando a ambos les interesa conocerse.'],
+    ['Dices qué buscas.', 'Eliges una o varias intenciones y los intereses que te definen. Puedes cambiarlas cuando quieras.', 'sin presión, lo cambias cuando sea'],
+    ['Ves a gente afín, y por qué.', 'Te mostramos personas de tu ciudad con tu misma intención y te decimos qué tienen en común.', 'nada de adivinar: te decimos qué comparten'],
+    ['Hablan si los dos quieren.', 'El chat solo se abre cuando a ambos les interesa conocerse.', 'y el hilo por fin se une'],
   ]
 
   protected readonly safety = [
@@ -84,10 +89,73 @@ export class Landing {
       observer.observe(this.group().nativeElement)
       requestAnimationFrame(() => this.pill().nativeElement.classList.add('is-ready'))
       this.destroyRef.onDestroy(() => observer.disconnect())
+
+      this.setupAlbum()
     })
   }
 
   private readonly destroyRef = inject(DestroyRef)
+
+  /**
+   * Álbum horizontal. En escritorio la sección mide 300vh y su contenido queda fijo; el scroll
+   * vertical mueve las hojas de lado (con animation-timeline si existe; si no, desde aquí).
+   * En móvil es un carrusel nativo con scroll-snap. Con movimiento reducido, las hojas se apilan.
+   */
+  private setupAlbum() {
+    const section = this.albumEl().nativeElement
+    const track = this.trackEl().nativeElement
+    const pages = this.pagesEl().nativeElement
+    const cssTimeline = typeof CSS !== 'undefined' && CSS.supports('animation-timeline: view()')
+    const wide = matchMedia('(min-width: 768px) and (prefers-reduced-motion: no-preference)')
+    this.albumWide = wide
+    let shift = 0
+    let frame = 0
+
+    const update = () => {
+      frame = 0
+      if (wide.matches) {
+        const r = section.getBoundingClientRect()
+        const total = r.height - innerHeight
+        const p = total > 0 ? Math.min(1, Math.max(0, -r.top / total)) : 0
+        this.albumP.set(p)
+        if (!cssTimeline) track.style.transform = `translateX(${(-p * shift).toFixed(1)}px)`
+      } else {
+        const max = pages.scrollWidth - pages.clientWidth
+        this.albumP.set(max > 0 ? pages.scrollLeft / max : 0)
+        track.style.transform = ''
+      }
+    }
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(update)
+    }
+    const measure = () => {
+      shift = wide.matches ? Math.max(0, track.scrollWidth - section.clientWidth) : 0
+      track.style.setProperty('--shift', `${shift}px`)
+      update()
+    }
+
+    measure()
+    const resize = new ResizeObserver(measure)
+    resize.observe(section)
+    addEventListener('scroll', schedule, { passive: true })
+    pages.addEventListener('scroll', schedule, { passive: true })
+    wide.addEventListener('change', measure)
+    this.destroyRef.onDestroy(() => {
+      cancelAnimationFrame(frame)
+      resize.disconnect()
+      removeEventListener('scroll', schedule)
+      wide.removeEventListener('change', measure)
+    })
+  }
+
+  // Con teclado, enfocar una hoja la trae a la vista
+  protected focusSheet(i: number) {
+    if (!this.albumWide?.matches) return
+    const section = this.albumEl().nativeElement
+    const total = section.offsetHeight - innerHeight
+    const top = section.getBoundingClientRect().top + scrollY + (total * i) / (this.steps.length - 1)
+    scrollTo({ top, behavior: 'auto' })
+  }
 
   private placePill() {
     const active = this.group().nativeElement.querySelector<HTMLElement>('[aria-checked="true"]')

@@ -47,9 +47,18 @@
     <li class="lift overflow-hidden rounded-[28px]" [class]="first ? 'relative md:col-span-2' : 'card flex flex-col'" data-vt [style.--vt]="'plan-' + p.id">
       <div class="overflow-hidden" [class]="first ? 'h-[26rem]' : ''" [style.background]="p.photo ? null : 'var(--color-' + p.intent + '-soft)'">
         @if (p.photo; as photo) {
-          <img [src]="photo.src" [alt]="photo.alt" width="900" height="500" loading="lazy" class="photo-zoom w-full object-cover" [class]="first ? 'h-full' : 'aspect-[16/8]'" />
+          <!-- Foto impresa en semitono de dos tintas; al pasar el cursor se ve a color -->
+          <div class="halftone" [class]="first ? 'h-full' : 'aspect-[16/8]'" [attr.data-intent]="p.intent">
+            <div class="ht-src" aria-hidden="true">
+              <img [src]="photo.src" alt="" width="900" height="500" loading="lazy" decoding="async" class="photo-zoom" />
+            </div>
+            <img [src]="photo.src" [alt]="photo.alt" width="900" height="500" loading="lazy" decoding="async" class="ht-photo photo-zoom" />
+            <span class="ht-tape" aria-hidden="true"></span>
+          </div>
         } @else if (!first) {
-          <div class="aspect-[16/8]"></div>
+          <div class="grid aspect-[16/8] place-items-center">
+            <app-ascii [piece]="asciiFor(p.intent)" [intent]="p.intent" size="sm" />
+          </div>
         }
       </div>
       @if (first) {
@@ -99,6 +108,15 @@
     </li>
   }
 </ul>
+
+@if (!visible().length) {
+  <div class="card swap-in mt-6 flex flex-col items-center p-10 text-center">
+    <app-ascii piece="mantel" size="lg" class="mb-5" />
+    <h2 class="text-[1.85rem]">No hay planes con estos filtros</h2>
+    <p class="mt-2 text-ink-soft">Cambia los filtros o arma uno tú: alguien más querrá ir.</p>
+    <button class="btn btn-primary mt-6" (click)="creating.set(true)">Crear plan</button>
+  </div>
+}
 
 @if (creating()) {
   <app-create-plan-dialog (closed)="creating.set(false)" />

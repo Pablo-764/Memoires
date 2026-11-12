@@ -33,6 +33,12 @@
         Se conectaron porque los dos buscan {{ p.intents.length > 1 ? 'cosas en común' : 'lo mismo' }}. Recuerda: nunca compartas
         datos bancarios y, si quedan de verse, elijan un lugar público.
       </p>
+      @if (!thread().length) {
+        <div class="swap-in mb-6 flex flex-col items-center text-center">
+          <app-ascii piece="dos-tazas" [intent]="p.intents[0]" />
+          <p class="hand mt-3 text-[1.4rem] text-ink-soft">dos tazas y nadie ha dicho hola</p>
+        </div>
+      }
       <ul class="flex flex-col gap-2">
         @for (m of thread(); track m.id) {
           <li class="flex" [class]="m.from === 'me' ? 'justify-end' : 'justify-start'">

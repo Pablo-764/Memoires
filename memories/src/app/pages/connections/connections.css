@@ -1,0 +1,30 @@
+
+/* ---------- Acomodar conexiones ---------- */
+.conn-tool {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 999px;
+  color: var(--color-ink-mute);
+  transition: color 160ms ease, background-color 160ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .conn-tool:hover { color: var(--color-ink); background: var(--color-accent-soft); }
+}
+
+.conn-grip { cursor: grab; touch-action: none; }
+
+/* La que se arrastra flota encima, como una foto levantada de la mesa */
+.conn-card.is-dragging {
+  position: relative;
+  z-index: 20;
+  cursor: grabbing;
+  box-shadow: 0 0 0 1.5px var(--edge), 12px 14px 0 var(--color-accent) !important;
+  transition: none;
+}
+
+.conn-grid.is-sorting .conn-card:not(.is-dragging) { transition: box-shadow 200ms ease; }
+
+.conn-grid.is-sorting { user-select: none; }

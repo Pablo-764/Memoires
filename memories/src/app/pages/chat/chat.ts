@@ -14,10 +14,11 @@ import { Meter } from '../../componentes/meter/meter'
 import { Modal } from '../../componentes/modal/modal'
 import { BlockDialog } from '../../componentes/block-dialog/block-dialog'
 import { ReportDialog } from '../../componentes/report-dialog/report-dialog'
+import { AsciiArt } from '../../componentes/ascii-art/ascii-art'
 
 @Component({
   selector: 'app-chat',
-  imports: [FormsModule, RouterLink, Avatar, Banner, Icon, Meter, Modal, BlockDialog, ReportDialog],
+  imports: [AsciiArt, FormsModule, RouterLink, Avatar, Banner, Icon, Meter, Modal, BlockDialog, ReportDialog],
   styleUrl: './chat.css',
   templateUrl: './chat.html',
 })

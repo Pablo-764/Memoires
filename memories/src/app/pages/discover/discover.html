@@ -49,6 +49,14 @@
           <app-swipe-card [s]="s" [active]="i === 0" [intent]="intentFor(s)" [canLike]="canLike" [decide]="onDecide" (pull)="onPull($event)" (launch)="onLaunch($event)" />
         </div>
       }
+      <!-- Intereses en común flotando alrededor de la tarjeta (la tarjeta ya los dice en texto) -->
+      @for (c of [current()!]; track c.person.id) {
+        <div class="float-tags" aria-hidden="true" [attr.data-intent]="intentFor(c)">
+          @for (t of c.sharedInterests.slice(0, 4); track t; let n = $index) {
+            <span class="float-tag hand" [attr.data-slot]="n" [style.--i]="n">{{ t }}</span>
+          }
+        </div>
+      }
     </div>
 
     <div class="mt-5 flex items-center justify-center gap-3">

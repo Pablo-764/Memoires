@@ -1,5 +1,7 @@
 import { Component, DestroyRef, ElementRef, afterNextRender, computed, inject, input } from '@angular/core'
 import { bannerOf } from '../../modelos/decor'
+import { NgTemplateOutlet } from '@angular/common'
+import { AsciiArt } from '../ascii-art/ascii-art'
 
 /**
  * Fondo de perfil: una escena animada del catálogo o la imagen que subió la persona.
@@ -8,7 +10,8 @@ import { bannerOf } from '../../modelos/decor'
  */
 @Component({
   selector: 'app-banner',
-  styleUrls: ['./banner.css', './banner-temas.css', './banner-colecciones.css'],
+  imports: [NgTemplateOutlet, AsciiArt],
+  styleUrls: ['./banner.css', './banner-temas.css', './banner-colecciones.css', './banner-jardin.css'],
   templateUrl: './banner.html',
   host: {
     class: 'absolute inset-0 block overflow-hidden',
@@ -34,6 +37,13 @@ export class Banner {
   // Piezas de las escenas de colección (siempre las mismas, sin azar al repintar)
   protected readonly runeOuter = 'ΨΩΔΛΞΦΣΘΠΓΨΩΔΛΞΦ'.split('')
   protected readonly runeInner = 'ΣΘΠΓΛΞΦΩ'.split('')
+  // Jardín de texto: de 3 a 5 piezas acomodadas lejos de la esquina del avatar
+  protected readonly garden = [
+    { piece: 'cerezas', x: 5, y: 52, s: 0.8 },
+    { piece: 'flor', x: 34, y: 8, s: 1 },
+    { piece: 'taza', x: 58, y: 12, s: 0.9 },
+    { piece: 'flor', x: 80, y: 6, s: 0.75 },
+  ]
   protected readonly petals = [0, 1, 2, 3, 4, 5, 6, 7]
   protected readonly shards = [0, 1, 2, 3, 4, 5, 6]
   protected readonly bubbles = [0, 1, 2, 3, 4, 5, 6, 7, 8]

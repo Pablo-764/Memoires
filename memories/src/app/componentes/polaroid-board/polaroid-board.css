@@ -6,7 +6,7 @@
   border-radius: 16px;
   touch-action: pan-y;
   background:
-    radial-gradient(circle at 1px 1px, color-mix(in oklab, var(--color-ink) 14%, transparent) 1px, transparent 1.5px) 0 0 / 22px 22px,
+    var(--paper-light),
     var(--paper-grain),
     var(--color-raised);
   box-shadow: 0 0 0 1.5px var(--edge), 6px 6px 0 var(--edge);
@@ -18,8 +18,8 @@
   top: 0;
   width: clamp(9.5rem, 17vw, 13rem);
   padding: 0.6rem 0.6rem 0.4rem;
-  background: #fffdf8;
-  box-shadow: 0 1px 0 rgb(0 0 0 / 0.08), 0 14px 24px -14px rgb(19 32 47 / 0.55);
+  background: var(--polaroid);
+  box-shadow: 0 1px 0 rgb(46 31 70 / 0.08), 0 14px 24px -14px rgb(46 31 70 / 0.55);
   cursor: grab;
   user-select: none;
   touch-action: none;
@@ -30,7 +30,7 @@
 .pb-card.is-held {
   cursor: grabbing;
   scale: 1.05;
-  box-shadow: 0 1px 0 rgb(0 0 0 / 0.08), 0 28px 40px -18px rgb(19 32 47 / 0.6);
+  box-shadow: 0 1px 0 rgb(46 31 70 / 0.08), 0 28px 40px -18px rgb(46 31 70 / 0.6);
 }
 
 .pb-card img {
@@ -45,7 +45,7 @@
   padding: 0.45rem 0.1rem 0.1rem;
   font-size: 1.15rem;
   line-height: 1.1;
-  color: #13202f;
+  color: var(--polaroid-ink);
 }
 
 .pb-tape {
