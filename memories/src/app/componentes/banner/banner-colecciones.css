@@ -1,0 +1,500 @@
+/* Escenas de las colecciones: más capas, más detalle y variantes de color.
+   Igual que el resto: solo transform y opacity, pausadas fuera de pantalla. */
+[class^="cx-"],
+[class*=" cx-"] {
+  position: absolute;
+  pointer-events: none;
+}
+
+/* ---------- Llama ancestral: grietas de lava que respiran ---------- */
+.cx-cracks {
+  inset: -4%;
+  background: linear-gradient(0deg, var(--c), var(--c2));
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 120' preserveAspectRatio='none'%3E%3Cg fill='none' stroke='black' stroke-width='2.4' stroke-linejoin='round' stroke-linecap='round'%3E%3Cpath d='M0 92 L30 86 L52 98 L80 84 L104 90 L130 72 L160 80 L190 64 L214 74 L240 58 L270 66 L300 52'/%3E%3Cpath d='M80 84 L86 104 L78 120'/%3E%3Cpath d='M130 72 L122 50 L136 34 L128 12'/%3E%3Cpath d='M190 64 L200 92 L194 120'/%3E%3Cpath d='M240 58 L248 36 L262 26'/%3E%3Cpath d='M30 86 L22 60 L34 40'/%3E%3Cpath d='M214 74 L226 100'/%3E%3C/g%3E%3C/svg%3E") 0 0 / 100% 100%;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 120' preserveAspectRatio='none'%3E%3Cg fill='none' stroke='black' stroke-width='2.4' stroke-linejoin='round' stroke-linecap='round'%3E%3Cpath d='M0 92 L30 86 L52 98 L80 84 L104 90 L130 72 L160 80 L190 64 L214 74 L240 58 L270 66 L300 52'/%3E%3Cpath d='M80 84 L86 104 L78 120'/%3E%3Cpath d='M130 72 L122 50 L136 34 L128 12'/%3E%3Cpath d='M190 64 L200 92 L194 120'/%3E%3Cpath d='M240 58 L248 36 L262 26'/%3E%3Cpath d='M30 86 L22 60 L34 40'/%3E%3Cpath d='M214 74 L226 100'/%3E%3C/g%3E%3C/svg%3E") 0 0 / 100% 100%;
+  filter: drop-shadow(0 0 5px var(--c));
+  animation: cx-glow 2.8s var(--ease-in-out) infinite alternate;
+}
+
+.cx-cracks-b {
+  scale: -1 0.8;
+  translate: 0 -18%;
+  opacity: 0.55;
+  animation-duration: 3.6s;
+  animation-delay: -1.2s;
+}
+
+@keyframes cx-glow {
+  from { opacity: 0.45; }
+  to { opacity: 1; }
+}
+
+.cx-heat {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 60%;
+  background: radial-gradient(60% 100% at 50% 110%, color-mix(in oklab, var(--c) 55%, transparent), transparent 75%);
+  animation: bn-breathe 3.2s ease-in-out infinite alternate;
+}
+
+/* ---------- Pulso digital: franjas que se desfasan ---------- */
+.cx-neon {
+  inset: 0;
+  background:
+    repeating-linear-gradient(0deg, color-mix(in oklab, var(--c) 30%, transparent) 0 2px, transparent 2px 14px),
+    linear-gradient(90deg, color-mix(in oklab, var(--c) 35%, transparent), transparent 40%, color-mix(in oklab, var(--c2) 35%, transparent));
+}
+
+.cx-slice {
+  left: 0;
+  right: 0;
+  top: calc(var(--i) * 25%);
+  height: 25%;
+  opacity: 0;
+  box-shadow: inset 0 2px 0 var(--c), inset 0 -1px 0 var(--c);
+  mix-blend-mode: screen;
+  animation: cx-slice 2.6s steps(1) infinite;
+  animation-delay: calc(var(--i) * -0.65s);
+}
+
+@keyframes cx-slice {
+  0%, 100% { opacity: 0; transform: translateX(0); }
+  6% { opacity: 1; transform: translateX(-7%); }
+  8% { transform: translateX(5%); }
+  10% { opacity: 0.7; transform: translateX(-2%); }
+  12% { opacity: 0; transform: translateX(0); }
+  58% { opacity: 1; transform: translateX(9%); }
+  60% { opacity: 0; }
+}
+
+.cx-blocks {
+  inset: 0;
+  background:
+    linear-gradient(var(--c), var(--c)) 18% 30% / 22px 6px no-repeat,
+    linear-gradient(var(--c), var(--c)) 62% 70% / 34px 5px no-repeat,
+    linear-gradient(var(--c), var(--c)) 82% 22% / 12px 12px no-repeat,
+    linear-gradient(var(--c), var(--c)) 38% 84% / 16px 4px no-repeat;
+  animation: cx-blink 1.7s steps(2) infinite;
+}
+
+@keyframes cx-blink {
+  0% { opacity: 0; }
+  50% { opacity: 0.9; }
+}
+
+/* ---------- Runas: círculos mágicos que giran en sentidos opuestos ---------- */
+.cx-ring {
+  --r: 46cqh;
+  left: 50%;
+  top: 50%;
+  width: calc(var(--r) * 2);
+  aspect-ratio: 1;
+  margin: calc(var(--r) * -1) 0 0 calc(var(--r) * -1);
+  border-radius: 50%;
+  color: var(--c);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--c) 60%, transparent), 0 0 18px color-mix(in oklab, var(--c) 35%, transparent);
+  animation: bn-rotate 26s linear infinite;
+}
+
+.cx-ring-b {
+  --r: 28cqh;
+  animation-duration: 16s;
+  animation-direction: reverse;
+}
+
+.cx-glyph {
+  left: 50%;
+  top: 50%;
+  font-family: var(--font-serif);
+  font-size: 9cqh;
+  line-height: 1;
+  text-shadow: 0 0 6px currentColor;
+  transform: translate(-50%, -50%) rotate(calc(360deg / var(--n) * var(--i))) translateY(calc(var(--r) * -0.84));
+}
+
+.cx-sigil {
+  left: 50%;
+  top: 50%;
+  width: 30cqh;
+  aspect-ratio: 1;
+  margin: -15cqh 0 0 -15cqh;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in oklab, var(--c) 70%, #fff), color-mix(in oklab, var(--c) 30%, transparent) 55%, transparent);
+  animation: bn-pulse 2.4s var(--ease-in-out) infinite alternate;
+}
+
+.cx-sigil::before,
+.cx-sigil::after {
+  content: "";
+  position: absolute;
+  inset: 18%;
+  box-shadow: inset 0 0 0 1.5px var(--c);
+  rotate: 45deg;
+}
+
+.cx-sigil::after { rotate: 0deg; }
+
+/* ---------- Horizonte de sucesos: disco que gira alrededor de un agujero ---------- */
+.cx-disk {
+  left: 50%;
+  top: 50%;
+  width: 150cqh;
+  aspect-ratio: 1;
+  margin: -75cqh 0 0 -75cqh;
+  transform: rotate(-14deg) scaleY(0.3);
+}
+
+.cx-disk::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, var(--c), var(--c2), transparent 35%, var(--c) 55%, #fff 62%, var(--c2) 75%, var(--c));
+  -webkit-mask: radial-gradient(closest-side, transparent 30%, #000 36%, #000 66%, transparent 74%);
+  mask: radial-gradient(closest-side, transparent 30%, #000 36%, #000 66%, transparent 74%);
+  animation: bn-rotate 5s linear infinite;
+}
+
+.cx-disk-front { clip-path: inset(50% 0 0 0); z-index: 2; }
+
+.cx-hole {
+  left: 50%;
+  top: 50%;
+  width: 34cqh;
+  aspect-ratio: 1;
+  margin: -17cqh 0 0 -17cqh;
+  border-radius: 50%;
+  background: #000;
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--c) 80%, transparent), 0 0 30px 6px color-mix(in oklab, var(--c) 45%, transparent);
+  z-index: 1;
+}
+
+/* ---------- Tinta y cerezo ---------- */
+.cx-sun {
+  right: 12%;
+  top: 12%;
+  width: 34cqh;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--c);
+  opacity: 0.92;
+}
+
+.cx-mount {
+  left: -5%;
+  right: -5%;
+  bottom: 0;
+  height: 48%;
+  background: linear-gradient(180deg, var(--c), color-mix(in oklab, var(--c) 25%, transparent));
+  clip-path: polygon(0 100%, 0 70%, 8% 52%, 16% 60%, 26% 26%, 34% 42%, 42% 34%, 52% 58%, 62% 40%, 72% 12%, 80% 34%, 88% 28%, 100% 50%, 100% 100%);
+}
+
+.cx-mount-back { height: 66%; opacity: 0.35; scale: -1 1; }
+
+.cx-branch {
+  left: -3%;
+  top: -6%;
+  width: 46%;
+  height: 80%;
+  background:
+    radial-gradient(circle at 34% 24%, var(--c2) 0 4%, transparent 4.5%),
+    radial-gradient(circle at 50% 20%, var(--c2) 0 3%, transparent 3.5%),
+    radial-gradient(circle at 62% 30%, var(--c2) 0 4.5%, transparent 5%),
+    radial-gradient(circle at 46% 52%, var(--c2) 0 3.5%, transparent 4%),
+    radial-gradient(circle at 76% 40%, var(--c2) 0 3%, transparent 3.5%),
+    radial-gradient(circle at 70% 8%, var(--c2) 0 3%, transparent 3.5%);
+}
+
+.cx-branch::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--c);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 100' preserveAspectRatio='none'%3E%3Cpath d='M0 10 C40 16 70 26 100 24 C120 23 140 32 160 46 M70 24 C80 38 88 48 98 60 M120 25 C126 14 136 8 150 6' fill='none' stroke='black' stroke-width='3.2' stroke-linecap='round'/%3E%3C/svg%3E") 0 0 / 100% 100%;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 100' preserveAspectRatio='none'%3E%3Cpath d='M0 10 C40 16 70 26 100 24 C120 23 140 32 160 46 M70 24 C80 38 88 48 98 60 M120 25 C126 14 136 8 150 6' fill='none' stroke='black' stroke-width='3.2' stroke-linecap='round'/%3E%3C/svg%3E") 0 0 / 100% 100%;
+}
+
+.cx-petal {
+  left: calc(8% + var(--i) * 11%);
+  top: -8%;
+  width: 8px;
+  height: 6px;
+  border-radius: 100% 0;
+  background: var(--c);
+  animation: cx-fall 7s linear infinite;
+  animation-delay: calc(var(--i) * -0.9s);
+}
+
+@keyframes cx-fall {
+  from { transform: translate(0, 0) rotate(0deg); opacity: 0; }
+  10% { opacity: 1; }
+  to { transform: translate(-40px, 130cqh) rotate(400deg); opacity: 0.8; }
+}
+
+/* ---------- Cristal: fragmentos con destello interno ---------- */
+.cx-shard {
+  bottom: -6%;
+  left: calc(var(--i) * 14.5% - 2%);
+  width: 13%;
+  height: 70%;
+  clip-path: polygon(50% 0, 100% 28%, 86% 100%, 14% 100%, 0 28%);
+  background: linear-gradient(165deg, color-mix(in oklab, var(--c2) 85%, #fff), var(--c) 55%, color-mix(in oklab, var(--c) 35%, #000));
+}
+
+.cx-shard::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 30%, rgb(255 255 255 / 0.85) 46%, transparent 60%);
+  clip-path: polygon(50% 0, 50% 100%, 14% 100%, 0 28%);
+  opacity: 0;
+  animation: cx-facet 3.2s var(--ease-in-out) infinite;
+  animation-delay: calc(var(--i) * -0.45s);
+}
+
+.cx-shard:nth-child(2) { height: 92%; }
+.cx-shard:nth-child(3) { height: 54%; }
+.cx-shard:nth-child(4) { height: 100%; width: 15%; }
+.cx-shard:nth-child(5) { height: 62%; }
+.cx-shard:nth-child(6) { height: 84%; }
+.cx-shard:nth-child(7) { height: 48%; }
+
+@keyframes cx-facet {
+  0%, 70%, 100% { opacity: 0; }
+  80% { opacity: 0.9; }
+}
+
+/* ---------- Tormenta eléctrica ---------- */
+.cx-clouds {
+  inset: -10% -20% 40%;
+  background:
+    radial-gradient(30% 60% at 20% 40%, rgb(60 70 100 / 0.8), transparent 70%),
+    radial-gradient(34% 70% at 55% 30%, rgb(40 48 80 / 0.9), transparent 70%),
+    radial-gradient(30% 60% at 85% 45%, rgb(60 70 100 / 0.8), transparent 70%);
+  animation: bn-drift-cloud 18s var(--ease-in-out) infinite alternate;
+}
+
+.cx-bolt {
+  left: 30%;
+  top: 0;
+  width: 13cqh;
+  height: 100%;
+  background: var(--c);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 100' preserveAspectRatio='none'%3E%3Cpath d='M24 0 L10 42 L20 42 L6 100 L34 36 L22 36 L32 0 Z'/%3E%3C/svg%3E") 0 0 / 100% 100%;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 100' preserveAspectRatio='none'%3E%3Cpath d='M24 0 L10 42 L20 42 L6 100 L34 36 L22 36 L32 0 Z'/%3E%3C/svg%3E") 0 0 / 100% 100%;
+  filter: drop-shadow(0 0 8px var(--c));
+  opacity: 0;
+  animation: cx-bolt 5s steps(1) infinite;
+}
+
+.cx-bolt-b { left: 68%; width: 9cqh; height: 80%; animation-delay: -2.3s; scale: -1 1; }
+
+@keyframes cx-bolt {
+  0%, 57%, 64%, 100% { opacity: 0; }
+  58% { opacity: 1; }
+  60% { opacity: 0.3; }
+  62% { opacity: 1; }
+}
+
+/* ---------- Reino sumergido ---------- */
+.cx-caustic {
+  inset: -30%;
+  background:
+    radial-gradient(circle, transparent 38%, color-mix(in oklab, var(--c) 55%, transparent) 46%, transparent 54%) 0 0 / 64px 52px,
+    radial-gradient(circle, transparent 40%, color-mix(in oklab, var(--c) 40%, transparent) 47%, transparent 54%) 30px 22px / 78px 60px;
+  mix-blend-mode: screen;
+  opacity: 0.55;
+  animation: cx-caustic 9s var(--ease-in-out) infinite alternate;
+}
+
+.cx-caustic-b { animation-duration: 12s; animation-direction: alternate-reverse; opacity: 0.4; }
+
+@keyframes cx-caustic {
+  from { transform: translate(0, 0) rotate(0deg); }
+  to { transform: translate(-30px, 18px) rotate(6deg); }
+}
+
+.cx-kelp {
+  left: 6%;
+  bottom: -4%;
+  width: 10%;
+  height: 90%;
+  background: linear-gradient(0deg, var(--c), color-mix(in oklab, var(--c) 40%, transparent));
+  clip-path: polygon(40% 100%, 60% 100%, 70% 80%, 50% 62%, 72% 44%, 52% 26%, 66% 8%, 54% 0, 36% 20%, 50% 40%, 28% 56%, 46% 76%);
+  transform-origin: 50% 100%;
+  animation: cx-sway 5s var(--ease-in-out) infinite alternate;
+}
+
+.cx-kelp-b { left: 82%; height: 70%; animation-duration: 6.5s; animation-delay: -2s; }
+
+@keyframes cx-sway {
+  from { transform: skewX(-8deg); }
+  to { transform: skewX(8deg); }
+}
+
+.cx-bubble {
+  left: calc(6% + var(--i) * 10.5%);
+  bottom: -10%;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1.5px var(--c);
+  animation: cx-rise 5s linear infinite;
+  animation-delay: calc(var(--i) * -0.7s);
+}
+
+@keyframes cx-rise {
+  from { transform: translate(0, 0) scale(0.6); opacity: 0; }
+  15% { opacity: 1; }
+  to { transform: translate(8px, -130cqh) scale(1.2); opacity: 0; }
+}
+
+/* ---------- Corte real: damasco y filigrana ---------- */
+.cx-damask {
+  inset: -40px;
+  background: var(--c);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 44 44'%3E%3Cg fill='none' stroke='black' stroke-width='1.2'%3E%3Cpath d='M22 3 L41 22 L22 41 L3 22 Z'/%3E%3Ccircle cx='22' cy='22' r='5'/%3E%3Cpath d='M22 9 C26 14 26 18 22 17 C18 18 18 14 22 9 M22 35 C26 30 26 26 22 27 C18 26 18 30 22 35 M9 22 C14 18 18 18 17 22 C18 26 14 26 9 22 M35 22 C30 18 26 18 27 22 C26 26 30 26 35 22'/%3E%3C/g%3E%3C/svg%3E") 0 0 / 44px 44px;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 44 44'%3E%3Cg fill='none' stroke='black' stroke-width='1.2'%3E%3Cpath d='M22 3 L41 22 L22 41 L3 22 Z'/%3E%3Ccircle cx='22' cy='22' r='5'/%3E%3Cpath d='M22 9 C26 14 26 18 22 17 C18 18 18 14 22 9 M22 35 C26 30 26 26 22 27 C18 26 18 30 22 35 M9 22 C14 18 18 18 17 22 C18 26 14 26 9 22 M35 22 C30 18 26 18 27 22 C26 26 30 26 35 22'/%3E%3C/g%3E%3C/svg%3E") 0 0 / 44px 44px;
+  opacity: 0.4;
+  animation: bn-pan 30s var(--ease-in-out) infinite alternate;
+}
+
+.cx-filigree {
+  inset: 7px;
+  border: 1px solid color-mix(in oklab, var(--c) 75%, transparent);
+  outline: 1px solid color-mix(in oklab, var(--c) 40%, transparent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ---------- Arcade: paisaje de píxeles ---------- */
+.cx-pix-stars {
+  inset: 0 0 45%;
+  background:
+    linear-gradient(#fff, #fff) 12% 20% / 3px 3px no-repeat,
+    linear-gradient(#fff, #fff) 30% 50% / 3px 3px no-repeat,
+    linear-gradient(#fff, #fff) 52% 14% / 3px 3px no-repeat,
+    linear-gradient(#fff, #fff) 74% 40% / 3px 3px no-repeat,
+    linear-gradient(#fff, #fff) 90% 18% / 3px 3px no-repeat;
+  animation: cx-blink 1.6s steps(2) infinite;
+}
+
+.cx-pix-sun {
+  left: 50%;
+  bottom: 24%;
+  width: 40cqh;
+  aspect-ratio: 1;
+  margin-left: -20cqh;
+  background: var(--c);
+  clip-path: polygon(30% 0, 70% 0, 70% 10%, 85% 10%, 85% 20%, 95% 20%, 95% 35%, 100% 35%, 100% 65%, 95% 65%, 95% 80%, 85% 80%, 85% 90%, 70% 90%, 70% 100%, 30% 100%, 30% 90%, 15% 90%, 15% 80%, 5% 80%, 5% 65%, 0 65%, 0 35%, 5% 35%, 5% 20%, 15% 20%, 15% 10%, 30% 10%);
+  -webkit-mask-image: linear-gradient(180deg, #000 55%, transparent 55% 62%, #000 62% 72%, transparent 72% 78%, #000 78%);
+  mask-image: linear-gradient(180deg, #000 55%, transparent 55% 62%, #000 62% 72%, transparent 72% 78%, #000 78%);
+}
+
+.cx-pix-mount {
+  left: 0;
+  right: 0;
+  bottom: 20%;
+  height: 40%;
+  background: var(--c);
+  clip-path: polygon(0 100%, 0 60%, 6% 60%, 6% 40%, 12% 40%, 12% 20%, 18% 20%, 18% 50%, 26% 50%, 26% 30%, 32% 30%, 32% 10%, 38% 10%, 38% 45%, 48% 45%, 48% 65%, 58% 65%, 58% 30%, 64% 30%, 64% 15%, 70% 15%, 70% 40%, 80% 40%, 80% 25%, 88% 25%, 88% 55%, 100% 55%, 100% 100%);
+}
+
+.cx-pix-cloud {
+  left: 0;
+  top: 14%;
+  width: 22%;
+  height: 16%;
+  background: color-mix(in oklab, var(--c) 35%, #fff);
+  clip-path: polygon(10% 100%, 10% 60%, 25% 60%, 25% 30%, 45% 30%, 45% 0, 70% 0, 70% 40%, 90% 40%, 90% 100%);
+  opacity: 0.85;
+  animation: cx-cloud 14s steps(28) infinite;
+}
+
+@keyframes cx-cloud {
+  from { transform: translateX(-30%); }
+  to { transform: translateX(480%); }
+}
+
+.cx-pix-ground {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 22%;
+  background: linear-gradient(var(--c2), var(--c2)) 0 0 / 100% 3px no-repeat, var(--c);
+  overflow: hidden;
+}
+
+.cx-pix-ground::before {
+  content: "";
+  position: absolute;
+  inset: 3px -40px 0 0;
+  background: repeating-linear-gradient(90deg, color-mix(in oklab, var(--c2) 45%, transparent) 0 6px, transparent 6px 20px) 0 50% / 100% 3px no-repeat;
+  animation: cx-ground 1.2s steps(6) infinite;
+}
+
+@keyframes cx-ground { to { transform: translateX(-20px); } }
+
+/* ---------- Colmena: hexágonos que se encienden en oleadas ---------- */
+.cx-hex {
+  inset: 0;
+  background: var(--c);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cpath d='M14 32.5 L0 24.5 V8.5 L14 0.5 L28 8.5 V24.5 Z M14 32.5 V48.5' fill='none' stroke='black' stroke-width='1.1'/%3E%3C/svg%3E") 0 0 / 28px 49px;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cpath d='M14 32.5 L0 24.5 V8.5 L14 0.5 L28 8.5 V24.5 Z M14 32.5 V48.5' fill='none' stroke='black' stroke-width='1.1'/%3E%3C/svg%3E") 0 0 / 28px 49px;
+  opacity: 0.25;
+}
+
+.cx-hex-lit { opacity: 1; background: none; }
+
+.cx-hex-lit::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 55%;
+  width: 60cqh;
+  aspect-ratio: 1;
+  margin: -30cqh 0 0 -30cqh;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, transparent 55%, var(--c) 72%, transparent 88%);
+  animation: cx-wave 3.4s var(--ease-out) infinite;
+}
+
+@keyframes cx-wave {
+  from { transform: scale(0.2); opacity: 1; }
+  to { transform: scale(4); opacity: 0; }
+}
+
+/* ---------- Escarcha: cristales de hielo en las esquinas ---------- */
+.cx-frost {
+  left: 0;
+  top: 0;
+  width: 46cqh;
+  height: 46cqh;
+  background: var(--c);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round'%3E%3Cpath d='M0 0 L70 70 M12 12 L12 34 M12 12 L34 12 M28 28 L28 50 M28 28 L50 28 M44 44 L44 62 M44 44 L62 44 M58 58 L58 70 M58 58 L70 58 M20 20 L8 26 M20 20 L26 8 M36 36 L24 42 M36 36 L42 24'/%3E%3C/g%3E%3C/svg%3E") 0 0 / 100% 100%;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round'%3E%3Cpath d='M0 0 L70 70 M12 12 L12 34 M12 12 L34 12 M28 28 L28 50 M28 28 L50 28 M44 44 L44 62 M44 44 L62 44 M58 58 L58 70 M58 58 L70 58 M20 20 L8 26 M20 20 L26 8 M36 36 L24 42 M36 36 L42 24'/%3E%3C/g%3E%3C/svg%3E") 0 0 / 100% 100%;
+  filter: drop-shadow(0 0 4px var(--c));
+  animation: cx-glow 3.4s var(--ease-in-out) infinite alternate;
+}
+
+.cx-frost-b { left: auto; top: auto; right: 0; bottom: 0; scale: -1 -1; animation-delay: -1.7s; }
+
+.cx-snow { animation: cx-snow 9s linear infinite, bn-twinkle 3s ease-in-out infinite alternate; }
+
+.cx-snow-b { animation-duration: 14s, 4s; }
+
+@keyframes cx-snow {
+  from { transform: translateY(-110px); }
+  to { transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [class^="cx-"],
+  [class*=" cx-"],
+  [class^="cx-"]::before,
+  [class^="cx-"]::after { animation: none !important; }
+  .cx-slice,
+  .cx-bolt { opacity: 0; }
+}

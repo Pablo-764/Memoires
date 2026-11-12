@@ -3,7 +3,7 @@ import { frameOf } from '../../modelos/decor'
 
 @Component({
   selector: 'app-avatar',
-  styleUrl: './avatar.css',
+  styleUrls: ['./avatar.css', './avatar-ornamentos.css'],
   templateUrl: './avatar.html',
   host: {
     class: 'relative inline-grid shrink-0 place-items-center rounded-full font-display text-white',
@@ -32,4 +32,11 @@ export class Avatar {
     return accent ?? (bg.startsWith('#') || bg.startsWith('light-dark') ? bg : '#ffffff')
   })
   protected readonly sparks = [0, 1, 2, 3, 4]
+  // Segundo color de los ornamentos: punta de la llama, borde del ala, interior de la oreja
+  protected readonly accent2 = computed(() => this.frameInfo().accent2 ?? this.accent())
+  // Posiciones fijas alrededor del aro (en grados) para cada tipo de ornamento
+  protected readonly ring10 = Array.from({ length: 10 }, (_, i) => i * 36)
+  protected readonly ring8 = Array.from({ length: 8 }, (_, i) => i * 45 + 22.5)
+  protected readonly ring6 = Array.from({ length: 6 }, (_, i) => i * 60)
+  protected readonly glyphs = 'ΨΩΔΛΞΦΣΘΠΓΨΩ'.split('')
 }

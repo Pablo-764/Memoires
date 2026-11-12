@@ -8,6 +8,8 @@ export type BannerScene =
   | 'static' | 'mesh' | 'aurora' | 'stars' | 'galaxy' | 'sun' | 'flow' | 'waves' | 'rain' | 'rings' | 'pattern'
   // Escenas temáticas (solo la idea visual de cada género, sin obras concretas)
   | 'city' | 'hyper' | 'code' | 'planet' | 'portal' | 'synth' | 'crt' | 'spotlight' | 'noir' | 'film' | 'comic' | 'fog' | 'castle' | 'anime'
+  // Líneas de colección: escenas con más capas, cada una con variantes de color
+  | 'lava' | 'glitch' | 'runes' | 'blackhole' | 'sumi' | 'crystal' | 'lightning' | 'caustics' | 'royal' | 'pixel' | 'hexgrid' | 'frost'
 
 export interface Banner {
   key: string
@@ -22,7 +24,10 @@ export interface Banner {
 }
 
 // Capa animada extra del marco
-export type FrameFx = 'none' | 'glow' | 'orbit' | 'atom' | 'sparkle' | 'ripple' | 'shimmer' | 'dash' | 'double'
+export type FrameFx =
+  | 'none' | 'glow' | 'orbit' | 'atom' | 'sparkle' | 'ripple' | 'shimmer' | 'dash' | 'double'
+  // Ornamentos que salen del aro
+  | 'flames' | 'wings' | 'horns' | 'angel' | 'runes' | 'crystals' | 'electric' | 'vines' | 'gems' | 'glitch' | 'ears' | 'void'
 
 export interface Frame {
   key: string
@@ -34,6 +39,8 @@ export interface Frame {
   fx: FrameFx
   // Color de lunas, destellos, ondas o del segundo aro
   accent?: string
+  // Segundo color de los ornamentos (punta de la llama, borde del ala…)
+  accent2?: string
   tier: DecorTier
 }
 
@@ -53,7 +60,7 @@ export interface Effect {
 }
 
 // Efecto animado del nombre (neón, holograma, terminal…)
-export type NameFx = 'neon' | 'hologram' | 'terminal' | 'chrome' | 'glitch' | 'marquee' | 'noir' | 'film' | 'comic' | 'spooky' | 'rune' | 'drama'
+export type NameFx = 'neon' | 'hologram' | 'terminal' | 'chrome' | 'glitch' | 'marquee' | 'noir' | 'film' | 'comic' | 'spooky' | 'rune' | 'drama' | 'fire' | 'ice' | 'pixel'
 
 export interface NameStyle {
   key: string
@@ -82,50 +89,22 @@ const b = (key: string, label: string, group: string, scene: BannerScene, css: s
 
 export const BANNERS: Banner[] = [
   { key: 'none', label: 'Sin fondo', group: 'Cielos', css: 'var(--color-raised)', scene: 'static', colors: [], tier: 'free' },
-  b('halo', 'Halo', 'Cielos', 'mesh', 'linear-gradient(160deg, #dfe3ff, #aab2f4)', ['#8f9bff', '#f1d6ff', '#c8f0ff'], 'grand'),
-  b('dusk', 'Atardecer', 'Cielos', 'mesh', 'linear-gradient(170deg, #fde3c4, #f6b8a8 60%, #d98aa6)', ['#ff9e7a', '#ffd59a', '#d77ba8'], 'grand'),
-  b('alba', 'Alba', 'Cielos', 'mesh', 'linear-gradient(180deg, #ffd9c0, #ffeedd 55%, #cfe3ff)', ['#ffc29e', '#b8d6ff', '#fff1c9'], 'grand'),
   b('aurora', 'Aurora', 'Cielos', 'aurora', 'linear-gradient(180deg, #0d2a3a, #1b4b5c)', ['#5ff2c4', '#9f8bff', '#ff9ccd']),
   b('marea', 'Marea', 'Cielos', 'waves', 'linear-gradient(180deg, #cfe6ff, #8fb9f6)', ['#ffffff99', '#6c9eea', '#3f6fc6'], 'grand'),
-  b('durazno', 'Durazno', 'Cielos', 'mesh', 'linear-gradient(135deg, #ffecd2, #fcb69f)', ['#ff9f80', '#ffe0a8', '#ffc4c4'], 'grand'),
-  b('lavanda', 'Lavanda', 'Cielos', 'mesh', 'linear-gradient(160deg, #e9d8fd, #b9a6fb)', ['#a78bfa', '#f3c6ff', '#c9d8ff']),
   b('crepusculo', 'Crepúsculo', 'Cielos', 'sun', 'linear-gradient(180deg, #2b1b4d, #7b3f98 58%, #f08a5d)', ['#ffd08a', '#ff8a5c']),
   b('tormenta', 'Tormenta', 'Cielos', 'rain', 'linear-gradient(170deg, #55647f, #232a3f)', ['#ffffff']),
-  b('rosa-polar', 'Rosa polar', 'Cielos', 'mesh', 'linear-gradient(150deg, #fbc2eb, #a6c1ee)', ['#ff9ad8', '#8fb4ff', '#ffe0f4']),
-  b('cereza', 'Cereza', 'Cielos', 'mesh', 'linear-gradient(140deg, #ffdde1, #ee9ca7)', ['#ff7b93', '#ffd0d8', '#e06d8f']),
   b('ink', 'Tinta', 'Noche', 'stars', 'radial-gradient(120% 90% at 20% 0%, #3a3e70, #15172e)', ['#9aa3ff']),
   b('nebulosa', 'Nebulosa', 'Noche', 'aurora', 'radial-gradient(120% 120% at 50% 0%, #1d1650, #0b0c24)', ['#b14aed', '#2dd4bf', '#ff6fb5']),
   b('estrellas', 'Cielo estrellado', 'Noche', 'stars', 'linear-gradient(180deg, #0b1030, #27305f)', ['#cfd6ff']),
   b('galaxia', 'Galaxia', 'Noche', 'galaxy', 'conic-gradient(from 210deg at 60% 40%, #17123c, #4b1d78, #1b3a7a, #0b6a7c, #17123c)', ['#ffffff']),
   b('eclipse', 'Eclipse', 'Noche', 'sun', 'radial-gradient(circle at 50% 120%, #3a1b52 30%, #0d0b22 80%)', ['#ffb36b', '#ff6f61']),
-  b('neon-noche', 'Neón', 'Noche', 'flow', 'linear-gradient(115deg, #ff2e93, #7a2cff, #00d4ff, #7a2cff, #ff2e93)'),
-  b('prisma', 'Prisma', 'Vivos', 'flow', 'linear-gradient(115deg, #ff9a9e, #fad0c4, #a18cd1, #84fab0, #a18cd1, #ff9a9e)'),
-  b('fuego', 'Fuego', 'Vivos', 'flow', 'linear-gradient(115deg, #f83600, #fe8c00, #f9d423, #fe8c00, #f83600)'),
-  b('sirena', 'Sirena', 'Vivos', 'flow', 'linear-gradient(115deg, #00c9a7, #00b4db, #845ec2, #00b4db, #00c9a7)'),
-  b('caramelo', 'Caramelo', 'Vivos', 'flow', 'linear-gradient(115deg, #ffc3a0, #ffafbd, #c9a7eb, #ffafbd, #ffc3a0)'),
-  b('lima', 'Lima', 'Vivos', 'mesh', 'linear-gradient(120deg, #d4fc79, #96e6a1)', ['#f5ff8a', '#4fd18b', '#c4ffd9']),
-  b('mandarina', 'Mandarina', 'Vivos', 'mesh', 'linear-gradient(135deg, #ff9966, #ff5e62)', ['#ffc15e', '#ff3d6e', '#ff8a4c']),
-  b('uva', 'Uva', 'Vivos', 'mesh', 'linear-gradient(135deg, #8e2de2, #4a00e0)', ['#d26bff', '#3d1bd6', '#ff6bd6']),
   b('oceano', 'Océano', 'Vivos', 'waves', 'linear-gradient(180deg, #6dd5ed, #2193b0)', ['#ffffffaa', '#1a8fb0', '#0d5f86']),
   b('bosque', 'Bosque', 'Vivos', 'waves', 'linear-gradient(180deg, #a6d8a8, #134e5e)', ['#71b280aa', '#2c7a5f', '#0f3b46']),
-  b('sandia', 'Sandía', 'Vivos', 'mesh', 'linear-gradient(135deg, #f43b47, #453a94)', ['#ff6b81', '#7b5cff', '#ff2e4d']),
-  b('confetti', 'Confeti', 'Texturas', 'pattern', 'radial-gradient(circle, #ff8fb4 2.5px, transparent 3px) 0 0 / 38px 38px, radial-gradient(circle, #f3c560 2.5px, transparent 3px) 18px 22px / 52px 52px, radial-gradient(circle, #a6adff 2.5px, transparent 3px) 30px 8px / 44px 44px, #2b1f3f', [], 'grand'),
-  b('puntos', 'Puntos', 'Texturas', 'pattern', 'radial-gradient(circle, #ffffff66 2px, transparent 2.5px) 0 0 / 20px 20px, #4552c9', [], 'grand'),
-  b('rayas', 'Rayas', 'Texturas', 'pattern', 'repeating-linear-gradient(45deg, #f6b8a8 0 14px, #fde3c4 14px 28px)', [], 'grand'),
-  b('cuadros', 'Cuadros', 'Texturas', 'pattern', 'repeating-conic-gradient(#262a5c 0 25%, #34397a 0 50%) 0 0 / 44px 44px'),
-  b('tartan', 'Tartán', 'Texturas', 'pattern', 'repeating-linear-gradient(0deg, #b2335f55 0 14px, transparent 14px 42px), repeating-linear-gradient(90deg, #1f746455 0 14px, transparent 14px 42px), #f3e9d2'),
-  b('escamas', 'Escamas', 'Texturas', 'pattern', 'radial-gradient(circle at 50% 0, transparent 17px, #6fd5bd 18px, #1f7464 24px, transparent 25px) 0 0 / 40px 24px, #123f3a'),
   b('ondas', 'Ondas', 'Texturas', 'rings', 'radial-gradient(circle at 50% 120%, #34397a, #1b1e45 70%)', ['#a6adff', '#ff8fb4', '#6fd5bd']),
-  b('zigzag', 'Zigzag', 'Texturas', 'pattern', 'linear-gradient(135deg, #f3c560 25%, transparent 25%) -18px 0 / 36px 36px, linear-gradient(225deg, #f3c560 25%, transparent 25%) -18px 0 / 36px 36px, linear-gradient(315deg, #f3c560 25%, transparent 25%) 0 0 / 36px 36px, linear-gradient(45deg, #f3c560 25%, #b2335f 25%) 0 0 / 36px 36px'),
-  b('diamantes', 'Diamantes', 'Texturas', 'pattern', 'repeating-linear-gradient(45deg, #ffffff22 0 2px, transparent 2px 22px), repeating-linear-gradient(-45deg, #ffffff22 0 2px, transparent 2px 22px), #7b3f98'),
-  b('cuaderno', 'Cuaderno', 'Texturas', 'pattern', 'repeating-linear-gradient(0deg, #4552c933 0 1px, transparent 1px 22px), #fbf7ec'),
-  b('plano', 'Plano', 'Texturas', 'pattern', 'linear-gradient(#ffffff26 1px, transparent 1px) 0 0 / 26px 26px, linear-gradient(90deg, #ffffff26 1px, transparent 1px) 0 0 / 26px 26px, #1b3a7a'),
-  b('terrazo', 'Terrazo', 'Texturas', 'pattern', 'radial-gradient(5px 3px at 20% 30%, #b2335f, transparent) 0 0 / 120px 90px, radial-gradient(4px 6px at 70% 20%, #1f7464, transparent) 0 0 / 120px 90px, radial-gradient(6px 4px at 40% 75%, #8f5d00, transparent) 0 0 / 120px 90px, radial-gradient(3px 5px at 85% 70%, #4552c9, transparent) 0 0 / 120px 90px, radial-gradient(4px 3px at 10% 80%, #464866, transparent) 0 0 / 120px 90px, #efe9df'),
   b('sol', 'Sol', 'Texturas', 'sun', 'linear-gradient(180deg, #ff9a5e, #ff7e5f)', ['#fff3a8', '#f9d423']),
   b('arcoiris', 'Arcoíris', 'Texturas', 'rings', 'linear-gradient(180deg, #cfe3ff, #fdf2ff)', ['#ff8fb4', '#f3c560', '#6fd5bd', '#a6adff']),
 
   // Más cielos y noches
-  b('niebla', 'Niebla', 'Cielos', 'mesh', 'linear-gradient(180deg, #e6ebf2, #c9d3e0)', ['#ffffff', '#b8c6da', '#e9e2f5'], 'grand'),
   b('mediodia', 'Mediodía', 'Cielos', 'sun', 'linear-gradient(180deg, #7cc4ff, #cfeaff)', ['#fffbe0', '#ffd66b'], 'grand'),
   b('borealis', 'Boreal', 'Noche', 'aurora', 'linear-gradient(180deg, #06142b, #0e2d3f)', ['#3dffb0', '#3dc8ff', '#b26bff']),
   b('luna-llena', 'Luna llena', 'Noche', 'sun', 'linear-gradient(180deg, #0b1030, #1d2558)', ['#f4f1ff', '#c9cff5']),
@@ -133,27 +112,11 @@ export const BANNERS: Banner[] = [
   b('constelacion', 'Constelación', 'Noche', 'stars', 'radial-gradient(120% 90% at 80% 0%, #2c1f5c, #0b0c24)', ['#ff9fb6']),
   b('abismo', 'Abismo', 'Noche', 'waves', 'linear-gradient(180deg, #0b2a4a, #030c18)', ['#3dc8ff55', '#1b5296', '#0e2743']),
 
-  // Más vivos
-  b('tropical', 'Tropical', 'Vivos', 'flow', 'linear-gradient(115deg, #00d4a4, #c8f03a, #ffb03a, #ff4d7a, #ffb03a, #00d4a4)'),
-  b('chicle', 'Chicle', 'Vivos', 'mesh', 'linear-gradient(135deg, #ffc6e6, #c6dcff)', ['#ff7fcf', '#7fb4ff', '#ffe36b']),
   b('volcan', 'Volcán', 'Vivos', 'sun', 'linear-gradient(180deg, #2a0a0a, #8a1c0f 60%, #ff5a1f)', ['#ffd36b', '#ff5a1f']),
   b('laguna', 'Laguna', 'Vivos', 'waves', 'linear-gradient(180deg, #b8fff0, #2fc3b1)', ['#ffffffaa', '#14a39a', '#0b6f73']),
   b('cosmos', 'Cosmos', 'Vivos', 'galaxy', 'conic-gradient(from 90deg at 40% 60%, #ff2e93, #7a2cff, #00d4ff, #00e08a, #ff2e93)', ['#ffffff']),
 
-  // Más texturas
-  b('ajedrez', 'Ajedrez', 'Texturas', 'pattern', 'repeating-conic-gradient(#13202f 0 25%, #f7f3ea 0 50%) 0 0 / 36px 36px'),
-  b('lunares', 'Lunares', 'Texturas', 'pattern', 'radial-gradient(circle, #ffba67 6px, transparent 6.5px) 0 0 / 34px 34px, radial-gradient(circle, #ffba67 6px, transparent 6.5px) 17px 17px / 34px 34px, #9f3b59', [], 'grand'),
-  b('panal', 'Panal', 'Texturas', 'pattern', 'radial-gradient(circle at 50% 50%, transparent 9px, #ffba67 10px, #ffba67 12px, transparent 13px) 0 0 / 28px 24px, radial-gradient(circle at 50% 50%, transparent 9px, #ffba67 10px, #ffba67 12px, transparent 13px) 14px 12px / 28px 24px, #3a2400'),
   b('radar', 'Radar', 'Texturas', 'rings', 'radial-gradient(circle at 50% 120%, #003b33, #001a17 70%)', ['#59dac1', '#3dffb0', '#bae1fb']),
-
-  // Armonías: cada fondo aplica una regla del círculo cromático
-  b('complementario', 'Complementario', 'Armonías', 'mesh', 'linear-gradient(135deg, #1b5296, #0e2743)', ['#ff8a3d', '#3b7ddb', '#ffb36b']),
-  b('triada', 'Tríada', 'Armonías', 'mesh', 'linear-gradient(135deg, #ffe0ea, #e0f0ff)', ['#e8457a', '#ffba3a', '#3a8fe8']),
-  b('tetrada', 'Tétrada', 'Armonías', 'mesh', 'linear-gradient(135deg, #fff4ea, #f1eaff)', ['#ff9fb6', '#ffba67', '#59dac1']),
-  b('analogo-mar', 'Análogo mar', 'Armonías', 'flow', 'linear-gradient(115deg, #00a6a6, #2a7de1, #5a5ff0, #2a7de1, #00a6a6)'),
-  b('analogo-fuego', 'Análogo fuego', 'Armonías', 'flow', 'linear-gradient(115deg, #ff4d4d, #ff8a3d, #ffc23d, #ff8a3d, #ff4d4d)'),
-  b('dividido', 'Complementario dividido', 'Armonías', 'mesh', 'linear-gradient(135deg, #2b1a5c, #4a2f9a)', ['#c8e83a', '#ffb03a', '#7a4ff0']),
-  b('monocromo', 'Monocromo', 'Armonías', 'waves', 'linear-gradient(180deg, #bae1fb, #6ea8ec)', ['#ffffff88', '#1b5296', '#0e2743']),
 
   // Cine, series y ciencia ficción: solo la idea de cada estética
   b('ciudad-neon', 'Ciudad neón', 'Ciencia ficción', 'city', 'linear-gradient(180deg, #12002b, #2a0a4a 55%, #ff2e93)', ['#00e5ff', '#ff2e93', '#7a2cff']),
@@ -172,6 +135,35 @@ export const BANNERS: Banner[] = [
   b('reino', 'Reino encantado', 'Fantasía y terror', 'castle', 'linear-gradient(180deg, #2b1b4d, #a24b6a 60%, #ffb36b)', ['#ffd36b', '#1a0f2e']),
   b('cielo-anime', 'Cielo de anime', 'Anime y caricatura', 'anime', 'linear-gradient(180deg, #2f8cff, #8ccfff 60%, #e6f6ff)', ['#ffffff', '#fff6c9']),
   b('sabado', 'Sábado de caricaturas', 'Anime y caricatura', 'comic', 'linear-gradient(135deg, #6ee7ff, #b26bff)', ['#13202f', '#ffd23d', '#ffffff']),
+
+  // Colecciones: cada línea tiene variantes de color, como las de los juegos
+  b('llama-brasa', 'Brasa', 'Llama ancestral', 'lava', 'radial-gradient(120% 100% at 50% 110%, #4a0d05, #120303 70%)', ['#ff5a1f', '#ffb347', '#ffd36b'], 'grand'),
+  b('llama-azul', 'Fuego azul', 'Llama ancestral', 'lava', 'radial-gradient(120% 100% at 50% 110%, #06204a, #020812 70%)', ['#2fa8ff', '#8fe3ff', '#e0f7ff']),
+  b('llama-verde', 'Fuego fatuo', 'Llama ancestral', 'lava', 'radial-gradient(120% 100% at 50% 110%, #06301a, #020c06 70%)', ['#4dff6a', '#c8ff7a', '#eaffd0']),
+  b('pulso-rosa', 'Rosa eléctrico', 'Pulso digital', 'glitch', 'linear-gradient(135deg, #1a0030, #0a0018)', ['#ff2e93', '#00e5ff', '#ffe600']),
+  b('pulso-acido', 'Ácido', 'Pulso digital', 'glitch', 'linear-gradient(135deg, #0d1a00, #050a00)', ['#b6ff00', '#9d4bff', '#00ffd5']),
+  b('runa-dorada', 'Oro antiguo', 'Runas', 'runes', 'radial-gradient(circle at 50% 50%, #3a2a08, #0d0a02 70%)', ['#ffd36b', '#fff1b8']),
+  b('runa-arcana', 'Arcana', 'Runas', 'runes', 'radial-gradient(circle at 50% 50%, #2a0f4a, #0b0418 70%)', ['#b26bff', '#e3c7ff']),
+  b('runa-hielo', 'Glacial', 'Runas', 'runes', 'radial-gradient(circle at 50% 50%, #0b2a4a, #020a18 70%)', ['#7fe7ff', '#e0fbff']),
+  b('horizonte', 'Disco de fuego', 'Horizonte de sucesos', 'blackhole', 'radial-gradient(circle at 50% 50%, #120a1a, #020208 70%)', ['#ffb347', '#ff6a1f', '#fff1d0']),
+  b('horizonte-violeta', 'Disco violeta', 'Horizonte de sucesos', 'blackhole', 'radial-gradient(circle at 50% 50%, #140a2a, #020208 70%)', ['#c77dff', '#7a2cff', '#f3e3ff']),
+  b('cerezo-dia', 'Día', 'Tinta y cerezo', 'sumi', 'linear-gradient(180deg, #f6efe2, #e9dcc4)', ['#d62b3a', '#13202f', '#ffb7c5'], 'grand'),
+  b('cerezo-noche', 'Noche', 'Tinta y cerezo', 'sumi', 'linear-gradient(180deg, #1b1f4a, #0b0c24)', ['#f4f1ff', '#05061a', '#ffb7c5']),
+  b('cristal-rosa', 'Cuarzo rosa', 'Cristal', 'crystal', 'linear-gradient(160deg, #2a0b2e, #120414)', ['#ff7fcf', '#ffd1f0', '#ffffff']),
+  b('cristal-cian', 'Hielo vivo', 'Cristal', 'crystal', 'linear-gradient(160deg, #04252e, #010d12)', ['#3de8ff', '#c8fbff', '#ffffff']),
+  b('cristal-amatista', 'Amatista', 'Cristal', 'crystal', 'linear-gradient(160deg, #1c0b3a, #0a0418)', ['#9b5cff', '#e2ccff', '#ffffff']),
+  b('rayo-azul', 'Rayo azul', 'Tormenta eléctrica', 'lightning', 'linear-gradient(180deg, #0b1430, #1d2a4f)', ['#9fd8ff', '#ffffff']),
+  b('rayo-violeta', 'Rayo violeta', 'Tormenta eléctrica', 'lightning', 'linear-gradient(180deg, #160b30, #2d1d4f)', ['#d6a8ff', '#ffffff']),
+  b('arrecife', 'Arrecife', 'Reino sumergido', 'caustics', 'linear-gradient(180deg, #0e6f7a, #06343f)', ['#7ff7e6', '#1fbfa8', '#0b3f46']),
+  b('abisal', 'Abisal', 'Reino sumergido', 'caustics', 'linear-gradient(180deg, #08204a, #020818)', ['#4dc9ff', '#7a5cff', '#040c24']),
+  b('realeza-oro', 'Azul real', 'Corte real', 'royal', 'linear-gradient(160deg, #0f1a3d, #060b1f)', ['#ffd36b', '#fff1b8']),
+  b('realeza-carmesi', 'Carmesí', 'Corte real', 'royal', 'linear-gradient(160deg, #5a0a1c, #24030b)', ['#ffd36b', '#ffe7a8']),
+  b('arcade-atardecer', 'Atardecer', 'Arcade', 'pixel', 'linear-gradient(180deg, #2a0f5c 0 22%, #5a1f8a 22% 40%, #c2408f 40% 56%, #ff8a5c 56%)', ['#ffd36b', '#3a1466', '#1a0a33'], 'grand'),
+  b('arcade-noche', 'Noche', 'Arcade', 'pixel', 'linear-gradient(180deg, #050a24 0 22%, #0b1440 22% 40%, #16246a 40% 56%, #2a3a8a 56%)', ['#e0f0ff', '#0a1238', '#05081c']),
+  b('colmena-ambar', 'Ámbar', 'Colmena', 'hexgrid', 'radial-gradient(circle at 50% 60%, #2a1a00, #0a0600 75%)', ['#ffb000', '#ffe08a']),
+  b('colmena-cian', 'Cian', 'Colmena', 'hexgrid', 'radial-gradient(circle at 50% 60%, #002a33, #000a0e 75%)', ['#00e5ff', '#bafcff']),
+  b('escarcha', 'Escarcha', 'Escarcha', 'frost', 'linear-gradient(180deg, #bfe3ff, #6fa8dc)', ['#ffffff', '#e6f6ff'], 'grand'),
+  b('escarcha-aurora', 'Aurora helada', 'Escarcha', 'frost', 'linear-gradient(180deg, #123a5c, #2f8f9a)', ['#ffffff', '#b8ffe9']),
 ]
 
 // Colores con versión para tema claro y nocturno: siempre se distinguen sobre la superficie
@@ -183,6 +175,7 @@ interface FrameOpts {
   anim?: string
   fx?: FrameFx
   accent?: string
+  accent2?: string
 }
 
 const f = (key: string, label: string, group: string, bg: string, o: FrameOpts = {}): Frame => ({
@@ -195,40 +188,26 @@ const f = (key: string, label: string, group: string, bg: string, o: FrameOpts =
   anim: o.anim,
   fx: o.fx ?? 'none',
   accent: o.accent,
+  accent2: o.accent2,
 })
 
 // Armonías: cada marco de este grupo aplica una regla de la teoría del color
 export const FRAMES: Frame[] = [
   { key: 'none', label: 'Sin marco', group: 'Clásicos', bg: 'transparent', width: 0, tier: 'free', fx: 'none' },
   f('halo', 'Halo', 'Clásicos', ld('#5f6be0', '#9aa3f5'), { tier: 'grand', fx: 'glow' }),
-  f('dusk', 'Atardecer', 'Clásicos', 'linear-gradient(160deg, #fde3c4, #f6b8a8, #d98aa6)', { tier: 'grand' }),
-  f('rosa', 'Rosa', 'Clásicos', ld('#e0457f', '#ff9fb6'), { tier: 'grand' }),
   f('oro', 'Oro', 'Metales', 'linear-gradient(135deg, #fff1b8, #f0b94a, #a8741a, #f0b94a)', { tier: 'grand', width: 0.09, fx: 'shimmer' }),
   f('plata', 'Plata', 'Metales', 'linear-gradient(135deg, #e8ebf2, #9aa2b6, #5b6277, #c3c9d6)', { tier: 'grand', width: 0.09, fx: 'shimmer' }),
-  f('menta', 'Menta', 'Clásicos', ld('#1f9c80', '#59dac1'), { tier: 'grand' }),
-  f('confeti', 'Confeti', 'Vivos', 'conic-gradient(#ff9fb6 0 25%, #ffba67 0 50%, #59dac1 0 75%, #cab0ff 0)', { fx: 'dash', anim: 'frame-spin-slow' }),
   f('arcoiris', 'Arcoíris', 'Vivos', 'conic-gradient(#ff9fb6, #ffba67, #59dac1, #9fb4ff, #ff9fb6)', { width: 0.09, anim: 'frame-spin', fx: 'glow' }),
   f('aurora', 'Aurora', 'Vivos', 'conic-gradient(#59dac1, #cdd4fb, #f4cfe0, #59dac1)', { width: 0.08, anim: 'frame-spin', fx: 'glow' }),
   f('neon', 'Neón', 'Vivos', 'conic-gradient(#ff2e93, #7a2cff, #00d4ff, #ff2e93)', { width: 0.08, anim: 'frame-spin', fx: 'glow' }),
   f('fuego', 'Fuego', 'Vivos', 'conic-gradient(#f83600, #fe8c00, #f9d423, #fe8c00, #f83600)', { width: 0.1, anim: 'frame-spin', fx: 'glow' }),
-  f('oceano', 'Océano', 'Vivos', 'conic-gradient(#00c9a7, #00b4db, #2193b0, #00c9a7)', { width: 0.09, anim: 'frame-spin' }),
   f('cometa', 'Cometa', 'Órbitas', 'conic-gradient(transparent 0 62%, #fff 100%)', { width: 0.08, anim: 'frame-spin', fx: 'orbit', accent: '#ffffff' }),
   f('orbita', 'Órbita', 'Órbitas', ld('#c9cdf5', '#3a4470'), { width: 0.04, fx: 'orbit', accent: '#ffba67' }),
-  f('puntos', 'Puntos', 'Punteados', ld('#c9930f', '#ffba67'), { fx: 'dash', anim: 'frame-spin-slow' }),
-  f('rayitas', 'Rayitas', 'Punteados', 'repeating-conic-gradient(#9fb4ff 0 4deg, transparent 4deg 12deg)', { width: 0.1, anim: 'frame-spin-slow' }),
   f('corona', 'Corona', 'Metales', 'repeating-conic-gradient(#ffba67 0 18deg, #a8741a 18deg 36deg)', { width: 0.12, fx: 'sparkle', accent: '#fff1b8' }),
-  f('petalos', 'Pétalos', 'Clásicos', 'repeating-conic-gradient(#ff9fb6 0 20deg, #ffd1e0 20deg 40deg)', { width: 0.12, anim: 'frame-spin-slow' }),
-  f('caramelo', 'Caramelo', 'Clásicos', 'repeating-conic-gradient(#ff5e62 0 15deg, #fff 15deg 30deg)', { width: 0.1, anim: 'frame-spin-slow' }),
   f('hielo', 'Hielo', 'Brillos', 'repeating-conic-gradient(#cfe3ff 0 15deg, #6dd5ed 15deg 30deg)', { width: 0.1, anim: 'frame-spin-slow', fx: 'sparkle', accent: '#ffffff' }),
-  f('selva', 'Selva', 'Clásicos', 'repeating-conic-gradient(#71b280 0 22deg, #134e5e 22deg 44deg)', { width: 0.1 }),
   f('latido', 'Latido', 'Ondas', ld('#e8457a', '#ff7fa4'), { width: 0.08, anim: 'frame-pulse', fx: 'ripple' }),
   f('radar', 'Radar', 'Ondas', ld('#1f9c80', '#59dac1'), { width: 0.06, fx: 'ripple' }),
   f('lucero', 'Lucero', 'Brillos', ld('#c9930f', '#ffba67'), { width: 0.06, anim: 'frame-pulse', fx: 'sparkle' }),
-  f('uva', 'Uva', 'Clásicos', 'linear-gradient(135deg, #8e2de2, #4a00e0)', { width: 0.09 }),
-  f('sandia', 'Sandía', 'Clásicos', 'linear-gradient(135deg, #f43b47, #453a94)', { width: 0.09 }),
-  f('noche', 'Noche', 'Clásicos', 'linear-gradient(135deg, #3a3e70, #15172e)', { width: 0.11 }),
-  f('tinta', 'Tinta', 'Clásicos', ld('#191a33', '#c9d0f5'), { width: 0.05 }),
-  f('hilo', 'Hilo', 'Clásicos', ld('#13202f', '#ffffff'), { width: 0.025 }),
 
   // Brillos: un resplandor que respira detrás del aro
   f('brasa', 'Brasa', 'Brillos', 'conic-gradient(#ff4d2e, #ffb347, #ff4d2e)', { anim: 'frame-spin', fx: 'glow', width: 0.08 }),
@@ -261,10 +240,7 @@ export const FRAMES: Frame[] = [
   f('bronce', 'Bronce', 'Metales', 'linear-gradient(135deg, #f0c9a0, #b07434, #6e4120, #d9a46b)', { width: 0.09, fx: 'shimmer' }),
 
   // Punteados: el aro se corta en segmentos que giran
-  f('costura', 'Costura', 'Punteados', ld('#938b7d', '#bec8d4'), { width: 0.05, fx: 'dash', anim: 'frame-spin-slow' }),
-  f('reloj', 'Reloj', 'Punteados', 'linear-gradient(135deg, #fff1b8, #c9930f)', { width: 0.1, fx: 'dash' }),
   f('pixel', 'Píxel', 'Punteados', 'conic-gradient(#ff2e93, #ffba67, #59dac1, #7a2cff, #ff2e93)', { width: 0.09, fx: 'dash', anim: 'frame-spin' }),
-  f('cinta', 'Cinta', 'Punteados', ld('#1b5296', '#bae1fb'), { width: 0.06, fx: 'dash', anim: 'frame-spin' }),
 
   // Dobles: un segundo aro gira en sentido contrario
   f('eco', 'Eco', 'Dobles', ld('#1b5296', '#93c6ff'), { width: 0.05, fx: 'double' }),
@@ -272,13 +248,7 @@ export const FRAMES: Frame[] = [
   f('gemelos', 'Gemelos', 'Dobles', ld('#e0457f', '#ff9fb6'), { width: 0.05, fx: 'double', accent: ld('#2a61b1', '#93c6ff') }),
   f('nebula', 'Nébula', 'Dobles', 'conic-gradient(#7a2cff, #00d4ff, #7a2cff)', { width: 0.06, anim: 'frame-spin', fx: 'double', accent: '#ff9fb6' }),
 
-  f('complementario', 'Complementario', 'Armonías', 'conic-gradient(#1b5296, #3b7ddb, #ff8a3d, #ffb36b, #1b5296)', { width: 0.09, anim: 'frame-spin-slow' }),
-  f('triada', 'Tríada', 'Armonías', 'conic-gradient(#e8457a, #ffba3a, #3a8fe8, #e8457a)', { width: 0.09, anim: 'frame-spin-slow' }),
   f('tetrada', 'Tétrada', 'Armonías', 'conic-gradient(#ff9fb6, #ffba67, #59dac1, #cab0ff, #ff9fb6)', { width: 0.09, anim: 'frame-spin-slow', fx: 'glow' }),
-  f('analogo-mar', 'Análogo mar', 'Armonías', 'conic-gradient(#00a6a6, #2a7de1, #5a5ff0, #2a7de1, #00a6a6)', { width: 0.09, anim: 'frame-spin' }),
-  f('analogo-fuego', 'Análogo fuego', 'Armonías', 'conic-gradient(#ff4d4d, #ff8a3d, #ffc23d, #ff8a3d, #ff4d4d)', { width: 0.09, anim: 'frame-spin' }),
-  f('dividido', 'Complementario dividido', 'Armonías', 'conic-gradient(#7a4ff0, #c8e83a, #ffb03a, #7a4ff0)', { width: 0.09, anim: 'frame-spin-slow' }),
-  f('monocromo', 'Monocromo', 'Armonías', 'conic-gradient(#0e2743, #1b5296, #6ea8ec, #bae1fb, #0e2743)', { width: 0.09, anim: 'frame-spin' }),
 
   // Temáticos
   f('neon-tubo', 'Tubo de neón', 'Temáticos', '#ff2e93', { width: 0.05, fx: 'glow' }),
@@ -291,6 +261,34 @@ export const FRAMES: Frame[] = [
   f('runa', 'Runa', 'Temáticos', 'linear-gradient(135deg, #ffe7a8, #c9930f)', { width: 0.07, fx: 'sparkle', accent: '#ffd36b' }),
   f('foco', 'Reflector', 'Temáticos', 'linear-gradient(135deg, #fff6c9, #ffd36b)', { width: 0.07, fx: 'shimmer' }),
   f('ochentero', 'Ochentero', 'Temáticos', 'linear-gradient(135deg, #00e5ff, #ff2e93)', { width: 0.07, fx: 'glow', anim: 'frame-spin' }),
+
+  // Ornamentos: piezas que salen del aro, cada una con variantes
+  f('llama', 'Llama', 'Llamas', '#ff5a1f', { width: 0.06, fx: 'flames', accent: '#ff5a1f', accent2: '#ffd36b', tier: 'grand' }),
+  f('llama-azul', 'Llama azul', 'Llamas', '#2fa8ff', { width: 0.06, fx: 'flames', accent: '#2fa8ff', accent2: '#e0f7ff' }),
+  f('llama-verde', 'Fuego fatuo', 'Llamas', '#3ddc5a', { width: 0.06, fx: 'flames', accent: '#4dff6a', accent2: '#eaffd0' }),
+  f('alas-angel', 'Alas de ángel', 'Alas', 'linear-gradient(135deg, #fff1b8, #f0b94a)', { width: 0.06, fx: 'wings', accent: '#ffffff', accent2: '#ffd36b' }),
+  f('alas-demonio', 'Alas de sombra', 'Alas', 'linear-gradient(135deg, #5a0a1c, #13020a)', { width: 0.06, fx: 'wings', accent: '#2a0610', accent2: '#ff3d5a' }),
+  f('alas-hada', 'Alas de hada', 'Alas', 'conic-gradient(#ffc6e6, #c6f0ff, #d9c6ff, #ffc6e6)', { width: 0.06, fx: 'wings', accent: '#c6f0ffcc', accent2: '#ffc6e6' }),
+  f('cuernos', 'Cuernos', 'Cuernos', 'linear-gradient(135deg, #5a0a1c, #13020a)', { width: 0.07, fx: 'horns', accent: '#8a0f2a', accent2: '#ff5a5a' }),
+  f('cuernos-hueso', 'Cuernos de hueso', 'Cuernos', 'linear-gradient(135deg, #e8dcc4, #a89878)', { width: 0.07, fx: 'horns', accent: '#f3ead8', accent2: '#a89878' }),
+  f('aureola', 'Aureola', 'Aureolas', 'linear-gradient(135deg, #fff1b8, #f0b94a)', { width: 0.05, fx: 'angel', accent: '#ffd36b', tier: 'grand' }),
+  f('aureola-neon', 'Aureola neón', 'Aureolas', '#00e5ff', { width: 0.05, fx: 'angel', accent: '#00e5ff' }),
+  f('circulo-arcano', 'Círculo arcano', 'Runas', '#9b5cff', { width: 0.04, fx: 'runes', accent: '#c9a4ff' }),
+  f('circulo-dorado', 'Círculo dorado', 'Runas', '#f0b94a', { width: 0.04, fx: 'runes', accent: '#ffd36b' }),
+  f('corona-cristal', 'Corona de cristal', 'Cristales', '#3de8ff', { width: 0.05, fx: 'crystals', accent: '#3de8ff', accent2: '#e0fbff' }),
+  f('corona-rosa', 'Cuarzo', 'Cristales', '#ff7fcf', { width: 0.05, fx: 'crystals', accent: '#ff7fcf', accent2: '#ffe3f4' }),
+  f('voltaje', 'Voltaje', 'Electricidad', '#4db8ff', { width: 0.05, fx: 'electric', accent: '#bfe6ff' }),
+  f('voltaje-violeta', 'Voltaje violeta', 'Electricidad', '#b26bff', { width: 0.05, fx: 'electric', accent: '#ecd9ff' }),
+  f('enredadera', 'Enredadera', 'Naturaleza', '#2f8a4f', { width: 0.05, fx: 'vines', accent: '#4fbf6a', accent2: '#a8e6a0' }),
+  f('rosal', 'Rosal', 'Naturaleza', '#2f6a3f', { width: 0.05, fx: 'vines', accent: '#ff6f9f', accent2: '#ffc6d9' }),
+  f('joyero', 'Joyero', 'Gemas', 'linear-gradient(135deg, #fff1b8, #c9930f)', { width: 0.07, fx: 'gems', accent: '#ff3d6e', accent2: '#3de8ff' }),
+  f('esmeraldas', 'Esmeraldas', 'Gemas', 'linear-gradient(135deg, #e8ebf2, #8a93a6)', { width: 0.07, fx: 'gems', accent: '#1fbf6a', accent2: '#7fffb0' }),
+  f('falla', 'Falla', 'Digital', '#ffffff', { width: 0.05, fx: 'glitch', accent: '#ff2e93', accent2: '#00e5ff' }),
+  f('falla-acida', 'Falla ácida', 'Digital', '#b6ff00', { width: 0.05, fx: 'glitch', accent: '#9d4bff', accent2: '#00ffd5' }),
+  f('orejitas', 'Orejitas', 'Tiernos', '#ffb7d5', { width: 0.05, fx: 'ears', accent: '#ffb7d5', accent2: '#ff7fae', tier: 'grand' }),
+  f('orejitas-noche', 'Orejitas de noche', 'Tiernos', '#2a2f5a', { width: 0.05, fx: 'ears', accent: '#2a2f5a', accent2: '#b6a8ff' }),
+  f('vacio', 'Vacío', 'Cósmicos', '#120a1a', { width: 0.06, fx: 'void', accent: '#ffb347', accent2: '#ff6a1f' }),
+  f('vacio-violeta', 'Vacío violeta', 'Cósmicos', '#140a2a', { width: 0.06, fx: 'void', accent: '#c77dff', accent2: '#7a2cff' }),
 ]
 
 const PASTEL = ['#ff9fb6', '#ffba67', '#59dac1', '#cab0ff']
@@ -410,22 +408,28 @@ export const NAME_STYLES: NameStyle[] = [
   fx('embrujado', 'Embrujado', ld('#3f7a52', '#b8ffd2'), 'spooky'),
   fx('runa', 'Runa', ld('#8a5a00', '#ffd36b'), 'rune', true),
   fx('drama', 'Drama', ld('#9f1239', '#ff8fa8'), 'drama', true),
+  fx('fuego', 'Fuego', ld('#c2410c', '#ffb347'), 'fire'),
+  fx('escarcha', 'Escarcha', ld('#0b6aa3', '#bfe8ff'), 'ice'),
+  fx('pixel', 'Píxel', ld('#6e2fd1', '#ffd36b'), 'pixel'),
 ]
 
 // Temas: combinan fondo, marco, efecto y nombre de una sola vez.
 // Están inspirados en géneros y estéticas, nunca en obras, personajes ni marcas concretas.
+export type Rarity = 'rara' | 'epica' | 'legendaria' | 'mitica'
+
 export interface Theme {
   key: string
   label: string
   group: string
   idea: string
+  rarity?: Rarity
   banner: string
   frame: string
   effect: string
   name: string
 }
 
-const t = (key: string, label: string, group: string, idea: string, banner: string, frame: string, effect: string, name: string): Theme => ({
+const t = (key: string, label: string, group: string, idea: string, banner: string, frame: string, effect: string, name: string, rarity?: Rarity): Theme => ({
   key,
   label,
   group,
@@ -434,23 +438,40 @@ const t = (key: string, label: string, group: string, idea: string, banner: stri
   frame,
   effect,
   name,
+  rarity,
 })
 
 export const THEMES: Theme[] = [
+  // Colecciones con rareza (como las líneas de aspectos de los juegos)
+  t('col-llama', 'Llama ancestral', 'Colecciones', 'Grietas de lava, brasas y un aro en llamas', 'llama-brasa', 'llama', 'brasas', 'fuego', 'legendaria'),
+  t('col-infernal', 'Sombra infernal', 'Colecciones', 'Alas oscuras y fuego que no se apaga', 'llama-brasa', 'alas-demonio', 'brasas', 'drama', 'mitica'),
+  t('col-celestial', 'Celestial', 'Colecciones', 'Alas blancas, oro y polvo de estrellas', 'runa-dorada', 'alas-angel', 'plumas', 'runa', 'mitica'),
+  t('col-horizonte', 'Horizonte de sucesos', 'Colecciones', 'Un agujero negro que se traga la luz', 'horizonte', 'vacio', 'galaxia', 'cromo', 'mitica'),
+  t('col-runas', 'Runas arcanas', 'Colecciones', 'Círculos mágicos que giran sin parar', 'runa-arcana', 'circulo-arcano', 'polvo-estelar', 'runa', 'legendaria'),
+  t('col-corte', 'Corte real', 'Colecciones', 'Damasco dorado y una aureola', 'realeza-oro', 'aureola', 'lluvia-oro', 'marquesina', 'legendaria'),
+  t('col-pulso', 'Pulso digital', 'Colecciones', 'Señal rota, neón y estática', 'pulso-rosa', 'falla', 'codigo', 'falla', 'epica'),
+  t('col-cristal', 'Cristal', 'Colecciones', 'Fragmentos que brillan por dentro', 'cristal-cian', 'corona-cristal', 'gemas', 'holograma', 'epica'),
+  t('col-tormenta', 'Tormenta eléctrica', 'Colecciones', 'Relámpagos y un aro con voltaje', 'rayo-azul', 'voltaje', 'lluvia', 'cromo', 'epica'),
+  t('col-cerezo', 'Tinta y cerezo', 'Colecciones', 'Montañas de tinta, luna y pétalos', 'cerezo-noche', 'rosal', 'petalos', 'rosa-cursiva', 'epica'),
+  t('col-sumergido', 'Reino sumergido', 'Colecciones', 'Luz bajo el agua y burbujas', 'arrecife', 'sonar', 'pompas', 'holograma', 'epica'),
+  t('col-arcade', 'Arcade', 'Colecciones', 'Paisaje de píxeles y joyas de puntaje', 'arcade-atardecer', 'joyero', 'gamer', 'pixel', 'epica'),
+  t('col-colmena', 'Colmena', 'Colecciones', 'Hexágonos que se encienden en oleadas', 'colmena-ambar', 'ambar', 'atomos', 'terminal', 'rara'),
+  t('col-escarcha', 'Escarcha', 'Colecciones', 'Hielo en los bordes y nieve que cae', 'escarcha', 'corona-cristal', 'nieve', 'escarcha', 'rara'),
+  t('col-tierno', 'Dulzura', 'Colecciones', 'Orejitas, corazones y cielo de caricatura', 'cielo-anime', 'orejitas', 'corazones', 'rosa-cursiva', 'rara'),
   t('neon-nocturno', 'Neón nocturno', 'Ciencia ficción', 'Ciudades lluviosas con letreros de neón', 'ciudad-neon', 'neon-tubo', 'lluvia', 'neon'),
   t('hiperespacio', 'Hiperespacio', 'Ciencia ficción', 'Naves que saltan entre estrellas', 'hiperespacio', 'hud', 'fugaces', 'holograma'),
   t('terminal', 'Terminal', 'Ciencia ficción', 'Pantallas verdes y código que cae', 'terminal', 'fosforo', 'codigo', 'terminal'),
   t('planeta', 'Planeta lejano', 'Ciencia ficción', 'Exploración de mundos con anillos', 'planeta', 'saturno', 'cohetes', 'cromo'),
   t('portal', 'Portal', 'Ciencia ficción', 'Viajes en el tiempo y otras dimensiones', 'portal', 'portal', 'ovnis', 'falla'),
   t('ochentero', 'Ochentero', 'Series y programas', 'Atardeceres de neón y cuadrícula infinita', 'ochentero', 'ochentero', 'destellos', 'cromo'),
-  t('tele-antigua', 'Tele de antes', 'Series y programas', 'Comedias de foro con risas grabadas', 'tele-antigua', 'tinta', 'teles', 'falla'),
+  t('tele-antigua', 'Tele de antes', 'Series y programas', 'Comedias de foro con risas grabadas', 'tele-antigua', 'falla', 'teles', 'falla'),
   t('en-vivo', 'En vivo', 'Series y programas', 'Concursos, reflectores y confeti', 'en-vivo', 'foco', 'confeti', 'marquesina'),
   t('telenovela', 'Telenovela', 'Series y programas', 'Romances intensos y miradas dramáticas', 'telenovela', 'rubi', 'petalos', 'drama'),
-  t('cine-negro', 'Cine negro', 'Cine', 'Detectives, persianas y lluvia en blanco y negro', 'cine-negro', 'tinta', 'lluvia', 'cine-negro'),
+  t('cine-negro', 'Cine negro', 'Cine', 'Detectives, persianas y lluvia en blanco y negro', 'cine-negro', 'pelicula', 'lluvia', 'cine-negro'),
   t('funcion', 'Función de medianoche', 'Cine', 'Película vieja con grano y palomitas', 'funcion', 'pelicula', 'palomitas', 'sepia'),
   t('vineta', 'Viñeta', 'Cine', 'Historietas de héroes con onomatopeyas', 'vineta', 'vineta', 'fuegos', 'vineta'),
   t('embrujada', 'Noche embrujada', 'Fantasía y terror', 'Neblina, luna llena y algo que se mueve', 'embrujada', 'calabaza', 'fantasmas', 'embrujado'),
-  t('murcielagos', 'Medianoche gótica', 'Fantasía y terror', 'Castillos oscuros y alas en la noche', 'embrujada', 'noche', 'murcielagos', 'drama'),
+  t('murcielagos', 'Medianoche gótica', 'Fantasía y terror', 'Castillos oscuros y alas en la noche', 'embrujada', 'cuernos', 'murcielagos', 'drama'),
   t('reino', 'Reino encantado', 'Fantasía y terror', 'Castillos, magia y brasas al atardecer', 'reino', 'runa', 'brasas', 'runa'),
   t('cielo-anime', 'Cielo de anime', 'Anime y caricatura', 'Nubes enormes y pétalos al viento', 'cielo-anime', 'hada', 'sakura', 'rosa-cursiva'),
   t('sabado', 'Sábado de caricaturas', 'Anime y caricatura', 'Colores planos, risas y golpes de onomatopeya', 'sabado', 'vineta', 'risas', 'vineta'),
@@ -461,12 +482,29 @@ export const themeOf = (key?: string) => THEMES.find((x) => x.key === key)
 
 export const TOTAL_STYLES = BANNERS.length + FRAMES.length + EFFECTS.length + NAME_STYLES.length - 4
 
+// Fondos y marcos retirados por simples: quien los tenía pasa al reemplazo más parecido
+const LEGACY_BANNERS: Record<string, string> = {
+  halo: 'runa-hielo', dusk: 'cerezo-dia', alba: 'escarcha', durazno: 'cerezo-dia', lavanda: 'cristal-amatista', 'rosa-polar': 'cristal-rosa',
+  cereza: 'cristal-rosa', 'neon-noche': 'pulso-rosa', prisma: 'cristal-rosa', fuego: 'llama-brasa', sirena: 'arrecife', caramelo: 'cerezo-dia',
+  lima: 'colmena-ambar', mandarina: 'llama-brasa', uva: 'runa-arcana', sandia: 'realeza-carmesi', confetti: 'en-vivo', puntos: 'colmena-cian',
+  rayas: 'arcade-atardecer', cuadros: 'arcade-noche', tartan: 'realeza-carmesi', escamas: 'arrecife', zigzag: 'pulso-acido', diamantes: 'realeza-oro',
+  cuaderno: 'cerezo-dia', plano: 'colmena-cian', terrazo: 'cerezo-dia', niebla: 'escarcha', tropical: 'arrecife', chicle: 'cristal-rosa',
+  ajedrez: 'arcade-noche', lunares: 'realeza-carmesi', panal: 'colmena-ambar', complementario: 'horizonte', triada: 'pulso-rosa',
+  tetrada: 'cristal-amatista', 'analogo-mar': 'abisal', 'analogo-fuego': 'llama-brasa', dividido: 'pulso-acido', monocromo: 'escarcha-aurora',
+}
+const LEGACY_FRAMES: Record<string, string> = {
+  dusk: 'aureola', rosa: 'orejitas', menta: 'enredadera', petalos: 'rosal', caramelo: 'joyero', selva: 'enredadera', uva: 'circulo-arcano',
+  sandia: 'cuernos', noche: 'vacio', tinta: 'falla', hilo: 'aureola', rayitas: 'voltaje', oceano: 'corona-cristal', puntos: 'circulo-dorado',
+  confeti: 'joyero', costura: 'circulo-dorado', cinta: 'voltaje', reloj: 'circulo-dorado', complementario: 'llama-azul', triada: 'falla',
+  'analogo-mar': 'corona-cristal', 'analogo-fuego': 'llama', dividido: 'falla-acida', monocromo: 'aureola-neon',
+}
+
 const find = <T extends { key: string }>(list: T[], key: string | undefined) => list.find((x) => x.key === key) ?? list[0]
-export const bannerOf = (key?: string) => find(BANNERS, key)
+export const bannerOf = (key?: string) => find(BANNERS, (key && LEGACY_BANNERS[key]) || key)
 
 // Agrupa un catálogo por su campo group, conservando el orden
 export const groupsOf = <T extends { group: string }>(list: T[]) =>
   [...new Set(list.map((x) => x.group))].map((group) => ({ group, items: list.filter((x) => x.group === group) }))
-export const frameOf = (key?: string) => find(FRAMES, key)
+export const frameOf = (key?: string) => find(FRAMES, (key && LEGACY_FRAMES[key]) || key)
 export const effectOf = (key?: string) => find(EFFECTS, key)
 export const nameStyleOf = (key?: string) => find(NAME_STYLES, key)

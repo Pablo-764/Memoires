@@ -1184,6 +1184,46 @@ app-avatar {
   to { transform: skewX(4deg) translateY(-2px); }
 }
 
+/* Fuego: el degradado sube como una llama */
+[data-name-fx="fire"] {
+  background-image: linear-gradient(0deg, #c2410c 0%, #ff6a1f 30%, #ffb347 55%, #fff1b8 75%, #ff6a1f 100%);
+  background-size: 100% 220%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 8px rgb(255 106 31 / 0.45));
+  animation: name-fire 1.6s linear infinite;
+}
+
+@keyframes name-fire {
+  from { background-position: 0 0; }
+  to { background-position: 0 -220%; }
+}
+
+/* Escarcha: hielo con un brillo que cruza */
+[data-name-fx="ice"] {
+  background-image: linear-gradient(100deg, currentColor 30%, #ffffff 46%, #bfe8ff 52%, currentColor 66%);
+  background-size: 260% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 6px rgb(127 231 255 / 0.4));
+  animation: name-slide 3.2s var(--ease-in-out) infinite;
+}
+
+/* Píxel: letras de consola con sombra escalonada */
+[data-name-fx="pixel"] {
+  font-family: ui-monospace, "Cascadia Code", Consolas, monospace !important;
+  letter-spacing: 0.02em;
+  text-shadow: 2px 2px 0 color-mix(in oklab, currentColor 35%, transparent), 4px 4px 0 color-mix(in oklab, currentColor 18%, transparent);
+  animation: name-pixel 1.2s steps(2) infinite;
+}
+
+@keyframes name-pixel {
+  0% { translate: 0 0; }
+  50% { translate: 0 -2px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   [data-name-fx] { animation: none !important; }
   [data-name-fx="terminal"]::after { animation: none; }

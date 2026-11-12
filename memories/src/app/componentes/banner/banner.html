@@ -128,6 +128,97 @@
         <span class="bn-castle bn-near" [style.--c]="color(1)"></span>
         <span class="bn-embers" [style.--c]="color(0)"></span>
       }
+      @case ('lava') {
+        <span class="cx-cracks bn-far" [style.--c]="color(0)" [style.--c2]="color(1)"></span>
+        <span class="cx-cracks cx-cracks-b bn-near" [style.--c]="color(1)" [style.--c2]="color(2)"></span>
+        <span class="cx-heat" [style.--c]="color(0)"></span>
+        <span class="bn-embers" [style.--c]="color(2)"></span>
+      }
+      @case ('glitch') {
+        <span class="cx-neon bn-far" [style.--c]="color(0)" [style.--c2]="color(1)"></span>
+        @for (i of [0, 1, 2, 3]; track i) {
+          <span class="cx-slice" [style.--i]="i" [style.background]="info().css" [style.--c]="color(i % 2)"></span>
+        }
+        <span class="cx-blocks" [style.--c]="color(2)"></span>
+        <span class="bn-scan"></span>
+      }
+      @case ('runes') {
+        <span class="cx-sigil bn-far" [style.--c]="color(0)"></span>
+        <span class="cx-ring bn-near" [style.--c]="color(0)">
+          @for (g of runeOuter; track $index) {
+            <span class="cx-glyph" [style.--i]="$index" [style.--n]="runeOuter.length">{{ g }}</span>
+          }
+        </span>
+        <span class="cx-ring cx-ring-b bn-far" [style.--c]="color(1)">
+          @for (g of runeInner; track $index) {
+            <span class="cx-glyph" [style.--i]="$index" [style.--n]="runeInner.length">{{ g }}</span>
+          }
+        </span>
+        <span class="bn-embers" [style.--c]="color(1)"></span>
+      }
+      @case ('blackhole') {
+        <span class="bn-stars bn-stars-a bn-far"></span>
+        <span class="cx-disk bn-near" [style.--c]="color(0)" [style.--c2]="color(1)"></span>
+        <span class="cx-hole" [style.--c]="color(2)"></span>
+        <span class="cx-disk cx-disk-front bn-near" [style.--c]="color(0)" [style.--c2]="color(1)"></span>
+      }
+      @case ('sumi') {
+        <span class="cx-sun bn-far" [style.--c]="color(0)"></span>
+        <span class="cx-mount cx-mount-back bn-far" [style.--c]="color(1)"></span>
+        <span class="cx-mount bn-near" [style.--c]="color(1)"></span>
+        <span class="cx-branch bn-near" [style.--c]="color(1)" [style.--c2]="color(2)"></span>
+        @for (i of petals; track i) {
+          <span class="cx-petal" [style.--i]="i" [style.--c]="color(2)"></span>
+        }
+      }
+      @case ('crystal') {
+        @for (i of shards; track i) {
+          <span class="cx-shard" [class.bn-near]="i % 2 === 0" [class.bn-far]="i % 2 === 1" [style.--i]="i" [style.--c]="color(0)" [style.--c2]="color(1)"></span>
+        }
+        <span class="bn-stars bn-stars-b"></span>
+      }
+      @case ('lightning') {
+        <span class="cx-clouds bn-far"></span>
+        <span class="cx-bolt" [style.--c]="color(0)"></span>
+        <span class="cx-bolt cx-bolt-b" [style.--c]="color(0)"></span>
+        <span class="bn-flash"></span>
+        <div class="bn-layer bn-rain-tilt bn-near"><span class="bn-rain"></span></div>
+      }
+      @case ('caustics') {
+        <span class="cx-caustic bn-far" [style.--c]="color(0)"></span>
+        <span class="cx-caustic cx-caustic-b bn-near" [style.--c]="color(0)"></span>
+        <span class="bn-rays-diag" [style.--c]="color(0)"></span>
+        <span class="cx-kelp" [style.--c]="color(2)"></span>
+        <span class="cx-kelp cx-kelp-b" [style.--c]="color(2)"></span>
+        @for (i of bubbles; track i) {
+          <span class="cx-bubble" [style.--i]="i" [style.--c]="color(1)"></span>
+        }
+      }
+      @case ('royal') {
+        <span class="cx-damask bn-far" [style.--c]="color(0)"></span>
+        <span class="cx-filigree" [style.--c]="color(0)"></span>
+        <span class="bn-sweep"></span>
+        <span class="bn-stars bn-stars-b cx-gold" [style.--c]="color(1)"></span>
+      }
+      @case ('pixel') {
+        <span class="cx-pix-stars"></span>
+        <span class="cx-pix-sun bn-far" [style.--c]="color(0)"></span>
+        <span class="cx-pix-mount bn-far" [style.--c]="color(1)"></span>
+        <span class="cx-pix-cloud" [style.--c]="color(0)"></span>
+        <span class="cx-pix-ground bn-near" [style.--c]="color(2)" [style.--c2]="color(0)"></span>
+      }
+      @case ('hexgrid') {
+        <span class="cx-hex bn-far" [style.--c]="color(0)"></span>
+        <span class="cx-hex cx-hex-lit" [style.--c]="color(1)"></span>
+        <span class="bn-scan"></span>
+      }
+      @case ('frost') {
+        <span class="cx-frost bn-far" [style.--c]="color(0)"></span>
+        <span class="cx-frost cx-frost-b bn-near" [style.--c]="color(0)"></span>
+        <span class="bn-stars bn-stars-a cx-snow"></span>
+        <span class="bn-stars bn-stars-b cx-snow cx-snow-b"></span>
+        <span class="bn-sweep"></span>
+      }
       @case ('anime') {
         <span class="bn-rays-diag bn-far" [style.--c]="color(1)"></span>
         <span class="bn-cloud bn-cloud-a bn-far" [style.--c]="color(0)"></span>
