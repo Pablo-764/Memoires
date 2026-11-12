@@ -7,9 +7,11 @@ import { Icon } from '../../componentes/icon/icon'
 import { Modal } from '../../componentes/modal/modal'
 import { ThemeSegmented } from '../../componentes/theme-segmented/theme-segmented'
 
+import { Pressure } from '../../directivas/pressure'
+
 @Component({
   selector: 'app-settings',
-  imports: [FormsModule, RouterLink, ChoiceChip, Icon, Modal, ThemeSegmented],
+  imports: [FormsModule, RouterLink, ChoiceChip, Icon, Modal, ThemeSegmented, Pressure],
   styleUrl: './settings.css',
   templateUrl: './settings.html',
 })

@@ -1,0 +1,10 @@
+<div class="pb-area" aria-label="Fotos de ejemplo: puedes arrastrarlas">
+  @for (s of snaps; track s.photo) {
+    <figure #card class="pb-card" [style.--tone]="'var(--color-' + s.tone + ')'">
+      <span class="pb-tape" aria-hidden="true"></span>
+      <img [src]="s.photo" alt="" draggable="false" loading="lazy" decoding="async" />
+      <figcaption class="hand">{{ s.note }}</figcaption>
+    </figure>
+  }
+  <p class="pb-hint hand" aria-hidden="true">← arrástralas y lánzalas</p>
+</div>

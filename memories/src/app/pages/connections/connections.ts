@@ -8,9 +8,11 @@ import { Banner } from '../../componentes/banner/banner'
 import { Icon } from '../../componentes/icon/icon'
 import { IntentBadge } from '../../componentes/intent-badge/intent-badge'
 
+import { Pressure } from '../../directivas/pressure'
+
 @Component({
   selector: 'app-connections',
-  imports: [RouterLink, Avatar, Banner, Icon, IntentBadge],
+  imports: [RouterLink, Avatar, Banner, Icon, IntentBadge, Pressure],
   styleUrl: './connections.css',
   templateUrl: './connections.html',
 })

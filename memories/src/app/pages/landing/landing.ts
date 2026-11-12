@@ -9,6 +9,9 @@ import { IntentBadge } from '../../componentes/intent-badge/intent-badge'
 import { Logo } from '../../componentes/logo/logo'
 import { Footer } from '../../componentes/footer/footer'
 import { Reveal } from '../../directivas/reveal'
+import { Pressure } from '../../directivas/pressure'
+import { StickerTrail } from '../../directivas/sticker-trail'
+import { PolaroidBoard } from '../../componentes/polaroid-board/polaroid-board'
 import { ThemeIconButton } from '../../componentes/theme-icon-button/theme-icon-button'
 import { TierCards } from '../../componentes/tier-cards/tier-cards'
 
@@ -23,7 +26,7 @@ const COLOR_KEY: Record<Intent, string> = { friend: 'friend', plan: 'plan', hobb
 
 @Component({
   selector: 'app-landing',
-  imports: [RouterLink, Avatar, Footer, IntentBadge, Logo, Reveal, ThemeIconButton, TierCards],
+  imports: [RouterLink, Avatar, Footer, IntentBadge, Logo, PolaroidBoard, Pressure, Reveal, StickerTrail, ThemeIconButton, TierCards],
   styleUrl: './landing.css',
   templateUrl: './landing.html',
 })

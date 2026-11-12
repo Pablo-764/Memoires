@@ -2,16 +2,38 @@
   <div class="flex flex-col px-5 py-6 sm:px-10">
     <div class="flex items-center justify-between">
       <a [routerLink]="store.homeUrl()" aria-label="Volver al inicio"><app-logo /></a>
-      <button appThemeIcon></button>
+      <button appThemeIcon aria-label="Cambiar tema"></button>
     </div>
-    <div class="mx-auto my-auto w-full max-w-sm py-10">
-      <h1 class="enter text-5xl">{{ title() }}</h1>
-      <p class="enter mt-2 text-ink-soft" style="--d: 70ms">{{ subtitle() }}</p>
-      <div class="enter mt-8" style="--d: 140ms"><ng-content /></div>
+
+    <!-- El formulario es una hoja de papel pegada con cinta -->
+    <div class="auth-sheet enter mx-auto my-auto w-full max-w-[25rem]">
+      <span class="auth-tape" aria-hidden="true"></span>
+      <h1 appPressure class="text-[2.8rem] leading-none">{{ title() }}</h1>
+      <p class="hand mt-2 text-[1.45rem] leading-tight text-ink-soft">{{ subtitle() }}</p>
+      <div class="mt-7"><ng-content /></div>
     </div>
   </div>
-  <figure class="relative hidden p-3 lg:block">
-    <img src="fotos/cafe.webp" alt="" width="1100" height="1650" class="enter-photo h-full w-full rounded-[28px] object-cover object-[50%_70%]" />
-    <figcaption class="absolute bottom-6 right-7 text-xs text-white/80">Foto: tommao wang en Unsplash</figcaption>
-  </figure>
+
+  <!-- Collage de recuerdos: se mueve con el cursor y lleva un sello que gira -->
+  <div class="auth-collage hidden lg:block" (pointermove)="tilt($event)" (pointerleave)="tilt(null)" aria-hidden="true">
+    <div class="auth-board">
+      @for (p of photos; track p.src; let i = $index) {
+        <figure class="auth-polaroid" [style.--r]="p.r + 'deg'" [style.--depth]="p.depth" [style.left.%]="p.x" [style.top.%]="p.y" [style.--i]="i">
+          <span class="auth-polaroid-tape"></span>
+          <img [src]="p.src" alt="" width="400" height="400" decoding="async" />
+          <figcaption class="hand">{{ p.note }}</figcaption>
+        </figure>
+      }
+      <svg class="auth-seal" viewBox="0 0 140 140">
+        <defs>
+          <path id="auth-seal-path" d="M70,70 m-52,0 a52,52 0 1,1 104,0 a52,52 0 1,1 -104,0" />
+        </defs>
+        <circle cx="70" cy="70" r="66" class="auth-seal-disc" />
+        <text class="auth-seal-text"><textPath href="#auth-seal-path">di qué buscas · conoce gente ·</textPath></text>
+        <path class="auth-seal-heart" d="M70 88c-14-9-22-16-22-25a10 10 0 0 1 22-5 10 10 0 0 1 22 5c0 9-8 16-22 25Z" />
+      </svg>
+      <p class="auth-note hand">tu próximo recuerdo<br />empieza aquí ↓</p>
+    </div>
+    <p class="absolute bottom-5 right-7 text-xs text-ink-mute">Fotos de Unsplash</p>
+  </div>
 </div>
