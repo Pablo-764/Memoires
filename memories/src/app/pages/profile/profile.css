@@ -118,3 +118,42 @@
 .theme-avatar { position: absolute; left: 0.9rem; bottom: 0.7rem; z-index: 2; display: block; }
 
 .theme-body { display: block; padding: 0.7rem 0.95rem 0.9rem; }
+
+/* Insignia de rareza de las colecciones */
+.rarity {
+  position: absolute;
+  top: 0.55rem;
+  left: 0.55rem;
+  z-index: 3;
+  padding: 0.15rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--r, #2a61b1);
+  box-shadow: 0 0 0 1.5px rgb(0 0 0 / 0.55), 2px 2px 0 rgb(0 0 0 / 0.55);
+  rotate: -3deg;
+}
+
+.rarity[data-rarity="rara"] { --r: #2a61b1; }
+
+.rarity[data-rarity="epica"] { --r: #7a3fd1; }
+
+.rarity[data-rarity="legendaria"] { --r: linear-gradient(135deg, #c9930f, #f0b94a); color: #2a1a00; }
+
+.rarity[data-rarity="mitica"] {
+  --r: linear-gradient(110deg, #d1006b, #ff6a1f 40%, #d1006b 60%, #7a2cff);
+  background-size: 220% 100%;
+  animation: rarity-shine 3s linear infinite;
+}
+
+@keyframes rarity-shine { to { background-position: -220% 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .rarity[data-rarity="mitica"] { animation: none; }
+}
+
+/* Los marcos con ornamentos (cuernos, aureolas, alas) necesitan aire alrededor */
+.frame-swatch { height: 5.75rem; padding-top: 1rem; }

@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms'
 import { Router, RouterLink } from '@angular/router'
 import { AppStore, type Profile as ProfileData } from '../../servicios/app-store'
 import { Celebrate } from '../../servicios/celebrate'
-import { BANNERS, EFFECTS, FRAMES, NAME_STYLES, THEMES, bannerOf, canUse, effectOf, frameOf, groupsOf, nameStyleOf, type DecorTier, type Theme } from '../../modelos/decor'
+import { BANNERS, EFFECTS, FRAMES, NAME_STYLES, THEMES, bannerOf, canUse, effectOf, frameOf, groupsOf, nameStyleOf, type DecorTier, type Rarity, type Theme } from '../../modelos/decor'
 import { fitImage } from '../../utilidades/image'
 import { CITIES, INTENTS, INTENT_ORDER, type Intent } from '../../modelos/intents'
 import { Avatar } from '../../componentes/avatar/avatar'
@@ -41,6 +41,7 @@ export class Profile {
   protected readonly effectGroups = groupsOf(EFFECTS)
   protected readonly themeGroups = groupsOf(THEMES)
   protected readonly nameOf = nameStyleOf
+  protected readonly rarityLabel: Record<Rarity, string> = { rara: 'Rara', epica: 'Épica', legendaria: 'Legendaria', mitica: 'Mítica' }
 
   protected readonly tabs: { key: Tab; label: string; count?: number }[] = [
     { key: 'about', label: 'Sobre ti' },

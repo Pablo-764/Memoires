@@ -8,7 +8,7 @@ import { bannerOf } from '../../modelos/decor'
  */
 @Component({
   selector: 'app-banner',
-  styleUrls: ['./banner.css', './banner-temas.css'],
+  styleUrls: ['./banner.css', './banner-temas.css', './banner-colecciones.css'],
   templateUrl: './banner.html',
   host: {
     class: 'absolute inset-0 block overflow-hidden',
@@ -31,6 +31,12 @@ export class Banner {
     delay: -((i * 53) % 7),
     text: Array.from({ length: 16 }, (_, j) => '01{}<>/=+*#;$'[(i * 7 + j * 5) % 13]).join(''),
   }))
+  // Piezas de las escenas de colección (siempre las mismas, sin azar al repintar)
+  protected readonly runeOuter = 'ΨΩΔΛΞΦΣΘΠΓΨΩΔΛΞΦ'.split('')
+  protected readonly runeInner = 'ΣΘΠΓΛΞΦΩ'.split('')
+  protected readonly petals = [0, 1, 2, 3, 4, 5, 6, 7]
+  protected readonly shards = [0, 1, 2, 3, 4, 5, 6]
+  protected readonly bubbles = [0, 1, 2, 3, 4, 5, 6, 7, 8]
   // Onomatopeya de la escena de historieta, distinta por fondo
   protected readonly popWord = computed(() => (this.info().key === 'sabado' ? '¡JA!' : '¡ZAS!'))
   protected readonly color = (i: number) => {

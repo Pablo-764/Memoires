@@ -1,0 +1,303 @@
+/* Ornamentos de los marcos de colección: piezas que salen del aro.
+   Todo se mide con el tamaño del avatar (--s) y el grosor del aro (--t),
+   y solo se anima transform y opacity. */
+[class^="ao-"],
+[class*=" ao-"] {
+  position: absolute;
+  pointer-events: none;
+}
+
+/* Cada ranura ocupa el avatar completo y gira hasta su ángulo; la pieza va arriba */
+.ao-slot {
+  inset: 0;
+  rotate: var(--a);
+}
+
+/* ---------- Llamas ---------- */
+.ao-flame {
+  left: 50%;
+  bottom: calc(100% + var(--t) * 0.35);
+  width: max(5px, calc(var(--t) * 2.2));
+  height: max(9px, calc(var(--t) * 3.6));
+  margin-left: calc(max(5px, calc(var(--t) * 2.2)) / -2);
+  border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%;
+  background: radial-gradient(ellipse at 50% 80%, var(--c2) 0 20%, var(--c) 52%, transparent 74%);
+  transform-origin: 50% 100%;
+  animation: ao-flicker 0.8s var(--ease-in-out) infinite alternate;
+  animation-delay: calc(var(--i) * -0.17s);
+}
+
+.ao-slot:nth-child(odd) .ao-flame { height: max(7px, calc(var(--t) * 2.6)); }
+
+@keyframes ao-flicker {
+  from { transform: scale(1.05, 0.72); opacity: 0.7; }
+  to { transform: scale(0.88, 1.22); opacity: 1; }
+}
+
+/* ---------- Alas ---------- */
+.ao-wing {
+  top: 50%;
+  z-index: -1;
+  width: calc(var(--s) * 0.9);
+  height: calc(var(--s) * 0.62);
+  margin-top: calc(var(--s) * -0.42);
+  background: linear-gradient(180deg, var(--c), var(--c2));
+  filter: drop-shadow(0 0 calc(var(--t) * 1.2) color-mix(in oklab, var(--c2) 55%, transparent));
+}
+
+.ao-wing-l {
+  right: calc(100% - var(--s) * 0.08);
+  transform-origin: 100% 55%;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 60' preserveAspectRatio='none'%3E%3Cpath d='M100 30 C80 4 40 0 4 10 C24 14 40 18 52 22 C30 22 14 26 2 34 C22 34 38 34 54 32 C38 38 24 46 12 56 C40 52 70 44 100 36 Z'/%3E%3C/svg%3E") 0 0 / 100% 100%;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 60' preserveAspectRatio='none'%3E%3Cpath d='M100 30 C80 4 40 0 4 10 C24 14 40 18 52 22 C30 22 14 26 2 34 C22 34 38 34 54 32 C38 38 24 46 12 56 C40 52 70 44 100 36 Z'/%3E%3C/svg%3E") 0 0 / 100% 100%;
+  animation: ao-flap-l 2.4s var(--ease-in-out) infinite alternate;
+}
+
+.ao-wing-r {
+  left: calc(100% - var(--s) * 0.08);
+  transform-origin: 0 55%;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 60' preserveAspectRatio='none'%3E%3Cpath d='M0 30 C20 4 60 0 96 10 C76 14 60 18 48 22 C70 22 86 26 98 34 C78 34 62 34 46 32 C62 38 76 46 88 56 C60 52 30 44 0 36 Z'/%3E%3C/svg%3E") 0 0 / 100% 100%;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 60' preserveAspectRatio='none'%3E%3Cpath d='M0 30 C20 4 60 0 96 10 C76 14 60 18 48 22 C70 22 86 26 98 34 C78 34 62 34 46 32 C62 38 76 46 88 56 C60 52 30 44 0 36 Z'/%3E%3C/svg%3E") 0 0 / 100% 100%;
+  animation: ao-flap-r 2.4s var(--ease-in-out) infinite alternate;
+}
+
+@keyframes ao-flap-l {
+  from { transform: rotate(6deg); }
+  to { transform: rotate(-10deg); }
+}
+
+@keyframes ao-flap-r {
+  from { transform: rotate(-6deg); }
+  to { transform: rotate(10deg); }
+}
+
+/* ---------- Cuernos ---------- */
+.ao-horn {
+  bottom: calc(100% - var(--s) * 0.16);
+  z-index: -1;
+  width: calc(var(--s) * 0.24);
+  height: calc(var(--s) * 0.42);
+  background: linear-gradient(0deg, var(--c), var(--c2));
+  transform-origin: 50% 100%;
+  animation: ao-breathe 3s var(--ease-in-out) infinite alternate;
+}
+
+.ao-horn-l {
+  left: 12%;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 60' preserveAspectRatio='none'%3E%3Cpath d='M30 60 C30 40 25 20 4 2 C14 22 16 42 10 60 Z'/%3E%3C/svg%3E") 0 0 / 100% 100%;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 60' preserveAspectRatio='none'%3E%3Cpath d='M30 60 C30 40 25 20 4 2 C14 22 16 42 10 60 Z'/%3E%3C/svg%3E") 0 0 / 100% 100%;
+}
+
+.ao-horn-r {
+  right: 12%;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 60' preserveAspectRatio='none'%3E%3Cpath d='M10 60 C10 40 15 20 36 2 C26 22 24 42 30 60 Z'/%3E%3C/svg%3E") 0 0 / 100% 100%;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 60' preserveAspectRatio='none'%3E%3Cpath d='M10 60 C10 40 15 20 36 2 C26 22 24 42 30 60 Z'/%3E%3C/svg%3E") 0 0 / 100% 100%;
+  animation-delay: -1.5s;
+}
+
+@keyframes ao-breathe {
+  from { transform: scale(0.96); opacity: 0.85; }
+  to { transform: scale(1.04); opacity: 1; }
+}
+
+/* ---------- Aureola ---------- */
+.ao-halo {
+  left: 50%;
+  bottom: calc(100% + var(--t) * 0.9);
+  width: calc(var(--s) * 0.64);
+  height: calc(var(--s) * 0.17);
+  margin-left: calc(var(--s) * -0.32);
+  border-radius: 50%;
+  box-shadow:
+    inset 0 0 0 max(2px, calc(var(--t) * 0.75)) var(--c),
+    0 0 calc(var(--t) * 2.4) color-mix(in oklab, var(--c) 70%, transparent);
+  animation: ao-bob 2.2s var(--ease-in-out) infinite alternate;
+}
+
+@keyframes ao-bob {
+  from { transform: translateY(0); }
+  to { transform: translateY(calc(var(--s) * -0.05)); }
+}
+
+/* ---------- Runas en círculo ---------- */
+.ao-runes {
+  inset: calc(var(--t) * -2.8);
+  animation: ao-spin 18s linear infinite;
+}
+
+.ao-glyph {
+  left: 50%;
+  top: 0;
+  font-family: var(--font-serif);
+  font-size: max(7px, calc(var(--t) * 2.1));
+  font-weight: 600;
+  line-height: 1;
+  text-shadow: 0 0 calc(var(--t) * 1.2) currentColor;
+  transform: translate(-50%, -20%);
+  animation: ao-glyph-glow 2.4s var(--ease-in-out) infinite alternate;
+}
+
+@keyframes ao-glyph-glow {
+  from { opacity: 0.55; }
+  to { opacity: 1; }
+}
+
+@keyframes ao-spin { to { transform: rotate(360deg); } }
+
+/* ---------- Corona de cristales ---------- */
+.ao-shard {
+  left: 50%;
+  bottom: calc(100% + var(--t) * 0.2);
+  width: max(4px, calc(var(--t) * 1.5));
+  height: max(9px, calc(var(--t) * 3.4));
+  margin-left: calc(max(4px, calc(var(--t) * 1.5)) / -2);
+  clip-path: polygon(50% 0, 100% 72%, 50% 100%, 0 72%);
+  background: linear-gradient(180deg, var(--c2), var(--c));
+  transform-origin: 50% 100%;
+  animation: ao-shine 2.6s var(--ease-in-out) infinite;
+  animation-delay: calc(var(--i) * -0.32s);
+}
+
+.ao-slot:nth-child(even) .ao-shard { height: max(6px, calc(var(--t) * 2.2)); }
+
+@keyframes ao-shine {
+  0%, 100% { opacity: 0.75; transform: scaleY(0.92); }
+  50% { opacity: 1; transform: scaleY(1.1); }
+}
+
+/* ---------- Electricidad: arcos que saltan ---------- */
+.ao-volt {
+  inset: calc(var(--t) * -1.9);
+  border-radius: 999px;
+  -webkit-mask:
+    radial-gradient(farthest-side, transparent calc(100% - var(--t) * 0.6), #000 calc(100% - var(--t) * 0.6 + 0.5px)),
+    repeating-conic-gradient(#000 0 7deg, transparent 7deg 34deg);
+  -webkit-mask-composite: source-in;
+  mask:
+    radial-gradient(farthest-side, transparent calc(100% - var(--t) * 0.6), #000 calc(100% - var(--t) * 0.6 + 0.5px)) intersect,
+    repeating-conic-gradient(#000 0 7deg, transparent 7deg 34deg);
+  filter: drop-shadow(0 0 calc(var(--t) * 1.2) var(--c));
+  animation: ao-zap 0.7s steps(1) infinite;
+}
+
+.ao-volt-b { inset: calc(var(--t) * -2.7); animation-duration: 0.9s; animation-delay: -0.35s; }
+
+@keyframes ao-zap {
+  0% { transform: rotate(0deg); opacity: 1; }
+  25% { transform: rotate(47deg); opacity: 0.4; }
+  50% { transform: rotate(133deg); opacity: 1; }
+  75% { transform: rotate(211deg); opacity: 0.7; }
+}
+
+/* ---------- Enredadera ---------- */
+.ao-leaf {
+  left: 50%;
+  bottom: calc(100% - var(--t) * 0.2);
+  width: max(5px, calc(var(--t) * 1.9));
+  height: max(8px, calc(var(--t) * 3));
+  margin-left: calc(max(5px, calc(var(--t) * 1.9)) / -2);
+  border-radius: 100% 0;
+  background: linear-gradient(160deg, var(--c2), var(--c));
+  transform-origin: 50% 100%;
+  animation: ao-sway 2.6s var(--ease-in-out) infinite alternate;
+  animation-delay: calc(var(--i) * -0.26s);
+}
+
+.ao-slot:nth-child(odd) .ao-leaf { border-radius: 0 100%; }
+
+@keyframes ao-sway {
+  from { transform: rotate(-16deg); }
+  to { transform: rotate(16deg); }
+}
+
+/* ---------- Gemas engastadas ---------- */
+.ao-gem {
+  left: 50%;
+  top: calc(var(--t) * -0.95);
+  width: max(6px, calc(var(--t) * 2.4));
+  height: max(6px, calc(var(--t) * 2.4));
+  border-radius: 2px;
+  background: linear-gradient(135deg, #fff 0 16%, var(--c) 42%, color-mix(in oklab, var(--c) 55%, #000));
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.25), 0 0 calc(var(--t) * 1.4) color-mix(in oklab, var(--c) 60%, transparent);
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.ao-gem::after {
+  content: "";
+  position: absolute;
+  left: 18%;
+  top: 18%;
+  width: 30%;
+  height: 30%;
+  background: #fff;
+  opacity: 0;
+  animation: ao-glint 2.8s var(--ease-in-out) infinite;
+  animation-delay: calc(var(--i) * -0.45s);
+}
+
+@keyframes ao-glint {
+  0%, 75%, 100% { opacity: 0; transform: scale(0.4); }
+  85% { opacity: 1; transform: scale(1.2); }
+}
+
+/* ---------- Falla digital: copias del aro desfasadas ---------- */
+.ao-ghost {
+  mix-blend-mode: screen;
+  opacity: 0.85;
+  animation: ao-jitter 1.9s steps(1) infinite;
+}
+
+.ao-ghost-b { animation-delay: -0.95s; }
+
+@keyframes ao-jitter {
+  0%, 64%, 100% { transform: translate(0, 0); }
+  66% { transform: translate(-3px, 1px); }
+  70% { transform: translate(3px, -1px); }
+  74% { transform: translate(-1px, 2px); }
+}
+
+/* ---------- Orejitas ---------- */
+.ao-ear {
+  bottom: calc(100% - var(--s) * 0.2);
+  z-index: -1;
+  width: calc(var(--s) * 0.36);
+  height: calc(var(--s) * 0.36);
+  background: var(--c);
+  transform-origin: 50% 100%;
+  animation: ao-twitch 4.5s var(--ease-in-out) infinite;
+}
+
+.ao-ear::after {
+  content: "";
+  position: absolute;
+  inset: 26% 24% 0;
+  background: var(--c2);
+  clip-path: inherit;
+}
+
+.ao-ear-l { left: 2%; clip-path: polygon(8% 100%, 22% 0, 96% 88%); }
+
+.ao-ear-r { right: 2%; clip-path: polygon(92% 100%, 78% 0, 4% 88%); animation-delay: -2.2s; }
+
+@keyframes ao-twitch {
+  0%, 86%, 100% { transform: rotate(0deg); }
+  90% { transform: rotate(-10deg); }
+  94% { transform: rotate(5deg); }
+}
+
+/* ---------- Vacío: disco que gira alrededor ---------- */
+.ao-void {
+  inset: calc(var(--t) * -2.4);
+  border-radius: 999px;
+  background: conic-gradient(from 0deg, var(--c), var(--c2), transparent 38%, var(--c) 64%, #fff 70%, transparent 82%, var(--c));
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - var(--t) * 1.4), #000 calc(100% - var(--t) * 1.4 + 0.5px), #000 calc(100% - var(--t) * 0.3), transparent 100%);
+  mask: radial-gradient(farthest-side, transparent calc(100% - var(--t) * 1.4), #000 calc(100% - var(--t) * 1.4 + 0.5px), #000 calc(100% - var(--t) * 0.3), transparent 100%);
+  filter: drop-shadow(0 0 calc(var(--t) * 1.5) color-mix(in oklab, var(--c) 60%, transparent));
+  animation: ao-spin 2.6s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [class^="ao-"],
+  [class*=" ao-"],
+  .ao-gem::after { animation: none !important; }
+}

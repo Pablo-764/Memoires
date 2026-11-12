@@ -191,6 +191,9 @@
                       <span class="theme-avatar">
                         <app-avatar [name]="draft().name || 'Tú'" [hue]="260" [size]="40" [frame]="t.frame" [photo]="draft().photo" />
                       </span>
+                      @if (t.rarity) {
+                        <span class="rarity" [attr.data-rarity]="t.rarity">{{ rarityLabel[t.rarity] }}</span>
+                      }
                       @if (!themeUsable(t)) {
                         <span class="decor-lock"><app-icon name="lock" [size]="14" /></span>
                       }
@@ -233,7 +236,7 @@
             <div class="decor-grid stagger">
               @for (f of g.items; track f.key) {
                 <button type="button" class="decor-tile" [attr.aria-pressed]="draft().frame === f.key" (click)="patch({ frame: f.key })">
-                  <span class="decor-swatch grid place-items-center bg-raised">
+                  <span class="decor-swatch frame-swatch grid place-items-center bg-raised">
                     <app-avatar [name]="draft().name || 'Tú'" [hue]="260" [size]="46" [frame]="f.key" [photo]="draft().photo" />
                     @if (!usable(f)) {
                       <span class="decor-lock"><app-icon name="lock" [size]="14" /></span>
