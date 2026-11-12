@@ -16,5 +16,5 @@ export function runListTransition(appRef: ApplicationRef, update: () => void) {
   const clear = () => root.classList.remove('vt-list')
   transition.finished.then(clear, clear)
   // Se rechaza si otra transición la interrumpe; la actualización ya se aplicó
-  transition.ready.catch(() => {})
+  transition.ready.catch(() => undefined)
 }

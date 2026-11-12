@@ -1,5 +1,5 @@
 // jsdom no trae estas APIs del navegador; las pruebas solo necesitan que existan
-const noop = () => {}
+const noop = () => undefined
 
 if (!window.matchMedia) {
   window.matchMedia = (query: string) =>

@@ -4,7 +4,7 @@
     <a routerLink="/app/suscripcion" class="btn min-h-9 px-3 text-sm text-hobby" [attr.aria-label]="'Plan ' + tierInfo().name">
       {{ tierInfo().name }}
     </a>
-    <button appThemeIcon class="text-ink-soft"></button>
+    <button appThemeIcon aria-label="Cambiar tema" class="text-ink-soft"></button>
     <a routerLink="/app/ajustes" class="btn size-10 min-h-0 p-0 text-ink-soft" aria-label="Ajustes">
       <app-icon name="settings" [size]="19" />
     </a>
