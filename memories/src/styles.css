@@ -359,16 +359,47 @@ html.theme-switching::view-transition-new(root) {
   mix-blend-mode: normal;
 }
 
-/* Mancha de tinta: la capa que se anima lleva la máscara; tamaño y posición los da theme.ts */
+/* Mancha de tinta: la capa que se anima lleva la máscara (mancha + gotas);
+   tamaños y posiciones los calcula servicios/ink.ts */
 html.ink-spread::view-transition-new(root),
 html.ink-retract::view-transition-old(root) {
-  -webkit-mask-image: var(--ink-blot);
-  mask-image: var(--ink-blot);
+  -webkit-mask-image: var(--ink-layers);
+  mask-image: var(--ink-layers);
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
 }
 
 html.ink-retract::view-transition-old(root) { z-index: 2; }
+
+/* Orilla mojada: anillo delgado que sigue el borde de la mancha y se desvanece */
+.ink-ring {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  pointer-events: none;
+  view-transition-name: ink-ring;
+}
+
+.ink-ring.is-dark { background: var(--color-night); }
+
+.ink-ring.is-light { background: var(--color-lila); }
+
+html.theme-switching::view-transition-group(ink-ring),
+html.theme-switching::view-transition-old(ink-ring),
+html.theme-switching::view-transition-new(ink-ring) {
+  animation: none;
+}
+
+html.theme-switching::view-transition-group(ink-ring) { z-index: 3; }
+
+html.theme-switching::view-transition-new(ink-ring) {
+  -webkit-mask-image: var(--ink-ring-layers);
+  mask-image: var(--ink-ring-layers);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
 
 @media (prefers-reduced-motion: reduce) {
   .modal-panel,
