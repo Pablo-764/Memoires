@@ -10,6 +10,8 @@ import { Icon } from '../icon/icon'
   host: {
     class: 'btn size-10 min-h-0 p-0',
     '[attr.aria-label]': "theme.mode() === 'dark' ? 'Activar modo claro' : 'Activar modo nocturno'",
+    '(pointerenter)': 'theme.prepare()',
+    '(focus)': 'theme.prepare()',
     '(click)': "theme.set(theme.mode() === 'dark' ? 'light' : 'dark', { x: $event.clientX, y: $event.clientY })",
   },
 })
