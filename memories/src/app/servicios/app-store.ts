@@ -5,6 +5,7 @@ import type { Intent } from '../modelos/intents'
 import { DEFAULT_FILTERS, countWords, type Filters } from '../utilidades/matching'
 import type { Gender, IntentPrefs } from '../modelos/plan-formats'
 import { TIERS, type DecorationKey, type Tier } from '../modelos/plans'
+import type { Etapa, PlanPropuesto } from '../utilidades/etapas'
 
 export interface Profile {
   name: string
@@ -58,6 +59,8 @@ interface State {
   snoozedUntilMinute: number
   // Ya se agregó a Arleth como conexión en esta sesión guardada
   arleth?: boolean
+  // Etapa elegida a mano en el tablero de Conexiones
+  stages?: Record<string, Etapa>
 }
 
 const KEY = 'afin-demo-v1'
@@ -195,6 +198,7 @@ export class AppStore {
   readonly minutesToday = computed(() => this.state().minutesToday)
   readonly limitMinutes = computed(() => this.state().limitMinutes)
   readonly snoozedUntilMinute = computed(() => this.state().snoozedUntilMinute)
+  readonly stages = computed(() => this.state().stages ?? {})
 
   // Los avisos y el último match no se guardan
   readonly toasts = signal<Toast[]>([])
@@ -310,6 +314,39 @@ export class AppStore {
       this.patch((st) => ({ messages: { ...st.messages, [id]: [...(st.messages[id] ?? []), reply] } }))
     }, 1400)
     return 'sent'
+  }
+
+  /** Propone un plan en el chat; en la demostración, la otra persona lo acepta al momento. */
+  proposePlan(id: string, plan: Omit<PlanPropuesto, 'status'>) {
+    const msg: Message = { id: crypto.randomUUID(), from: 'me', text: `Te propongo: ${plan.title}`, at: Date.now(), plan: { ...plan, status: 'propuesto' } }
+    this.patch((s) => ({ messages: { ...s.messages, [id]: [...(s.messages[id] ?? []), msg] } }))
+    this.typing.set(id)
+    window.setTimeout(() => {
+      this.typing.set(null)
+      const reply: Message = { id: crypto.randomUUID(), from: id, text: '¡Va! Ahí nos vemos.', at: Date.now() }
+      this.patch((st) => ({
+        messages: {
+          ...st.messages,
+          [id]: [...(st.messages[id] ?? []).map((m) => (m.id === msg.id && m.plan ? { ...m, plan: { ...m.plan, status: 'aceptado' as const } } : m)), reply],
+        },
+      }))
+    }, 1400)
+  }
+
+  /** Mueve un plan propuesto: queda pendiente de que la otra persona acepte la nueva fecha. */
+  movePlan(id: string, messageId: string, when: string) {
+    this.patch((s) => ({
+      messages: { ...s.messages, [id]: (s.messages[id] ?? []).map((m) => (m.id === messageId && m.plan ? { ...m, plan: { ...m.plan, when, status: 'movido' as const } } : m)) },
+    }))
+  }
+
+  setStage(id: string, stage: Etapa | null) {
+    this.patch((s) => {
+      const stages = { ...(s.stages ?? {}) }
+      if (stage) stages[id] = stage
+      else delete stages[id]
+      return { stages }
+    })
   }
 
   toggleJoin(planId: string) {
