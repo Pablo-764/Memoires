@@ -31,7 +31,7 @@ Sigue la organización del repositorio del equipo: cada componente y cada págin
 | `src/app/utilidades` | Árbol de decisión (`matching`), búsqueda de texto, imágenes y transiciones de lista |
 | `src/app/datos` | Datos de demostración |
 
-Los estilos globales (colores, tipografía, botones y animaciones compartidas) están en `src/styles.css`; lo propio de cada componente está en su `.css`.
+Los estilos globales (tokens, tipografía, botones y animaciones compartidas) están en `src/styles.css` y se explican en [`DESIGN.md`](DESIGN.md); lo propio de cada componente está en su `.css`.
 
 ## Pruebas
 
@@ -56,9 +56,36 @@ npm test -- --watch=false
 
 ## Lo que es simulado
 
-Este frontend aún no se conecta al backend. Los datos viven en `src/app/data/mock.ts` y el estado se guarda en `localStorage`. El pago es una simulación: no se piden ni se guardan datos de tarjeta. Las respuestas del chat son automáticas.
+Este frontend aún no se conecta al backend. Los datos viven en `src/app/datos/mock.ts` y el estado se guarda en `localStorage`. El pago es una simulación: no se piden ni se guardan datos de tarjeta. Las respuestas del chat son automáticas.
 
-Para conectarlo al backend, reemplaza las acciones de `src/app/core/app-store.service.ts` por llamadas a la API REST y a Socket.IO.
+Para conectarlo al backend, reemplaza las acciones de `src/app/servicios/app-store.ts` por llamadas a la API REST y a Socket.IO.
+
+## Herramientas y créditos
+
+El detalle de licencias está en [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
+
+**De RemLam (＠RemiH06)**
+
+- [iroFactory](https://github.com/RemiH06/iroFactory) (MIT): temas *disco* (paleta semántica, asanoha y luces ambientales), *tarot* (marco doble) y *mirai* (retícula editorial, tintas planas y curvas de movimiento).
+- [LinNeo](https://github.com/RemiH06/LinNeo) (AGPL-3.0): solo ideas de diseño (UI teñida por contexto, grafo radial, mosaico, buscador con sugerencias y filtros encadenados), sin código copiado.
+- [Fontificar](https://github.com/RemiH06/Fontificar) (MIT): agregó los acentos, la eñe y `¿ ¡` a la fuente display. La fuente original, Blackout Midnight de Tyler Finck, conserva su licencia SIL OFL 1.1 en `public/fonts/MemoiresDisplay-OFL.txt`.
+
+**Skills de diseño usadas:** impeccable, design-taste-frontend, better-typography, emil-design-eng, gsap-scrolltrigger, refactoring-ui y web-design-guidelines.
+
+**Cartas de diseño** de la baraja de André aplicadas: dis-019, dis-023, dis-025, dis-027, dis-034, dis-043, dis-059, dis-064, dis-071, dis-081, dis-084, dis-090, dis-094 y dis-101.
+
+**Bibliotecas**
+
+| Biblioteca | Licencia |
+| --- | --- |
+| Angular (core, router, forms, build, CLI) | MIT |
+| Tailwind CSS 4 y `@tailwindcss/postcss` | MIT |
+| RxJS | Apache-2.0 |
+| tslib | 0BSD |
+| Plus Jakarta Sans (vía Fontsource) | SIL OFL 1.1 (fuente) y MIT (paquete) |
+| Vitest y jsdom (pruebas) | MIT |
+| ESLint, angular-eslint y typescript-eslint | MIT |
+| Prettier | MIT |
 
 ## Fotos
 
