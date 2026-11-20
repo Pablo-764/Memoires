@@ -1,10 +1,10 @@
 import { Component } from '@angular/core'
 import { RouterLink } from '@angular/router'
-import { AsciiArt } from '../../componentes/ascii-art/ascii-art'
+import { IntentConstellation } from '../../componentes/intent-constellation/intent-constellation'
 
 @Component({
   selector: 'app-rest',
-  imports: [AsciiArt, RouterLink],
+  imports: [IntentConstellation, RouterLink],
   styleUrl: './rest.css',
   templateUrl: './rest.html',
 })

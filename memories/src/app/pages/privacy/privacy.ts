@@ -2,11 +2,12 @@ import { Component, inject } from '@angular/core'
 import { Location } from '@angular/common'
 import { Router, RouterLink } from '@angular/router'
 import { AppStore } from '../../servicios/app-store'
+import { Seal } from '../../componentes/seal/seal'
 import { Logo } from '../../componentes/logo/logo'
 
 @Component({
   selector: 'app-privacy',
-  imports: [RouterLink, Logo],
+  imports: [RouterLink, Logo, Seal],
   styleUrl: './privacy.css',
   templateUrl: './privacy.html',
 })

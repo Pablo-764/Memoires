@@ -6,120 +6,159 @@
       }
     </button>
   } @else {
-    <span class="text-sm font-semibold text-plan">Tu plan</span>
+    <span class="text-sm font-semibold text-tint-ink">Tu plan</span>
   }
 </ng-template>
 
 <div class="flex flex-wrap items-end justify-between gap-4">
-  <h1 class="text-[clamp(3rem,6vw,4.6rem)]">Planes en {{ store.me().city }}</h1>
+  <div>
+    <h1 class="font-display text-[clamp(2.75rem,6vw,4rem)]">Planes</h1>
+    <p class="mt-2 text-ink-2">Lo que se organiza en {{ store.me().city }}. Siempre en lugares públicos.</p>
+  </div>
   <button class="btn btn-primary" (click)="creating.set(true)"><app-icon name="calendar-plus" [size]="18" /> Crear plan</button>
 </div>
 
-<div class="mt-6 flex flex-wrap items-end gap-x-6 gap-y-2">
-<div class="shape-bar" [appPillGroup]="filter()" role="group" aria-label="Filtrar planes">
-  <span class="group-echo" aria-hidden="true"></span>
-      <span class="group-pill shape-marker" aria-hidden="true"></span>
-  <button type="button" data-shape="arch" data-tone="accent" class="intent-tab" [class.is-on]="filter() === 'all'" [attr.aria-pressed]="filter() === 'all'" (click)="setFilter('all')">Todos</button>
-  @for (i of filterOptions; track i) {
-    <button type="button" class="intent-tab" [attr.data-shape]="shapes[i]" [attr.data-tone]="i" [class.is-on]="filter() === i" [attr.aria-pressed]="filter() === i" (click)="setFilter(i)">{{ intents[i].short }}</button>
+<!-- Buscador con sugerencias (combobox de ARIA) -->
+<div class="relative mt-6 max-w-xl">
+  <div class="search-box">
+    <app-icon name="search" [size]="18" />
+    <input
+      type="search"
+      role="combobox"
+      aria-label="Buscar planes"
+      aria-autocomplete="list"
+      aria-controls="sugerencias-planes"
+      [attr.aria-expanded]="suggestOpen()"
+      [attr.aria-activedescendant]="suggestOpen() && active() >= 0 ? 'sug-' + active() : null"
+      placeholder="Buscar por plan, lugar o quién organiza…"
+      autocomplete="off"
+      [value]="query()"
+      (input)="onQuery($any($event.target).value)"
+      (keydown)="onSearchKey($event)"
+      (focus)="focused.set(true)"
+      (blur)="focused.set(false)"
+    />
+    @if (query()) {
+      <button class="grid size-8 place-items-center rounded-full" aria-label="Limpiar búsqueda" (click)="onQuery('')"><app-icon name="x" [size]="16" /></button>
+    }
+  </div>
+  @if (suggestOpen()) {
+    <ul id="sugerencias-planes" role="listbox" class="suggest swap-in" aria-label="Sugerencias">
+      @for (s of suggestions(); track s.plan.id; let i = $index) {
+        <li
+          [id]="'sug-' + i"
+          role="option"
+          [attr.aria-selected]="i === active()"
+          class="suggest-option"
+          [attr.data-intent]="s.plan.intent"
+          (mousedown)="$event.preventDefault()"
+          (click)="choose(s.plan.title)"
+        >
+          <span class="chip-dot" aria-hidden="true"></span>
+          <span class="min-w-0 flex-1">
+            <span class="block truncate font-semibold">@for (part of parts(s.plan.title); track $index) {@if (part.hit) {<mark>{{ part.text }}</mark>} @else {{{ part.text }}}}</span>
+            <span class="block truncate text-xs text-ink-2">{{ s.why }}</span>
+          </span>
+        </li>
+      }
+    </ul>
   }
 </div>
 
-<div class="shape-bar" [appPillGroup]="sizeFilter()" role="group" aria-label="Filtrar por tamaño de grupo">
-  <span class="group-echo" aria-hidden="true"></span>
-      <span class="group-pill shape-marker" aria-hidden="true"></span>
-  <button type="button" data-shape="arch" data-tone="accent" class="intent-tab" [class.is-on]="sizeFilter() === 'all'" [attr.aria-pressed]="sizeFilter() === 'all'" (click)="setSizeFilter('all')">Cualquier tamaño</button>
-  @for (k of sizes; track k) {
-    <button type="button" class="intent-tab" [attr.data-shape]="sizeLook[k].shape" [attr.data-tone]="sizeLook[k].tone" [class.is-on]="sizeFilter() === k" [attr.aria-pressed]="sizeFilter() === k" (click)="setSizeFilter(k)">{{ sizeInfo[k].label }}</button>
+<!-- Filtros: intención y tamaño; después zona y, dentro de ella, colonia -->
+<div class="mt-5 flex flex-col gap-3">
+  <div class="flex flex-wrap gap-3">
+    <div class="shape-bar" [appPillGroup]="filter()" role="group" aria-label="Filtrar por intención">
+      <span class="group-pill" aria-hidden="true"></span>
+      <button type="button" data-tone="accent" class="intent-tab" [class.is-on]="filter() === 'all'" [attr.aria-pressed]="filter() === 'all'" (click)="setFilter('all')">Todos</button>
+      @for (i of filterOptions; track i) {
+        <button type="button" class="intent-tab" [attr.data-tone]="i" [class.is-on]="filter() === i" [attr.aria-pressed]="filter() === i" (click)="setFilter(i)">{{ intents[i].short }}</button>
+      }
+    </div>
+    <div class="shape-bar" [appPillGroup]="sizeFilter()" role="group" aria-label="Filtrar por tamaño de grupo">
+      <span class="group-pill" aria-hidden="true"></span>
+      <button type="button" data-tone="accent" class="intent-tab" [class.is-on]="sizeFilter() === 'all'" [attr.aria-pressed]="sizeFilter() === 'all'" (click)="setSizeFilter('all')">Cualquier tamaño</button>
+      @for (k of sizes; track k) {
+        <button type="button" data-tone="accent" class="intent-tab" [class.is-on]="sizeFilter() === k" [attr.aria-pressed]="sizeFilter() === k" (click)="setSizeFilter(k)">{{ sizeInfo[k].label }}</button>
+      }
+    </div>
+  </div>
+  <div class="flex flex-wrap items-center gap-2" role="group" aria-label="Zona">
+    <span class="text-sm font-semibold text-ink-2">Zona</span>
+    <button appChip [selected]="zone() === 'all'" (click)="setZone('all')">Todas</button>
+    @for (z of zones(); track z) {
+      <button appChip [selected]="zone() === z" (click)="setZone(z)">{{ z }}</button>
+    }
+  </div>
+  @if (zone() !== 'all') {
+    <div class="swap-in flex flex-wrap items-center gap-2" role="group" aria-label="Colonia">
+      <span class="text-sm font-semibold text-ink-2">Colonia</span>
+      <button appChip [selected]="colonia() === 'all'" (click)="setColonia('all')">Todas</button>
+      @for (c of colonias(); track c) {
+        <button appChip [selected]="colonia() === c" (click)="setColonia(c)">{{ c }}</button>
+      }
+    </div>
   }
 </div>
-</div>
 
-<ul class="stagger mt-6 grid gap-4 md:grid-cols-2">
+<ul class="mt-6 grid gap-4 md:grid-cols-2">
   @for (p of visible(); track p.id; let first = $first) {
-    <li class="lift overflow-hidden rounded-[28px]" [class]="first ? 'relative md:col-span-2' : 'card flex flex-col'" data-vt [style.--vt]="'plan-' + p.id">
-      <div class="overflow-hidden" [class]="first ? 'h-[26rem]' : ''" [style.background]="p.photo ? null : 'var(--color-' + p.intent + '-soft)'">
+    <li class="plan-card" [class.is-feature]="first" [attr.data-intent]="p.intent" data-vt [style.--vt]="'plan-' + p.id">
+      <div class="plan-media">
         @if (p.photo; as photo) {
-          <!-- Foto impresa en semitono de dos tintas; al pasar el cursor se ve a color -->
-          <div class="halftone" [class]="first ? 'h-full' : 'aspect-[16/8]'" [attr.data-intent]="p.intent">
-            <div class="ht-src" aria-hidden="true">
-              <img [src]="photo.src" alt="" width="900" height="500" loading="lazy" decoding="async" class="photo-zoom" />
-            </div>
-            <img [src]="photo.src" [alt]="photo.alt" width="900" height="500" loading="lazy" decoding="async" class="ht-photo photo-zoom" />
-            <span class="ht-tape" aria-hidden="true"></span>
-          </div>
-        } @else if (!first) {
-          <div class="grid aspect-[16/8] place-items-center">
-            <app-ascii [piece]="asciiFor(p.title + ' ' + p.description, p.intent)" [intent]="p.intent" size="sm" [decorative]="true" />
-          </div>
+          <img [src]="photo.src" [alt]="photo.alt" width="900" height="500" loading="lazy" decoding="async" class="photo-zoom size-full object-cover" />
+        } @else {
+          <span class="plan-wash" aria-hidden="true"><app-icon [name]="icons[p.intent]" [size]="first ? 48 : 36" /></span>
         }
       </div>
-      @if (first) {
-        <div class="plan-feature">
-          <div class="flex items-center gap-3">
-            <app-intent-badge [intent]="p.intent" size="md" />
-            <span class="text-sm text-white/80"><span class="mono-tag">{{ p.when }}</span> · {{ sizeLabel(p) }}. {{ audienceLabel(p) }}.</span>
-          </div>
-          <h2 class="mt-3 max-w-[18ch] text-[clamp(2.4rem,5vw,3.8rem)] text-white">{{ p.title }}</h2>
-          <p class="mt-2 max-w-[52ch] text-white/85">{{ p.description }}</p>
-          <div class="mt-5 flex flex-wrap items-center justify-between gap-3">
-            <p class="text-sm text-white/80">{{ p.place }} · <span class="mono-tag">{{ p.attendees.length }}/{{ p.capacity }}</span> lugares</p>
-            <ng-container [ngTemplateOutlet]="join" [ngTemplateOutletContext]="{ $implicit: p }" />
-          </div>
+      <div class="flex flex-1 flex-col p-5">
+        <div class="flex items-start justify-between gap-3">
+          <h2 class="font-bold leading-tight" [class]="first ? 'text-3xl' : 'text-xl'">{{ p.title }}</h2>
+          <app-intent-badge [intent]="p.intent" />
         </div>
-      } @else {
-        <div class="flex flex-1 flex-col p-5">
-          <div class="flex items-start justify-between gap-3">
-            <h2 class="text-[1.85rem]">{{ p.title }}</h2>
-            <app-intent-badge [intent]="p.intent" />
-          </div>
-          <p class="mt-2 text-ink-soft">{{ p.description }}</p>
-          <dl class="mt-4 grid gap-1.5 text-sm text-ink-soft">
-            <div class="flex items-center gap-2"><app-icon name="clock" [size]="16" class="text-ink-mute" /><dt class="sr-only">Cuándo</dt><dd class="mono-tag">{{ p.when }}</dd></div>
-            <div class="flex items-center gap-2"><app-icon name="map-pin" [size]="16" class="text-ink-mute" /><dt class="sr-only">Dónde</dt><dd>{{ p.place }}</dd></div>
-            <div class="flex items-center gap-2"><app-icon name="users" [size]="16" class="text-ink-mute" /><dt class="sr-only">Lugares</dt><dd>{{ sizeLabel(p) }} · <span class="mono-tag">{{ p.attendees.length }}/{{ p.capacity }}</span> lugares</dd></div>
-            <div class="flex items-center gap-2"><app-icon name="handshake" [size]="16" class="text-ink-mute" /><dt class="sr-only">Con quién</dt><dd>{{ audienceLabel(p) }}</dd></div>
-          </dl>
-          <div class="mt-5 flex items-center justify-between gap-3">
-            <div class="flex items-center">
-              @for (a of p.attendees.slice(0, 5); track a; let i = $index) {
-                @let person = attendee(a);
-                <app-avatar [name]="person?.name ?? (store.me().name || 'Tú')" [hue]="person?.hue ?? 260" [size]="32" [photo]="a === 'me' ? store.me().photo : undefined" class="pop ring-2 ring-surface" [class.-ml-2]="i > 0" />
+        <p class="mt-2 text-ink-2">{{ p.description }}</p>
+        <dl class="mt-4 grid gap-1.5 text-sm text-ink-2">
+          <div class="flex items-center gap-2"><app-icon name="clock" [size]="16" /><dt class="sr-only">Cuándo</dt><dd class="tabular-nums">{{ p.when }}</dd></div>
+          <div class="flex items-center gap-2"><app-icon name="map-pin" [size]="16" /><dt class="sr-only">Dónde</dt><dd>{{ p.place }}@if (zoneOf(p).colonia) { · {{ zoneOf(p).colonia }} }</dd></div>
+          <div class="flex items-center gap-2"><app-icon name="users" [size]="16" /><dt class="sr-only">Lugares</dt><dd>{{ sizeLabel(p) }} · <span class="tabular-nums">{{ p.attendees.length }}/{{ p.capacity }}</span> lugares</dd></div>
+          <div class="flex items-center gap-2"><app-icon name="handshake" [size]="16" /><dt class="sr-only">Con quién</dt><dd>{{ audienceLabel(p) }}</dd></div>
+        </dl>
+        <div class="mt-auto flex flex-wrap items-center justify-between gap-3 pt-5">
+          <div class="flex items-center">
+            @for (a of p.attendees.slice(0, 5); track a; let i = $index) {
+              @let person = attendee(a);
+              <app-avatar [name]="person?.name ?? (store.me().name || 'Tú')" [hue]="person?.hue ?? 260" [size]="30" [photo]="a === 'me' ? store.me().photo : undefined" class="ring-2 ring-paper-2" [class.-ml-2]="i > 0" />
+            }
+            <span class="ml-2 text-sm text-ink-2">Organiza
+              @if (host(p); as h) {
+                <a [routerLink]="['/app/persona', h.id]" class="link-soft font-semibold">{{ h.name }}</a>
+              } @else {
+                tú
               }
-              <span class="ml-2 text-sm text-ink-mute">Organiza
-                @if (host(p); as h) {
-                  <a [routerLink]="['/app/persona', h.id]" class="link-soft font-semibold text-hobby">{{ h.name }}</a>
-                } @else {
-                  tú
-                }
-              </span>
-            </div>
-            <ng-container [ngTemplateOutlet]="join" [ngTemplateOutletContext]="{ $implicit: p }" />
+            </span>
           </div>
+          <ng-container [ngTemplateOutlet]="join" [ngTemplateOutletContext]="{ $implicit: p }" />
         </div>
-      }
+      </div>
     </li>
   }
 </ul>
 
 @if (!visible().length) {
   <div class="card swap-in mt-6 flex flex-col items-center p-10 text-center">
-    <app-ascii piece="mantel" size="lg" class="mb-5" mode="decode" />
-    <h2 class="text-[1.85rem]">No hay planes con estos filtros</h2>
-    <p class="mt-2 text-ink-soft">Cambia los filtros o arma uno tú: alguien más querrá ir.</p>
+    <h2 class="text-2xl">No hay planes con estos filtros</h2>
+    <p class="mt-2 text-ink-2">Cambia los filtros o arma uno tú: alguien más querrá ir.</p>
     <button class="btn btn-primary mt-6" (click)="creating.set(true)">Crear plan</button>
   </div>
 }
 
-<!-- Planes cumplidos: el protagonista de la página -->
+<!-- Planes cumplidos: álbum en mosaico, el momento firma de la página -->
 <section class="mt-14" aria-labelledby="cumplidos">
   <div class="mb-4 flex flex-wrap items-end justify-between gap-3">
-    <h2 id="cumplidos" class="text-[clamp(2.2rem,4vw,3rem)] leading-none">Planes cumplidos</h2>
-    <p class="hand text-[1.45rem] leading-tight text-ink-soft">cada plan que se cumple termina aquí</p>
+    <h2 id="cumplidos" class="font-display text-[clamp(2.25rem,4vw,3rem)]">Planes cumplidos</h2>
+    <p class="text-sm text-ink-2">Cada plan que se cumple termina aquí.</p>
   </div>
-  @for (k of [album().length]; track k) {
-    <app-polaroid-board [items]="album()" />
-  }
+  <app-plan-mosaic [items]="album()" />
 </section>
 
 @if (creating()) {

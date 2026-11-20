@@ -53,6 +53,10 @@
   --color-qr-paper: #fbfaf7;
   --color-qr-ink: #1a1814;
 
+  /* Botón de PayPal: su amarillo de marca es obligatorio */
+  --color-paypal: #ffc439;
+  --color-on-paypal: #1f1a33;
+
   --radius-field: 12px;
   --radius-card: 20px;
   --radius-sheet: 28px;

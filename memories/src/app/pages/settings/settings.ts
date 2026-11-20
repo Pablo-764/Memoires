@@ -4,20 +4,19 @@ import { Router, RouterLink } from '@angular/router'
 import { AppStore } from '../../servicios/app-store'
 import { ChoiceChip } from '../../componentes/choice-chip/choice-chip'
 import { Icon } from '../../componentes/icon/icon'
+import { Seal } from '../../componentes/seal/seal'
 import { Modal } from '../../componentes/modal/modal'
 import { ThemeSegmented } from '../../componentes/theme-segmented/theme-segmented'
-import { TextAlbum } from '../../servicios/text-album'
 import { ThemeService } from '../../servicios/theme'
 
 
 @Component({
   selector: 'app-settings',
-  imports: [FormsModule, RouterLink, ChoiceChip, Icon, Modal, ThemeSegmented],
+  imports: [FormsModule, RouterLink, ChoiceChip, Icon, Modal, ThemeSegmented, Seal],
   styleUrl: './settings.css',
   templateUrl: './settings.html',
 })
 export class Settings {
-  protected readonly textAlbum = inject(TextAlbum)
 
   constructor() {
     // Las siluetas de la mancha de tinta quedan listas antes de tocar el selector de tema
