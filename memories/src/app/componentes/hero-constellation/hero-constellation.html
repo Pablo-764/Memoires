@@ -1,0 +1,40 @@
+<svg class="sky" [attr.viewBox]="'0 0 ' + w() + ' ' + h()" preserveAspectRatio="none">
+  <defs>
+    @for (n of nebulae(); track n.intent) {
+      <radialGradient [attr.id]="'neb-' + n.intent" [attr.data-intent]="n.intent">
+        <stop offset="0" class="neb-core" />
+        <stop offset="0.55" class="neb-mid" />
+        <stop offset="1" class="neb-edge" />
+      </radialGradient>
+    }
+  </defs>
+
+  @for (s of stars; track $index) {
+    <circle [attr.cx]="s.fx * w()" [attr.cy]="s.fy * h()" [attr.r]="s.r" class="star" [style.--i]="$index" />
+  }
+
+  @for (n of nebulae(); track n.intent; let i = $index) {
+    <g class="neb" [attr.data-intent]="n.intent" [class.is-hover]="hover() === n.intent || active() === n.intent" [class.is-knot]="knot() === n.intent" [style.--i]="i">
+      <circle [attr.cx]="n.x" [attr.cy]="n.y" [attr.r]="n.r" [attr.fill]="'url(#neb-' + n.intent + ')'" class="neb-cloud" />
+      @for (k of [0, 1, 2, 3, 4, 5]; track k) {
+        <circle [attr.cx]="n.x + Math.cos(k * 1.05 + i) * n.r * 0.55" [attr.cy]="n.y + Math.sin(k * 1.05 + i) * n.r * 0.5" r="3" class="neb-person" />
+      }
+      <text [attr.x]="n.x" [attr.y]="n.y - 6" class="neb-label">{{ labels[n.intent].short }}</text>
+      <text [attr.x]="n.x" [attr.y]="n.y + 16" class="neb-count">{{ n.count }} personas</text>
+    </g>
+  }
+
+  <!-- Hilo: mientras se arrastra, o tenso hacia la nebulosa elegida -->
+  @if (thread(); as t) {
+    <line [attr.x1]="me().x" [attr.y1]="me().y" [attr.x2]="t.x" [attr.y2]="t.y" class="thread" />
+  }
+  @if (knot(); as k) {
+    <line [attr.x1]="me().x" [attr.y1]="me().y" [attr.x2]="target(k).x" [attr.y2]="target(k).y" class="thread thread-tight" [attr.data-intent]="k" pathLength="1" />
+  }
+
+  <g class="me" [attr.transform]="'translate(' + me().x + ' ' + me().y + ')'">
+    <circle r="22" class="me-halo" />
+    <circle r="9" class="me-dot" />
+    <text y="-20" class="me-label">tú</text>
+  </g>
+</svg>
