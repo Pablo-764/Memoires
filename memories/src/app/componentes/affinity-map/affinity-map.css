@@ -1,0 +1,126 @@
+:host {
+  position: relative;
+  user-select: none;
+}
+.map {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.ring {
+  fill: none;
+  stroke: var(--color-line);
+  stroke-dasharray: 2 8;
+}
+
+.thread {
+  stroke: var(--tint);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+.thread-bead { fill: var(--tint); }
+.thread-label {
+  fill: var(--color-ink);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-anchor: middle;
+  paint-order: stroke;
+  stroke: var(--color-paper);
+  stroke-width: 5px;
+  stroke-linejoin: round;
+}
+
+.node {
+  cursor: pointer;
+  outline: none;
+  transition:
+    transform 600ms var(--ease-spring),
+    opacity var(--dur-4) ease;
+}
+.node-halo {
+  fill: var(--wash);
+  stroke: var(--tint);
+  stroke-width: 1.5;
+  opacity: 0;
+  transition: opacity var(--dur-2) ease;
+}
+.node-dot {
+  fill: var(--tint);
+  stroke: var(--color-paper);
+  stroke-width: 3;
+}
+.node-name {
+  fill: var(--color-ink);
+  font-size: 13px;
+  font-weight: 700;
+  text-anchor: middle;
+  paint-order: stroke;
+  stroke: var(--color-paper);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+.node.is-on .node-halo,
+.node:focus-visible .node-halo { opacity: 1; }
+.node:focus-visible .node-halo { stroke: var(--color-ink); stroke-width: 2.5; }
+@media (hover: hover) and (pointer: fine) {
+  .node:hover .node-halo { opacity: 1; }
+}
+
+/* Dial */
+.arc-btn { cursor: pointer; outline: none; }
+.arc.is-off .arc-btn { cursor: default; }
+.arc-hit {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 42;
+  pointer-events: stroke;
+}
+.arc-path {
+  pointer-events: none;
+  fill: none;
+  stroke: var(--tint);
+  stroke-width: 10;
+  stroke-linecap: round;
+  opacity: 0.35;
+  cursor: pointer;
+  outline: none;
+  transition: opacity var(--dur-2) ease, stroke-width var(--dur-2) var(--ease-spring);
+}
+.arc.is-on .arc-path { opacity: 1; stroke-width: 14; }
+.arc.is-off .arc-path { opacity: 0.1; cursor: default; }
+.arc-btn:focus-visible .arc-path { opacity: 1; stroke-width: 14; stroke: var(--color-ink); }
+@media (hover: hover) and (pointer: fine) {
+  .arc:not(.is-off) .arc-btn:hover .arc-path { opacity: 0.8; }
+}
+.arc-label {
+  fill: var(--color-ink-2);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-anchor: middle;
+  pointer-events: none;
+}
+.arc.is-on .arc-label { fill: var(--color-ink); font-weight: 700; }
+.arc.is-off .arc-label { opacity: 0.5; }
+
+.me { cursor: pointer; outline: none; }
+.me-dot { fill: var(--color-ink); transition: r var(--dur-2) var(--ease-spring); }
+.me:focus-visible .me-dot { stroke: var(--tint); stroke-width: 4; }
+.me-label {
+  fill: var(--color-paper);
+  font-size: 15px;
+  font-weight: 800;
+  text-anchor: middle;
+}
+
+/* Entrada: las personas llegan desde ti hacia su distancia */
+@media (prefers-reduced-motion: no-preference) {
+  .node { animation: arrive 700ms var(--ease-out) both; animation-delay: calc(200ms + var(--i) * 50ms); }
+  .dial { animation: arrive-dial 500ms var(--ease-spring) both; transform-origin: center; transform-box: fill-box; }
+}
+@keyframes arrive { from { opacity: 0; } }
+@keyframes arrive-dial { from { opacity: 0; transform: scale(0.6); } }
+@media (prefers-reduced-motion: reduce) {
+  .node { transition: opacity var(--dur-1) ease; }
+}

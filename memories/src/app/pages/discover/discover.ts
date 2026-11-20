@@ -1,7 +1,8 @@
-import { Component, DestroyRef, ElementRef, computed, effect, inject, signal, viewChild, viewChildren } from '@angular/core'
+import { Component, DestroyRef, computed, effect, inject, signal, viewChildren } from '@angular/core'
 import { Router, RouterLink } from '@angular/router'
 import { AppStore } from '../../servicios/app-store'
 import { Celebrate } from '../../servicios/celebrate'
+import { Mando } from '../../servicios/mando'
 import { PEOPLE } from '../../datos/mock'
 import { INTENTS, INTENT_ICON, type Intent } from '../../modelos/intents'
 import { EMPTY_PREFS, GENDERS, GENDER_ORDER, PLAN_PEOPLE, PLAN_PEOPLE_ORDER, PLAN_SIZES, SIZE_ORDER, usesGender, usesGroups, type Gender, type IntentPrefs, type PlanSize } from '../../modelos/plan-formats'
@@ -10,30 +11,36 @@ import { TIERS } from '../../modelos/plans'
 import { ChoiceChip } from '../../componentes/choice-chip/choice-chip'
 import { Icon } from '../../componentes/icon/icon'
 import { Modal } from '../../componentes/modal/modal'
-import { PillGroup } from '../../directivas/pill-group'
 import { SwipeCard } from '../../componentes/swipe-card/swipe-card'
 import { FiltersPanel } from '../../componentes/filters-panel/filters-panel'
-import { DiscoverGraph } from '../../componentes/discover-graph/discover-graph'
+import { AffinityMap, type Leaving } from '../../componentes/affinity-map/affinity-map'
+import { Avatar } from '../../componentes/avatar/avatar'
+import { Seal } from '../../componentes/seal/seal'
+import { IntentBadge } from '../../componentes/intent-badge/intent-badge'
+import { ReportDialog } from '../../componentes/report-dialog/report-dialog'
+import { BlockDialog } from '../../componentes/block-dialog/block-dialog'
 
-const VIEW_KEY = 'memoires-descubre-vista'
-function readView(): 'tarjeta' | 'constelacion' {
+const MODE_KEY = 'memoires-descubre-modo'
+function readMode(): 'mapa' | 'mazo' {
   try {
-    return localStorage.getItem(VIEW_KEY) === 'constelacion' ? 'constelacion' : 'tarjeta'
+    return localStorage.getItem(MODE_KEY) === 'mazo' ? 'mazo' : 'mapa'
   } catch {
-    return 'tarjeta'
+    return 'mapa'
   }
 }
 
 @Component({
   selector: 'app-discover',
-  imports: [DiscoverGraph, RouterLink, ChoiceChip, Modal, Icon, PillGroup, SwipeCard, FiltersPanel],
+  imports: [AffinityMap, Avatar, Seal, IntentBadge, ReportDialog, BlockDialog, RouterLink, ChoiceChip, Modal, Icon, SwipeCard, FiltersPanel],
   styleUrl: './discover.css',
   templateUrl: './discover.html',
+  host: { '(document:keydown)': 'onKey($event)' },
 })
 export class Discover {
   protected readonly store = inject(AppStore)
   protected readonly router = inject(Router)
   private readonly celebrate = inject(Celebrate)
+  private readonly mando = inject(Mando)
 
   protected readonly intents = INTENTS
   protected readonly icons = INTENT_ICON
@@ -45,6 +52,7 @@ export class Discover {
   protected readonly genderInfo = GENDERS
   protected readonly groups = usesGroups
   protected readonly gendered = usesGender
+
   protected readonly selected = computed(() => {
     const i = this.store.filters().intent
     return i !== 'any' && this.store.me().intents.includes(i) ? i : null
@@ -55,60 +63,64 @@ export class Discover {
   })
   protected readonly filtersOpen = signal(false)
   protected readonly limitOpen = signal(false)
+  protected readonly reportOpen = signal(false)
+  protected readonly blockOpen = signal(false)
 
   private readonly cards = viewChildren(SwipeCard)
-  private readonly likeBtn = viewChild<ElementRef<HTMLElement>>('likeBtn')
-  private readonly passBtn = viewChild<ElementRef<HTMLElement>>('passBtn')
 
-  private readonly ranked = computed(() => {
+  protected readonly suggestions = computed(() => {
     const excluded = new Set([...Object.keys(this.store.decisions()), ...this.store.blocked(), ...this.store.suspended(), ...this.store.connections()])
     return rankSuggestions(this.store.me(), PEOPLE, excluded, this.store.filters())
   })
-  // La persona elegida en la constelación pasa al frente de la baraja
+  // La persona elegida en el mapa; si no hay, la de más afinidad
   protected readonly focusId = signal<string | null>(null)
-  protected readonly suggestions = computed(() => {
-    const list = this.ranked()
-    const f = this.focusId()
-    const i = f ? list.findIndex((s) => s.person.id === f) : -1
-    return i > 0 ? [list[i], ...list.slice(0, i), ...list.slice(i + 1)] : list
+  protected readonly current = computed(() => this.suggestions().find((s) => s.person.id === this.focusId()) ?? this.suggestions()[0])
+  protected readonly deck = computed(() => {
+    const c = this.current()
+    return c ? [c, ...this.suggestions().filter((s) => s !== c)].slice(0, 3) : []
   })
-  protected readonly deck = computed(() => this.suggestions().slice(0, 3))
-  protected readonly current = computed(() => this.suggestions()[0])
   protected readonly limits = computed(() => TIERS[this.store.tier()])
-  // Interruptor de vista en celular (dis-027): tarjeta o constelación
-  protected readonly view = signal<'tarjeta' | 'constelacion'>(readView())
+  protected readonly leaving = signal<Leaving | null>(null)
+  protected readonly mode = signal<'mapa' | 'mazo'>(readMode())
   protected readonly intentOf = (s: Suggestion) => this.intentFor(s)
+  protected readonly intentLabel = (i: Intent) => INTENTS[i].label.toLowerCase()
+
+  protected readonly planText = computed(() => {
+    const s = this.current()
+    if (!s) return ''
+    const sizes = (s.person.groupSizes ?? []).map((k) => PLAN_SIZES[k].label.toLowerCase())
+    return [sizes.length ? sizes.join(' o ') : null, s.person.availability.toLowerCase()].filter(Boolean).join(', ')
+  })
   protected readonly activeFilters = computed(() => {
     const f = this.store.filters()
     return [f.ageMin !== 18 || f.ageMax !== 60, f.minShared > 0, f.availability !== 'any', f.language !== 'any', f.verifiedOnly].filter(Boolean).length
   })
 
   constructor() {
-    // La UI toma la tinta de la intención que se está viendo
     effect(() => {
-      const f = this.store.filters().intent
-      this.store.backdropTone.set(f !== 'any' ? f : this.current() ? this.intentFor(this.current()) : null)
+      const c = this.current()
+      this.store.backdropTone.set(this.store.filters().intent !== 'any' ? (this.store.filters().intent as Intent) : c ? this.intentFor(c) : null)
     })
-    // Si la intención elegida ya no está en el perfil, se vuelve a mostrar todo
     effect(() => {
       const i = this.store.filters().intent
       if (i !== 'any' && !this.store.me().intents.includes(i)) this.store.setFilters({ intent: 'any' })
     })
-    inject(DestroyRef).onDestroy(() => this.store.backdropTone.set(null))
+    // En celular, el botón central del dock dice "Me interesa" a la persona elegida
+    const quitar = this.mando.declarar({ label: 'Me interesa', run: () => this.decide('like') })
+    const destroyRef = inject(DestroyRef)
+    destroyRef.onDestroy(() => {
+      quitar()
+      this.store.backdropTone.set(null)
+    })
   }
 
-  protected setView(v: 'tarjeta' | 'constelacion') {
-    this.view.set(v)
+  protected setMode(m: 'mapa' | 'mazo') {
+    this.mode.set(m)
     try {
-      localStorage.setItem(VIEW_KEY, v)
+      localStorage.setItem(MODE_KEY, m)
     } catch {
-      /* sin almacenamiento: la vista dura esta visita */
+      /* sin almacenamiento: dura esta visita */
     }
-  }
-
-  protected pickPerson(id: string) {
-    this.focusId.set(id)
-    if (matchMedia('(max-width: 1023px)').matches) this.setView('tarjeta')
   }
 
   protected intentFor(s: Suggestion | undefined): Intent {
@@ -128,7 +140,40 @@ export class Discover {
     }
     if (r === 'liked') this.store.toast('Le avisaremos si también le interesa conocerte')
     if (r === 'match') this.celebrate.play(this.intentFor(s), { giant: true }).then(() => this.store.announceMatch(id))
+    this.focusId.set(null)
     return true
+  }
+
+  /**
+   * Gesto del mapa: "Me interesa" anuda el hilo y el nodo queda orbitando cerca;
+   * "Ahora no" lo aleja y se desvanece. En el mazo, la tarjeta sale volando.
+   */
+  protected decide(d: 'like' | 'pass') {
+    const c = this.current()
+    if (!c || this.leaving()) return
+    if (this.mode() === 'mazo') return void this.cards()[0]?.fling(d)
+    if (d === 'like' && !this.canLike()) return void this.limitOpen.set(true)
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
+    this.leaving.set({ id: c.person.id, kind: d })
+    setTimeout(
+      () => {
+        this.leaving.set(null)
+        this.onDecide(c.person.id, d)
+      },
+      reduce ? 0 : 620,
+    )
+  }
+
+  protected onKey(e: KeyboardEvent) {
+    const t = e.target as HTMLElement
+    if (t?.closest('input, textarea, select, [contenteditable], [role="dialog"]')) return
+    if (e.key === 'ArrowRight') {
+      e.preventDefault()
+      this.decide('like')
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault()
+      this.decide('pass')
+    }
   }
 
   protected patchPrefs(change: Partial<IntentPrefs>) {
@@ -148,21 +193,8 @@ export class Discover {
     this.patchPrefs({ genders: l.includes(g) ? l.filter((x) => x !== g) : [...l, g] })
   }
 
-  protected act(d: 'like' | 'pass') {
-    this.cards()[0]?.fling(d)
-  }
-
   protected onLaunch(d: 'like' | 'pass') {
-    if (d === 'like') this.celebrate.play(this.intentFor(this.current()), { at: this.likeBtn()?.nativeElement })
-    else this.celebrate.play('pass', { at: this.passBtn()?.nativeElement })
-  }
-
-  protected onPull(x: number) {
-    const pull = Math.min(1, Math.abs(x) / 140)
-    const like = this.likeBtn()?.nativeElement
-    const pass = this.passBtn()?.nativeElement
-    if (like) like.style.transform = x > 0 ? `scale(${1 + pull * 0.1})` : ''
-    if (pass) pass.style.transform = x < 0 ? `scale(${1 + pull * 0.14})` : ''
+    if (d === 'like') this.celebrate.play(this.intentFor(this.current()))
   }
 
   protected goToSubscription() {
