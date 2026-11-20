@@ -7,7 +7,6 @@ import { Icon } from '../../componentes/icon/icon'
 import { Seal } from '../../componentes/seal/seal'
 import { Modal } from '../../componentes/modal/modal'
 import { ThemeSegmented } from '../../componentes/theme-segmented/theme-segmented'
-import { ThemeService } from '../../servicios/theme'
 
 
 @Component({
@@ -17,11 +16,6 @@ import { ThemeService } from '../../servicios/theme'
   templateUrl: './settings.html',
 })
 export class Settings {
-
-  constructor() {
-    // Las siluetas de la mancha de tinta quedan listas antes de tocar el selector de tema
-    inject(ThemeService).prepare()
-  }
   protected readonly store = inject(AppStore)
   private readonly router = inject(Router)
   protected readonly limits = [30, 60, 90, 120]

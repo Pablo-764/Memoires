@@ -51,8 +51,10 @@
           [attr.aria-selected]="i === active()"
           class="suggest-option"
           [attr.data-intent]="s.plan.intent"
+          tabindex="-1"
           (mousedown)="$event.preventDefault()"
           (click)="choose(s.plan.title)"
+          (keydown.enter)="choose(s.plan.title)"
         >
           <span class="chip-dot" aria-hidden="true"></span>
           <span class="min-w-0 flex-1">

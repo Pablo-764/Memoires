@@ -1,4 +1,4 @@
-import { Component, DestroyRef, computed, effect, inject, signal } from '@angular/core'
+import { Component, DestroyRef, ElementRef, afterNextRender, computed, effect, inject, signal } from '@angular/core'
 import { Router, RouterLink } from '@angular/router'
 import { AppStore } from '../../servicios/app-store'
 import { PEOPLE } from '../../datos/mock'
@@ -12,6 +12,7 @@ import { TierCards } from '../../componentes/tier-cards/tier-cards'
 import { IntentConstellation } from '../../componentes/intent-constellation/intent-constellation'
 import { Seal, type SealKind } from '../../componentes/seal/seal'
 import { PillGroup } from '../../directivas/pill-group'
+import { startLandingMotion } from '../../utilidades/landing-motion'
 
 @Component({
   selector: 'app-landing',
@@ -48,7 +49,22 @@ export class Landing {
   constructor() {
     // Toda la portada se tiñe con la intención elegida (como el reino en LinNeo)
     effect(() => this.store.backdropTone.set(this.intent()))
-    inject(DestroyRef).onDestroy(() => this.store.backdropTone.set(null))
+    const destroyRef = inject(DestroyRef)
+    destroyRef.onDestroy(() => this.store.backdropTone.set(null))
+
+    // Momento firma con GSAP y Lenis (solo en el navegador y sin movimiento reducido)
+    const host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement
+    // El héroe espera oculto desde el primer pintado para que no aparezca y luego florezca
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) host.classList.add('hero-pending')
+    let stop: (() => void) | null = null
+    let gone = false
+    afterNextRender(() => {
+      startLandingMotion(host).then((fn) => (gone ? fn() : (stop = fn)), () => host.classList.remove('hero-pending'))
+    })
+    destroyRef.onDestroy(() => {
+      gone = true
+      stop?.()
+    })
   }
 
   // El logo de la portada lleva al inicio de la misma portada, nunca a la app

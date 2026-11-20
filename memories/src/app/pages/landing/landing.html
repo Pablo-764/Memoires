@@ -1,7 +1,7 @@
 <header class="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
   <a routerLink="/" aria-label="Inicio de mémoires" (click)="toTop()"><app-logo /></a>
   <nav class="flex items-center gap-1 sm:gap-2" aria-label="Cuenta">
-    <button appThemeIcon class="text-ink-2"></button>
+    <button appThemeIcon aria-label="Cambiar tema" class="text-ink-2"></button>
     <a routerLink="/entrar" class="btn btn-sm">Iniciar sesión</a>
     <a routerLink="/registro" class="btn btn-primary btn-sm hidden sm:inline-flex">Crear cuenta</a>
   </nav>
@@ -9,19 +9,19 @@
 
 <!-- Héroe: la marca primero, luego la acción, luego la constelación -->
 <section class="mx-auto max-w-6xl px-4 pb-16 pt-4 sm:px-6 md:pb-24 md:pt-10">
-  <app-logo size="hero" [draw]="true" class="hero-logo" />
+  <app-logo size="hero" class="hero-logo" />
 
   <div class="mt-8 grid items-center gap-10 lg:mt-12 lg:grid-cols-[1fr_minmax(0,460px)] lg:gap-16">
     <div>
-      <h1 class="max-w-[18ch] text-[clamp(1.75rem,4.2vw,2.75rem)] font-bold leading-[1.1] tracking-tight">
+      <h1 data-hero-in class="max-w-[18ch] text-[clamp(1.75rem,4.2vw,2.75rem)] font-bold leading-[1.1] tracking-tight">
         Di qué buscas. Conoce a quien busca <span class="text-tint-ink">lo mismo</span>.
       </h1>
-      <p class="mt-4 max-w-[46ch] text-lg text-ink-2">
+      <p data-hero-in class="mt-4 max-w-[46ch] text-lg text-ink-2">
         Pareja, amistad, compañía para un plan o alguien con tu pasatiempo. Lo dices desde el principio y te mostramos a quienes buscan lo
         mismo en tu ciudad.
       </p>
 
-      <fieldset class="mt-8">
+      <fieldset data-hero-in class="mt-8">
         <legend class="mb-3 text-sm font-semibold text-ink-2">Hoy busco</legend>
         <div class="shape-bar" [appPillGroup]="intent()" role="radiogroup" aria-label="Hoy busco">
           <span class="group-pill" aria-hidden="true"></span>
@@ -36,7 +36,7 @@
         </p>
       </fieldset>
 
-      <div class="mt-8 flex flex-wrap gap-3">
+      <div data-hero-in class="mt-8 flex flex-wrap gap-3">
         <a routerLink="/registro" class="btn btn-primary min-h-12 px-6 text-base">Crear mi cuenta</a>
         <a href="#como-funciona" class="btn btn-ghost min-h-12 px-6 text-base" (click)="scrollToSteps($event)">Cómo funciona</a>
       </div>
@@ -51,7 +51,7 @@
   <h2 id="intenciones-titulo" class="sr-only">Las cuatro intenciones</h2>
   <ol class="mx-auto grid max-w-6xl sm:grid-cols-2 lg:grid-cols-4">
     @for (i of order; track i; let n = $index) {
-      <li appReveal class="intent-col" [attr.data-intent]="i" [class.is-on]="i === intent()">
+      <li class="intent-col" [attr.data-intent]="i" [class.is-on]="i === intent()">
         <button type="button" class="intent-col-btn" [attr.aria-pressed]="i === intent()" (click)="intent.set(i)">
           <span class="text-sm font-bold tabular-nums text-tint-ink">0{{ n + 1 }}</span>
           <span class="font-display mt-6 block text-[clamp(2.25rem,3.4vw,3rem)]">{{ intents[i].short }}</span>
