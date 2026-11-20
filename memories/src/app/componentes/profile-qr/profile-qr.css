@@ -1,0 +1,20 @@
+.qr {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+/* El QR siempre es oscuro sobre claro, también en modo nocturno: así se lee */
+.qr-bg { fill: var(--color-qr-paper); }
+.qr-dot,
+.qr-eye-core { fill: var(--color-qr-ink); }
+.qr-eye-ring {
+  fill: none;
+  stroke: var(--color-qr-ink);
+  stroke-width: 1;
+}
+.qr-me {
+  fill: var(--brand-fill);
+}
+:host-context([data-intent]) .qr-me {
+  fill: var(--tint);
+}

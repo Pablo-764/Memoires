@@ -1,30 +1,110 @@
+.mode-switch {
+  display: inline-flex;
+  padding: 0.25rem;
+  border-radius: 999px;
+  background: var(--color-paper-2);
+  box-shadow: inset 0 0 0 1px var(--color-line);
+}
+.mode-switch button {
+  min-height: 2.25rem;
+  padding: 0 0.875rem;
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 650;
+  color: var(--color-ink-2);
+}
+.mode-switch button[aria-pressed='true'] {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  box-shadow: var(--shadow-lift);
+}
 
-/* ---------- Acomodar conexiones ---------- */
+.conn-grid.is-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+}
+.conn-grid.is-list {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px var(--color-line);
+}
+
+.conn-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--color-paper-2);
+  transition: box-shadow var(--dur-2) ease, transform var(--dur-2) var(--ease-out);
+}
+.is-grid .conn-card {
+  border-radius: var(--radius-card);
+  box-shadow: inset 0 0 0 1px var(--color-line);
+}
+.is-list .conn-card {
+  flex-direction: row;
+  align-items: center;
+  border-top: 1px solid var(--color-line);
+}
+.is-list .conn-card:first-child {
+  border-top: 0;
+}
+
+.conn-main {
+  display: block;
+  flex: 1;
+  min-width: 0;
+}
+.conn-body {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.75rem;
+  padding: 0 1.25rem;
+}
+.is-grid .conn-avatar {
+  margin-top: -1.75rem;
+}
+.is-list .conn-body {
+  align-items: center;
+  padding: 0.75rem 1rem;
+}
+
+.conn-tools {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.75rem 1rem 0.75rem 1.25rem;
+}
+
 .conn-tool {
   display: grid;
   place-items: center;
-  width: 2.25rem;
-  height: 2.25rem;
+  width: 2.5rem;
+  height: 2.5rem;
   border-radius: 999px;
-  color: var(--color-ink-mute);
-  transition: color 160ms ease, background-color 160ms ease;
+  color: var(--color-ink-2);
+  transition: color var(--dur-1) ease, background-color var(--dur-1) ease;
 }
-
 @media (hover: hover) and (pointer: fine) {
-  .conn-tool:hover { color: var(--color-ink); background: var(--color-accent-soft); }
+  .conn-tool:hover { color: var(--color-ink); background: var(--color-paper-3); }
+  .is-grid .conn-card:not(.is-dragging):hover { box-shadow: inset 0 0 0 1px var(--color-line-strong); }
+  .is-list .conn-card:not(.is-dragging):hover { background: var(--color-paper-3); }
+}
+.conn-grip {
+  cursor: grab;
+  touch-action: none;
 }
 
-.conn-grip { cursor: grab; touch-action: none; }
-
-/* La que se arrastra flota encima, como una foto levantada de la mesa */
+/* La que se arrastra se levanta de la mesa */
 .conn-card.is-dragging {
   position: relative;
   z-index: 20;
   cursor: grabbing;
-  box-shadow: 0 0 0 1.5px var(--edge), 12px 14px 0 var(--color-accent) !important;
+  box-shadow: inset 0 0 0 2px var(--tint-ink), var(--shadow-float) !important;
   transition: none;
 }
-
-.conn-grid.is-sorting .conn-card:not(.is-dragging) { transition: box-shadow 200ms ease; }
-
-.conn-grid.is-sorting { user-select: none; }
+.conn-grid.is-sorting {
+  user-select: none;
+}

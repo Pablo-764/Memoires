@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal, viewChild, ElementRef } from '@angular/core'
+import { ApplicationRef, Component, computed, inject, signal, viewChild, ElementRef } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { Router, RouterLink } from '@angular/router'
 import { AppStore, type Profile as ProfileData } from '../../servicios/app-store'
@@ -15,13 +15,14 @@ import { IntentBadge } from '../../componentes/intent-badge/intent-badge'
 import { PillGroup } from '../../directivas/pill-group'
 import { IntentPrefsEditor } from '../../componentes/intent-prefs/intent-prefs'
 import { InterestPicker } from '../../componentes/interest-picker/interest-picker'
+import { ProfileQr } from '../../componentes/profile-qr/profile-qr'
 import { EMPTY_PREFS, GENDERS, GENDER_ORDER, usesGender, usesGroups, type IntentPrefs } from '../../modelos/plan-formats'
 
 type Tab = 'about' | 'themes' | 'banners' | 'frames' | 'effects' | 'names'
 
 @Component({
   selector: 'app-profile',
-  imports: [FormsModule, RouterLink, Avatar, Banner, ChoiceChip, Effect, Icon, IntentBadge, IntentPrefsEditor, InterestPicker, PillGroup],
+  imports: [FormsModule, RouterLink, Avatar, Banner, ChoiceChip, Effect, Icon, IntentBadge, IntentPrefsEditor, InterestPicker, PillGroup, ProfileQr],
   styleUrl: './profile.css',
   templateUrl: './profile.html',
 })
@@ -54,12 +55,34 @@ export class Profile {
   protected readonly tab = signal<Tab>('about')
   protected readonly tabLook = [
     { shape: 'arch', tone: 'accent' },
-    { shape: 'leaf', tone: 'romance' },
-    { shape: 'pill', tone: 'friend' },
-    { shape: 'drop', tone: 'plan' },
-    { shape: 'ticket', tone: 'hobby' },
+    { shape: 'leaf', tone: 'accent' },
+    { shape: 'pill', tone: 'accent' },
+    { shape: 'drop', tone: 'accent' },
+    { shape: 'ticket', tone: 'accent' },
     { shape: 'square', tone: 'accent' },
   ]
+  // Vista ampliada: la tarjeta crece con una View Transition (dis-034)
+  private readonly appRef = inject(ApplicationRef)
+  protected readonly expanded = signal(false)
+  protected readonly answered = computed(() => this.draft().prompts.filter((p) => p.a.trim()))
+  protected readonly shareUrl = computed(() => location.origin + '/app/persona/me')
+
+  protected toggleExpanded(open: boolean) {
+    const run = () => this.expanded.set(open)
+    if (!document.startViewTransition || matchMedia('(prefers-reduced-motion: reduce)').matches) return run()
+    document.startViewTransition(() => {
+      run()
+      this.appRef.tick()
+    })
+  }
+
+  protected copyLink() {
+    navigator.clipboard?.writeText(this.shareUrl()).then(
+      () => this.store.toast('Enlace copiado', 'ok'),
+      () => this.store.toast('No se pudo copiar el enlace', 'danger'),
+    )
+  }
+
   protected readonly genderOrder = GENDER_ORDER
   protected readonly genderInfo = GENDERS
   // Solo las intenciones elegidas que tienen algo que ajustar

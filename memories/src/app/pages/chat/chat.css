@@ -33,3 +33,19 @@
   scrollbar-width: thin;
   transition: height 120ms ease;
 }
+
+.chat-safety {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  min-height: 2.75rem;
+  padding: 0 0.625rem;
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--color-danger);
+  transition: background-color var(--dur-1) ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .chat-safety:hover { background: var(--color-danger-wash); }
+}

@@ -8,17 +8,16 @@ import { highlight, matches } from '../../utilidades/text-search'
 import { TIERS } from '../../modelos/plans'
 import { Celebrate } from '../../servicios/celebrate'
 import { Avatar } from '../../componentes/avatar/avatar'
-import { Banner } from '../../componentes/banner/banner'
 import { Icon } from '../../componentes/icon/icon'
 import { Meter } from '../../componentes/meter/meter'
 import { Modal } from '../../componentes/modal/modal'
 import { BlockDialog } from '../../componentes/block-dialog/block-dialog'
 import { ReportDialog } from '../../componentes/report-dialog/report-dialog'
-import { AsciiArt } from '../../componentes/ascii-art/ascii-art'
+import { Seal } from '../../componentes/seal/seal'
 
 @Component({
   selector: 'app-chat',
-  imports: [AsciiArt, FormsModule, RouterLink, Avatar, Banner, Icon, Meter, Modal, BlockDialog, ReportDialog],
+  imports: [Seal, FormsModule, RouterLink, Avatar, Icon, Meter, Modal, BlockDialog, ReportDialog],
   styleUrl: './chat.css',
   templateUrl: './chat.html',
 })
@@ -67,9 +66,9 @@ export class Chat {
     })
     effect(() => {
       const p = this.person()
-      this.store.ambient.set(p ? `color-mix(in oklab, oklch(0.7 0.12 ${p.hue}) 14%, var(--color-mist))` : null)
+      this.store.backdropTone.set(p ? (p.intents.find((i) => this.store.me().intents.includes(i)) ?? p.intents[0]) : null)
     })
-    inject(DestroyRef).onDestroy(() => this.store.ambient.set(null))
+    inject(DestroyRef).onDestroy(() => this.store.backdropTone.set(null))
 
     afterRenderEffect(() => {
       this.thread()

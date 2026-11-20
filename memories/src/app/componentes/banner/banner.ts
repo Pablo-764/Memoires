@@ -1,18 +1,31 @@
 import { Component, DestroyRef, ElementRef, afterNextRender, computed, inject, input } from '@angular/core'
-import { TextAlbum } from '../../servicios/text-album'
-import { bannerOf } from '../../modelos/decor'
-import { NgTemplateOutlet } from '@angular/common'
-import { AsciiArt } from '../ascii-art/ascii-art'
+import { bannerOf, type BannerScene } from '../../modelos/decor'
+
+type Overlay = 'none' | 'stars' | 'blobs' | 'asanoha' | 'threads' | 'lines'
+
+// Cada escena del catálogo se dibuja con una de cinco capas del sistema nuevo,
+// sobre el color base propio del fondo.
+const OVERLAY: Record<BannerScene, Overlay> = {
+  static: 'none',
+  stars: 'stars', galaxy: 'stars', aurora: 'stars', blackhole: 'stars', portal: 'stars', hyper: 'stars', planet: 'stars', anime: 'stars',
+  mesh: 'blobs', sun: 'blobs', flow: 'blobs', waves: 'blobs', lava: 'blobs', caustics: 'blobs', spotlight: 'blobs', fog: 'blobs', rings: 'blobs',
+  pattern: 'asanoha', hexgrid: 'asanoha', crystal: 'asanoha', royal: 'asanoha', runes: 'asanoha', sumi: 'asanoha', frost: 'asanoha', castle: 'asanoha',
+  code: 'lines', crt: 'lines', synth: 'lines', glitch: 'lines', pixel: 'lines', rain: 'lines', lightning: 'lines', noir: 'lines', film: 'lines', comic: 'lines', city: 'lines',
+  garden: 'threads', 'garden-grow': 'threads',
+}
+
+// Hilos de constelación del fondo (en % del ancho y alto)
+const STARS = [
+  [8, 62], [20, 30], [34, 54], [47, 22], [58, 48], [71, 18], [83, 40], [93, 70],
+] as const
 
 /**
- * Fondo de perfil: una escena animada del catálogo o la imagen que subió la persona.
- * Las animaciones solo corren mientras el fondo está en pantalla; al pasar el cursor
- * por la tarjeta que lo contiene, las capas se desplazan con profundidad y cruza un destello.
+ * Fondo de perfil: el color del catálogo o la imagen que subió la persona, con una
+ * capa animada muy discreta. La animación se pausa cuando el fondo no está en pantalla.
  */
 @Component({
   selector: 'app-banner',
-  imports: [NgTemplateOutlet, AsciiArt],
-  styleUrls: ['./banner.css', './banner-temas.css', './banner-colecciones.css', './banner-jardin.css'],
+  styleUrl: './banner.css',
   templateUrl: './banner.html',
   host: {
     class: 'absolute inset-0 block overflow-hidden',
@@ -27,38 +40,12 @@ export class Banner {
   readonly preview = input(false)
 
   protected readonly info = computed(() => bannerOf(this.decoration()))
-  private readonly textAlbum = inject(TextAlbum)
-  protected readonly scene = computed(() => {
-    if (this.custom()) return 'photo'
-    const scene = this.info().scene
-    // Modo álbum de texto: las escenas se dibujan con caracteres (el fondo liso se queda igual)
-    return this.textAlbum.on() && scene !== 'static' && scene !== 'garden-grow' ? 'garden' : scene
-  })
-  // Columnas de caracteres para la escena de terminal (siempre las mismas)
-  protected readonly codeColumns = Array.from({ length: 12 }, (_, i) => ({
-    left: i * 8.4 + 1,
-    speed: 3 + ((i * 37) % 5),
-    delay: -((i * 53) % 7),
-    text: Array.from({ length: 16 }, (_, j) => '01{}<>/=+*#;$'[(i * 7 + j * 5) % 13]).join(''),
-  }))
-  // Piezas de las escenas de colección (siempre las mismas, sin azar al repintar)
-  protected readonly runeOuter = 'ΨΩΔΛΞΦΣΘΠΓΨΩΔΛΞΦ'.split('')
-  protected readonly runeInner = 'ΣΘΠΓΛΞΦΩ'.split('')
-  // Jardín de texto: de 3 a 5 piezas acomodadas lejos de la esquina del avatar
-  protected readonly garden = [
-    { piece: 'cerezas', x: 4, y: 40, s: 0.8 },
-    { piece: 'flor', x: 33, y: 6, s: 1 },
-    { piece: 'ramo-arleth', x: 55, y: 4, s: 1 },
-    { piece: 'flor', x: 82, y: 6, s: 0.8 },
-  ]
-  protected readonly petals = [0, 1, 2, 3, 4, 5, 6, 7]
-  protected readonly shards = [0, 1, 2, 3, 4, 5, 6]
-  protected readonly bubbles = [0, 1, 2, 3, 4, 5, 6, 7, 8]
-  // Onomatopeya de la escena de historieta, distinta por fondo
-  protected readonly popWord = computed(() => (this.info().key === 'sabado' ? '¡JA!' : '¡ZAS!'))
+  protected readonly overlay = computed<Overlay | 'photo'>(() => (this.custom() ? 'photo' : OVERLAY[this.info().scene] ?? 'none'))
+  protected readonly stars = STARS
+  protected readonly links = STARS.slice(1).map((p, i) => ({ a: STARS[i], b: p }))
   protected readonly color = (i: number) => {
     const c = this.info().colors
-    return c.length ? c[i % c.length] : '#ffffff'
+    return c.length ? c[i % c.length] : 'rgb(255 255 255 / 0.8)'
   }
 
   constructor() {
@@ -68,32 +55,7 @@ export class Banner {
       // Pausa lo que no se ve: en Conexiones puede haber decenas de fondos
       const io = new IntersectionObserver(([entry]) => host.classList.toggle('is-off', !entry.isIntersecting), { rootMargin: '80px' })
       io.observe(host)
-
-      const fine = matchMedia('(hover: hover) and (pointer: fine)')
-      const zone = host.parentElement?.closest<HTMLElement>('a, button, article, .card, [data-banner-zone]') ?? host.parentElement
-      if (!zone) return () => io.disconnect()
-      const enter = () => fine.matches && host.classList.add('is-hover')
-      const leave = () => {
-        host.classList.remove('is-hover')
-        host.style.removeProperty('--hx')
-        host.style.removeProperty('--hy')
-      }
-      const move = (e: PointerEvent) => {
-        if (!fine.matches) return
-        const r = host.getBoundingClientRect()
-        host.style.setProperty('--hx', ((e.clientX - r.left) / r.width - 0.5).toFixed(3))
-        host.style.setProperty('--hy', ((e.clientY - r.top) / r.height - 0.5).toFixed(3))
-      }
-      zone.addEventListener('pointerenter', enter)
-      zone.addEventListener('pointerleave', leave)
-      zone.addEventListener('pointermove', move, { passive: true })
-      destroyRef.onDestroy(() => {
-        io.disconnect()
-        zone.removeEventListener('pointerenter', enter)
-        zone.removeEventListener('pointerleave', leave)
-        zone.removeEventListener('pointermove', move)
-      })
-      return undefined
+      destroyRef.onDestroy(() => io.disconnect())
     })
   }
 }

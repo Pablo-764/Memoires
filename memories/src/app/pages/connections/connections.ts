@@ -8,15 +8,23 @@ import { Banner } from '../../componentes/banner/banner'
 import { Icon } from '../../componentes/icon/icon'
 import { IntentBadge } from '../../componentes/intent-badge/intent-badge'
 
-import { Thread } from '../../componentes/thread/thread'
-import { AsciiArt } from '../../componentes/ascii-art/ascii-art'
+import { Seal } from '../../componentes/seal/seal'
 import { Modal } from '../../componentes/modal/modal'
+
+const MODE_KEY = 'memoires-conexiones-vista'
+function readMode(): 'cuadricula' | 'lista' {
+  try {
+    return localStorage.getItem(MODE_KEY) === 'lista' ? 'lista' : 'cuadricula'
+  } catch {
+    return 'cuadricula'
+  }
+}
 
 type Confirm = { kind: 'silent' } | { kind: 'chat' | 'connection'; id: string; name: string }
 
 @Component({
   selector: 'app-connections',
-  imports: [AsciiArt, RouterLink, Avatar, Banner, Icon, IntentBadge, Modal, Thread],
+  imports: [RouterLink, Avatar, Banner, Icon, IntentBadge, Modal, Seal],
   styleUrl: './connections.css',
   templateUrl: './connections.html',
 })
@@ -33,6 +41,17 @@ export class Connections {
   protected readonly dragging = signal<string | null>(null)
   protected readonly announce = signal('')
   protected readonly confirm = signal<Confirm | null>(null)
+  // Cuadrícula para explorar o lista para comparar (dis-027)
+  protected readonly mode = signal<'cuadricula' | 'lista'>(readMode())
+
+  protected setMode(m: 'cuadricula' | 'lista') {
+    this.mode.set(m)
+    try {
+      localStorage.setItem(MODE_KEY, m)
+    } catch {
+      /* sin almacenamiento: dura esta visita */
+    }
+  }
 
   protected readonly silentCount = computed(() => this.store.connections().filter((id) => !this.store.messages()[id]?.length).length)
 
