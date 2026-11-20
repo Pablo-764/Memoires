@@ -1,5 +1,15 @@
 @import "tailwindcss";
 
+@import "@fontsource-variable/plus-jakarta-sans";
+
+/* Mémoires Display: Blackout Midnight (Tyler Finck, OFL) ampliada con Fontificar.
+   "Blackout" es nombre reservado, por eso la derivada se llama distinto. */
+@font-face {
+  font-family: "Memoires Display";
+  src: url("/fonts/MemoiresDisplay-Regular.woff2") format("woff2");
+  font-display: swap;
+}
+
 @import "@fontsource-variable/syne";
 
 @import "@fontsource-variable/fraunces/full-italic.css";
