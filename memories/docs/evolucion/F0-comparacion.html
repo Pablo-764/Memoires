@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>F0 comparación de forma</title>
+<style>
+  :root { --b: #d3d0ca; --b2: #bcb8b1; --b3: #8f8a82; --t: #3d3a35; --bg: #f2f1ee; --new: #e3ddf0; --new2: #c9bfe3; --new3: #6f5fa8; }
+  * { box-sizing: border-box; margin: 0; }
+  body { background: var(--bg); font: 13px/1.4 system-ui, sans-serif; color: #1f1d1a; padding: 28px; width: 1500px; }
+  h1 { font-size: 22px; }
+  .note { color: var(--t); margin: 4px 0 22px; max-width: 110ch; }
+  .row { display: grid; grid-template-columns: 150px 470px 110px 470px 110px; gap: 14px; align-items: start; margin-bottom: 26px; padding-bottom: 22px; border-bottom: 1px solid #d8d4cc; }
+  .row h2 { font-size: 16px; }
+  .row p { color: var(--t); font-size: 12.5px; margin-top: 6px; }
+  .tag { display: inline-block; font-size: 12px; font-weight: 700; margin-bottom: 4px; }
+  .tag.old { color: #6a655e; } .tag.new { color: #5b4a9a; }
+  .d, .m { position: relative; overflow: hidden; border: 1px solid var(--b2); background: #fbfaf8; }
+  .d { width: 470px; height: 294px; border-radius: 8px; }
+  .m { width: 110px; height: 238px; border-radius: 16px; }
+  .x { position: absolute; background: var(--b); border-radius: 4px; display: grid; place-items: center; color: var(--t); font-size: 12px; text-align: center; line-height: 1.15; padding: 2px; }
+  .x2 { background: var(--b2); } .x3 { background: var(--b3); color: #fff; }
+  .n { background: var(--new); color: #2e2550; } .n2 { background: var(--new2); color: #2e2550; } .n3 { background: var(--new3); color: #fff; }
+  .c { border-radius: 50%; } .p { border-radius: 999px; }
+  .ring { position: absolute; border: 1.5px dashed var(--new3); border-radius: 50%; }
+  .line { position: absolute; height: 1.5px; background: var(--new3); transform-origin: 0 0; }
+</style>
+</head>
+<body>
+<h1>mémoires · F0: forma de antes (gris) contra forma nueva (lila)</h1>
+<p class="note">Bloques sin color ni contenido real: solo zonas, columnas y posición de la navegación y de la acción principal. Regla: en ninguna pantalla principal la estructura nueva coincide con la de antes. Antes = capturas de E0 a E8 (barra lateral fija). Nuevo = barra de mando flotante arriba en escritorio y dock con botón central en celular, sin cajas alrededor de la página.</p>
+
+<!-- LANDING -->
+<div class="row">
+  <div><h2>Landing</h2><p>Antes: héroe partido (texto a la izquierda, dibujo a la derecha), chips "Hoy busco", 2 botones y 4 tarjetas de intención.<br><br>Nuevo: héroe a pantalla completa como constelación viva; el titular abajo a la izquierda; el registro empieza arrastrando un hilo de "tú" a una nebulosa. Capítulos con escena fija.</p></div>
+  <div><span class="tag old">Antes · 1440</span>
+    <div class="d">
+      <div class="x" style="left:10px;top:8px;width:450px;height:18px">barra: logo · entrar · crear</div>
+      <div class="x x3" style="left:16px;top:34px;width:260px;height:44px">MÉMOIRES</div>
+      <div class="x x2" style="left:16px;top:88px;width:210px;height:30px">titular</div>
+      <div class="x p" style="left:16px;top:126px;width:210px;height:16px">chips hoy busco</div>
+      <div class="x p x3" style="left:16px;top:150px;width:100px;height:18px">crear</div>
+      <div class="x c" style="left:300px;top:80px;width:120px;height:120px">grafo</div>
+      <div class="x" style="left:16px;top:212px;width:104px;height:72px">Pareja</div><div class="x" style="left:128px;top:212px;width:104px;height:72px">Amistad</div><div class="x" style="left:240px;top:212px;width:104px;height:72px">Plan</div><div class="x" style="left:352px;top:212px;width:104px;height:72px">Pasatiempo</div>
+    </div></div>
+  <div><span class="tag old">Antes · 390</span>
+    <div class="m">
+      <div class="x" style="left:6px;top:6px;width:98px;height:12px">barra</div>
+      <div class="x x3" style="left:6px;top:24px;width:98px;height:22px">MÉMOIRES</div>
+      <div class="x x2" style="left:6px;top:52px;width:98px;height:22px">titular</div>
+      <div class="x p" style="left:6px;top:80px;width:98px;height:10px">chips</div>
+      <div class="x p x3" style="left:6px;top:96px;width:60px;height:12px">crear</div>
+      <div class="x c" style="left:20px;top:116px;width:70px;height:70px">grafo</div>
+      <div class="x" style="left:6px;top:192px;width:98px;height:40px">4 tarjetas</div>
+    </div></div>
+  <div><span class="tag new">Nuevo · 1440</span>
+    <div class="d" style="background:#2b2540">
+      <div class="x n p" style="left:150px;top:10px;width:170px;height:20px">mando: logo · entrar · crear</div>
+      <div class="x n2 c" style="left:40px;top:50px;width:110px;height:110px">nebulosa amistad (27)</div>
+      <div class="x n2 c" style="left:330px;top:40px;width:96px;height:96px">nebulosa plan (26)</div>
+      <div class="x n2 c" style="left:300px;top:170px;width:80px;height:80px">pasatiempo</div>
+      <div class="x n2 c" style="left:190px;top:120px;width:64px;height:64px">pareja</div>
+      <div class="x n3 c" style="left:228px;top:66px;width:22px;height:22px">tú</div>
+      <div class="line" style="left:239px;top:77px;width:110px;transform:rotate(-12deg)"></div>
+      <div class="x n" style="left:18px;top:212px;width:230px;height:46px">titular corto abajo a la izquierda + "arrastra un hilo"</div>
+      <div class="x n p" style="left:18px;top:264px;width:230px;height:16px">4 botones accesibles</div>
+    </div></div>
+  <div><span class="tag new">Nuevo · 390</span>
+    <div class="m" style="background:#2b2540">
+      <div class="x n2 c" style="left:6px;top:20px;width:52px;height:52px">amistad</div>
+      <div class="x n2 c" style="left:56px;top:54px;width:46px;height:46px">plan</div>
+      <div class="x n2 c" style="left:14px;top:96px;width:38px;height:38px">hobby</div>
+      <div class="x n2 c" style="left:66px;top:110px;width:30px;height:30px">pareja</div>
+      <div class="x n3 c" style="left:46px;top:74px;width:14px;height:14px"></div>
+      <div class="x n" style="left:6px;top:150px;width:98px;height:34px">titular abajo</div>
+      <div class="x n p" style="left:6px;top:190px;width:98px;height:12px">intenciones</div>
+      <div class="x n p" style="left:6px;top:208px;width:98px;height:16px">crear cuenta</div>
+    </div></div>
+</div>
+
+<!-- DESCUBRE -->
+<div class="row">
+  <div><h2>Descubre</h2><p>Antes: barra lateral, chips arriba, grafo de adorno y una tarjeta fija a la derecha con dos botones.<br><br>Nuevo: el mapa de afinidad es la pantalla; distancia = afinidad. Dial de intenciones alrededor de "tú". Al elegir un nodo se abre una ficha flotante (hoja inferior en celular). Atajos ← y →.</p></div>
+  <div><span class="tag old">Antes · 1440</span>
+    <div class="d">
+      <div class="x" style="left:0;top:0;width:80px;height:294px">barra lateral<br>· plan · tema · tú</div>
+      <div class="x p" style="left:100px;top:10px;width:200px;height:18px">chips intención</div>
+      <div class="x c" style="left:110px;top:50px;width:170px;height:170px">grafo</div>
+      <div class="x" style="left:110px;top:232px;width:170px;height:50px">lista</div>
+      <div class="x x3" style="left:310px;top:40px;width:150px;height:200px">tarjeta fija</div>
+      <div class="x p x2" style="left:310px;top:250px;width:150px;height:22px">ahora no · me interesa</div>
+    </div></div>
+  <div><span class="tag old">Antes · 390</span>
+    <div class="m">
+      <div class="x" style="left:6px;top:6px;width:98px;height:12px">cabecera</div>
+      <div class="x p" style="left:6px;top:22px;width:98px;height:12px">chips</div>
+      <div class="x x3" style="left:6px;top:40px;width:98px;height:140px">tarjeta</div>
+      <div class="x p x2" style="left:6px;top:186px;width:98px;height:16px">2 botones</div>
+      <div class="x" style="left:6px;top:212px;width:98px;height:20px">pestañas</div>
+    </div></div>
+  <div><span class="tag new">Nuevo · 1440</span>
+    <div class="d">
+      <div class="x n p" style="left:130px;top:8px;width:210px;height:20px">mando flotante · segmentado · ⌘K · avatar</div>
+      <div class="ring" style="left:110px;top:56px;width:200px;height:200px"></div>
+      <div class="ring" style="left:160px;top:106px;width:100px;height:100px;border-style:solid;border-width:6px;border-color:#c9bfe3"></div>
+      <div class="x n3 c" style="left:198px;top:144px;width:24px;height:24px">tú</div>
+      <div class="x n2 c" style="left:168px;top:84px;width:18px;height:18px"></div><div class="x n2 c" style="left:258px;top:120px;width:22px;height:22px"></div><div class="x n2 c" style="left:132px;top:190px;width:14px;height:14px"></div><div class="x n2 c" style="left:290px;top:210px;width:12px;height:12px"></div><div class="x n2 c" style="left:110px;top:100px;width:12px;height:12px"></div><div class="x n2 c" style="left:236px;top:236px;width:16px;height:16px"></div>
+      <div class="line" style="left:210px;top:156px;width:58px;transform:rotate(-30deg)"></div>
+      <div class="x n" style="left:330px;top:60px;width:128px;height:190px;box-shadow:0 8px 20px #0003">ficha flotante<br>por qué · plan ideal<br><br>← ahora no<br>→ me interesa</div>
+      <div class="x n p" style="left:12px;top:260px;width:90px;height:18px">mapa | mazo</div>
+    </div></div>
+  <div><span class="tag new">Nuevo · 390</span>
+    <div class="m">
+      <div class="ring" style="left:10px;top:20px;width:90px;height:90px"></div>
+      <div class="x n3 c" style="left:48px;top:58px;width:14px;height:14px"></div>
+      <div class="x n2 c" style="left:20px;top:30px;width:10px;height:10px"></div><div class="x n2 c" style="left:80px;top:44px;width:12px;height:12px"></div><div class="x n2 c" style="left:30px;top:96px;width:10px;height:10px"></div>
+      <div class="x n" style="left:0;top:122px;width:110px;height:80px;border-radius:12px 12px 0 0">hoja inferior: ficha</div>
+      <div class="x n" style="left:6px;top:210px;width:98px;height:20px">dock</div>
+      <div class="x n3 c" style="left:43px;top:200px;width:24px;height:24px">+</div>
+    </div></div>
+</div>
+
+<!-- CONEXIONES -->
+<div class="row">
+  <div><h2>Conexiones</h2><p>Antes: título, buscador y una tarjeta pequeña sola en un lienzo vacío.<br><br>Nuevo: tablero por etapas (Nueva, Hablando, Plan acordado, Plan cumplido). Cada conexión es una cinta horizontal con intereses, último mensaje, próximo plan y medidor de hilo. En celular, pestañas deslizables.</p></div>
+  <div><span class="tag old">Antes · 1440</span>
+    <div class="d">
+      <div class="x" style="left:0;top:0;width:80px;height:294px">barra lateral</div>
+      <div class="x x2" style="left:100px;top:14px;width:150px;height:28px">título</div>
+      <div class="x p" style="left:300px;top:20px;width:150px;height:16px">buscar</div>
+      <div class="x x3" style="left:100px;top:60px;width:110px;height:90px">1 tarjeta</div>
+    </div></div>
+  <div><span class="tag old">Antes · 390</span>
+    <div class="m">
+      <div class="x x2" style="left:6px;top:8px;width:98px;height:18px">título</div>
+      <div class="x p" style="left:6px;top:30px;width:98px;height:12px">buscar</div>
+      <div class="x x3" style="left:6px;top:50px;width:98px;height:70px">tarjeta</div>
+    </div></div>
+  <div><span class="tag new">Nuevo · 1440</span>
+    <div class="d">
+      <div class="x n p" style="left:130px;top:8px;width:210px;height:20px">mando flotante</div>
+      <div class="x n" style="left:12px;top:40px;width:110px;height:16px">Nueva</div><div class="x n" style="left:128px;top:40px;width:110px;height:16px">Hablando</div><div class="x n" style="left:244px;top:40px;width:110px;height:16px">Plan acordado</div><div class="x n" style="left:360px;top:40px;width:100px;height:16px">Cumplido</div>
+      <div class="x n2" style="left:12px;top:62px;width:110px;height:34px">cinta</div><div class="x n2" style="left:128px;top:62px;width:110px;height:34px">cinta</div><div class="x n2" style="left:128px;top:102px;width:110px;height:34px">cinta</div><div class="x n2" style="left:244px;top:62px;width:110px;height:34px">cinta · plan</div><div class="x n2" style="left:360px;top:62px;width:100px;height:34px">cinta</div><div class="x n2" style="left:12px;top:102px;width:110px;height:34px">cinta</div>
+    </div></div>
+  <div><span class="tag new">Nuevo · 390</span>
+    <div class="m">
+      <div class="x n p" style="left:6px;top:8px;width:98px;height:12px">Nueva · Hablando ›</div>
+      <div class="x n2" style="left:6px;top:26px;width:98px;height:28px">cinta</div>
+      <div class="x n2" style="left:6px;top:58px;width:98px;height:28px">cinta</div>
+      <div class="x n2" style="left:6px;top:90px;width:98px;height:28px">cinta</div>
+      <div class="x n" style="left:6px;top:210px;width:98px;height:20px">dock</div>
+    </div></div>
+</div>
+
+<!-- CHAT -->
+<div class="row">
+  <div><h2>Chat</h2><p>Antes: cabecera, burbujas genéricas y caja de texto.<br><br>Nuevo: cabecera con intereses en común y seguridad a un toque; sugerencias de plan dentro del chat; mensaje estructurado "Proponer plan" (fecha, lugar, tipo) que el otro acepta o mueve; en escritorio, panel de contexto con el plan sugerido.</p></div>
+  <div><span class="tag old">Antes · 1440</span>
+    <div class="d">
+      <div class="x" style="left:0;top:0;width:80px;height:294px">barra lateral</div>
+      <div class="x x2" style="left:100px;top:10px;width:360px;height:26px">cabecera</div>
+      <div class="x" style="left:100px;top:46px;width:150px;height:22px">burbuja</div><div class="x x3" style="left:310px;top:76px;width:150px;height:22px">burbuja</div>
+      <div class="x p x2" style="left:100px;top:260px;width:360px;height:22px">caja</div>
+    </div></div>
+  <div><span class="tag old">Antes · 390</span>
+    <div class="m">
+      <div class="x x2" style="left:6px;top:6px;width:98px;height:18px">cabecera</div>
+      <div class="x" style="left:6px;top:40px;width:60px;height:16px"></div><div class="x x3" style="left:44px;top:62px;width:60px;height:16px"></div>
+      <div class="x p" style="left:6px;top:190px;width:98px;height:14px">caja</div>
+    </div></div>
+  <div><span class="tag new">Nuevo · 1440</span>
+    <div class="d">
+      <div class="x n p" style="left:130px;top:8px;width:210px;height:20px">mando flotante</div>
+      <div class="x n" style="left:12px;top:38px;width:290px;height:26px">persona · comparten · sello</div>
+      <div class="x n2" style="left:12px;top:74px;width:150px;height:20px">burbuja papel</div><div class="x n3" style="left:150px;top:100px;width:150px;height:20px">burbuja tinta</div>
+      <div class="x n" style="left:40px;top:130px;width:240px;height:52px;border-top:3px solid #6f5fa8">PROPONER PLAN: fecha · lugar · tipo · aceptar / mover</div>
+      <div class="x n p" style="left:12px;top:198px;width:290px;height:16px">sugerencia: café en la Americana</div>
+      <div class="x n p" style="left:12px;top:260px;width:290px;height:22px">caja · + plan</div>
+      <div class="x n" style="left:316px;top:38px;width:144px;height:244px">contexto: intereses, planes juntos, seguridad</div>
+    </div></div>
+  <div><span class="tag new">Nuevo · 390</span>
+    <div class="m">
+      <div class="x n" style="left:6px;top:6px;width:98px;height:18px">persona · sello</div>
+      <div class="x n2" style="left:6px;top:32px;width:60px;height:14px"></div><div class="x n3" style="left:44px;top:50px;width:60px;height:14px"></div>
+      <div class="x n" style="left:12px;top:72px;width:86px;height:40px;border-top:3px solid #6f5fa8">plan propuesto</div>
+      <div class="x n p" style="left:6px;top:170px;width:98px;height:12px">sugerencia</div>
+      <div class="x n p" style="left:6px;top:188px;width:98px;height:14px">caja · +</div>
+    </div></div>
+</div>
+
+<!-- PERFIL -->
+<div class="row">
+  <div><h2>Perfil</h2><p>Antes: vista previa pequeña y un formulario largo de una columna (pestañas, textarea, selects, pares pregunta y respuesta).<br><br>Nuevo: editor en vivo. Vista previa fija tal como la ven otros; a la derecha, pasos (Sobre ti, Intereses, Qué buscas, Momentos, Seguridad, Compartir), anillo de perfil completo, carrusel de prompts, campo de etiquetas, polaroids que se arrastran y una tarjeta por intención.</p></div>
+  <div><span class="tag old">Antes · 1440</span>
+    <div class="d">
+      <div class="x" style="left:0;top:0;width:80px;height:294px">barra lateral</div>
+      <div class="x x2" style="left:96px;top:10px;width:110px;height:150px">vista previa</div>
+      <div class="x" style="left:96px;top:168px;width:110px;height:50px">QR</div>
+      <div class="x p" style="left:220px;top:10px;width:240px;height:14px">pestañas</div>
+      <div class="x" style="left:220px;top:30px;width:240px;height:30px">textarea</div>
+      <div class="x" style="left:220px;top:66px;width:116px;height:14px">select</div><div class="x" style="left:344px;top:66px;width:116px;height:14px">select</div>
+      <div class="x" style="left:220px;top:86px;width:240px;height:14px">chips</div><div class="x" style="left:220px;top:106px;width:240px;height:22px">pregunta + input</div><div class="x" style="left:220px;top:134px;width:240px;height:22px">pregunta + input</div><div class="x" style="left:220px;top:162px;width:240px;height:120px">… para amistad · para plan …</div>
+    </div></div>
+  <div><span class="tag old">Antes · 390</span>
+    <div class="m">
+      <div class="x x2" style="left:6px;top:6px;width:98px;height:70px">vista previa</div>
+      <div class="x" style="left:6px;top:82px;width:98px;height:150px">formulario largo</div>
+    </div></div>
+  <div><span class="tag new">Nuevo · 1440</span>
+    <div class="d">
+      <div class="x n p" style="left:130px;top:8px;width:210px;height:20px">mando flotante</div>
+      <div class="x n3" style="left:12px;top:40px;width:180px;height:242px">VISTA PREVIA EN VIVO (ficha de Descubre), fija</div>
+      <div class="x n c" style="left:208px;top:40px;width:40px;height:40px">72 %</div>
+      <div class="x n p" style="left:256px;top:50px;width:204px;height:18px">pasos: Sobre ti · Intereses · Qué buscas …</div>
+      <div class="x n2" style="left:208px;top:92px;width:80px;height:70px">prompt</div><div class="x n2" style="left:294px;top:92px;width:80px;height:70px">prompt</div><div class="x n" style="left:380px;top:92px;width:80px;height:70px">prompt ›</div>
+      <div class="x n" style="left:208px;top:172px;width:252px;height:18px">etiquetas: idiomas · disponibilidad</div>
+      <div class="x n" style="left:208px;top:198px;width:122px;height:84px;border-top:3px solid #6f5fa8">tarjeta Amistad</div><div class="x n" style="left:338px;top:198px;width:122px;height:84px;border-top:3px solid #6f5fa8">tarjeta Plan</div>
+    </div></div>
+  <div><span class="tag new">Nuevo · 390</span>
+    <div class="m">
+      <div class="x n c" style="left:6px;top:6px;width:26px;height:26px">72</div>
+      <div class="x n p" style="left:36px;top:12px;width:68px;height:12px">pasos ›</div>
+      <div class="x n3" style="left:6px;top:38px;width:98px;height:56px">vista previa</div>
+      <div class="x n2" style="left:6px;top:100px;width:62px;height:50px">prompt</div><div class="x n" style="left:72px;top:100px;width:32px;height:50px">›</div>
+      <div class="x n" style="left:6px;top:156px;width:98px;height:40px;border-top:3px solid #6f5fa8">tarjeta intención</div>
+    </div></div>
+</div>
+
+<!-- PLANES -->
+<div class="row">
+  <div><h2>Planes</h2><p>Antes: barra lateral, título, filtros en barras, tarjetas de plan en 2 columnas y el álbum al final.<br><br>Nuevo: franja de calendario horizontal con los próximos días y planes marcados; al elegir un día, su lista como agenda; buscador en el mando; el álbum en mosaico como mesa de fotos a lo ancho.</p></div>
+  <div><span class="tag old">Antes · 1440</span>
+    <div class="d">
+      <div class="x" style="left:0;top:0;width:80px;height:294px">barra lateral</div>
+      <div class="x x2" style="left:100px;top:10px;width:140px;height:26px">título</div>
+      <div class="x p" style="left:100px;top:44px;width:360px;height:14px">buscar · filtros</div>
+      <div class="x x3" style="left:100px;top:66px;width:360px;height:70px">plan destacado</div>
+      <div class="x x2" style="left:100px;top:144px;width:176px;height:70px">plan</div><div class="x x2" style="left:284px;top:144px;width:176px;height:70px">plan</div>
+      <div class="x" style="left:100px;top:222px;width:360px;height:62px">álbum</div>
+    </div></div>
+  <div><span class="tag old">Antes · 390</span>
+    <div class="m">
+      <div class="x x2" style="left:6px;top:6px;width:98px;height:16px">título</div>
+      <div class="x p" style="left:6px;top:26px;width:98px;height:12px">filtros</div>
+      <div class="x x3" style="left:6px;top:44px;width:98px;height:70px">plan</div>
+      <div class="x x2" style="left:6px;top:120px;width:98px;height:70px">plan</div>
+    </div></div>
+  <div><span class="tag new">Nuevo · 1440</span>
+    <div class="d">
+      <div class="x n p" style="left:130px;top:8px;width:210px;height:20px">mando flotante</div>
+      <div class="x n" style="left:12px;top:40px;width:448px;height:42px">FRANJA DE CALENDARIO: lun 23 · mar 24 ● · mié 25 ●● · …</div>
+      <div class="x n2" style="left:12px;top:92px;width:290px;height:28px">agenda del día: 17:30 café · Lafayette</div>
+      <div class="x n2" style="left:12px;top:124px;width:290px;height:28px">19:30 juegos · Americana</div>
+      <div class="x n3" style="left:312px;top:92px;width:148px;height:60px">detalle / unirme</div>
+      <div class="x n" style="left:12px;top:164px;width:120px;height:118px">foto</div><div class="x n2" style="left:138px;top:164px;width:80px;height:56px"></div><div class="x n" style="left:224px;top:164px;width:120px;height:56px"></div><div class="x n2" style="left:350px;top:164px;width:110px;height:118px"></div><div class="x n" style="left:138px;top:226px;width:206px;height:56px">mesa de fotos</div>
+    </div></div>
+  <div><span class="tag new">Nuevo · 390</span>
+    <div class="m">
+      <div class="x n" style="left:6px;top:6px;width:98px;height:30px">franja días ›</div>
+      <div class="x n2" style="left:6px;top:42px;width:98px;height:20px">agenda</div><div class="x n2" style="left:6px;top:66px;width:98px;height:20px">agenda</div>
+      <div class="x n" style="left:6px;top:94px;width:46px;height:56px"></div><div class="x n2" style="left:56px;top:94px;width:48px;height:26px"></div><div class="x n" style="left:56px;top:124px;width:48px;height:26px"></div>
+      <div class="x n" style="left:6px;top:210px;width:98px;height:20px">dock</div>
+      <div class="x n3 c" style="left:43px;top:200px;width:24px;height:24px">+</div>
+    </div></div>
+</div>
+</body>
+</html>
