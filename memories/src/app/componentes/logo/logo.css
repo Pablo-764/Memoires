@@ -1,0 +1,48 @@
+:host {
+  display: inline-flex;
+  align-items: flex-end;
+  color: var(--color-ink);
+  font-size: 1.5rem;
+  line-height: 1;
+}
+:host([data-size='sm']) { font-size: 1.25rem; }
+:host([data-size='lg']) { font-size: 2.5rem; }
+:host([data-size='hero']) { font-size: clamp(3.5rem, 15vw, 13rem); }
+:host(.logo-bright) { color: var(--color-paper); }
+
+.logo-word {
+  display: inline-flex;
+  font-family: 'Memoires Display', var(--font-display);
+  letter-spacing: 0.01em;
+  /* el punto del acento sobresale; se reserva su espacio */
+  padding-top: 0.3em;
+}
+.logo-l { display: inline-block; }
+.logo-e { position: relative; }
+.logo-dot {
+  position: absolute;
+  left: 50%;
+  top: -0.3em;
+  width: 0.22em;
+  height: 0.22em;
+  translate: -20% 0;
+  border-radius: 50%;
+  background: var(--color-tint, #4a50c8);
+  transition: background-color var(--dur-2, 250ms) var(--ease-out);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :host(.logo-draw) .logo-l {
+    animation: logo-bloom var(--dur-4, 600ms) var(--ease-out) both;
+    animation-delay: calc(var(--i) * 55ms);
+  }
+  :host(.logo-draw) .logo-dot {
+    animation: logo-drop 700ms var(--spring, cubic-bezier(.34,1.56,.64,1)) 520ms both;
+  }
+}
+@keyframes logo-bloom {
+  from { opacity: 0; transform: translateY(0.35em) scaleY(0.6); filter: blur(4px); }
+}
+@keyframes logo-drop {
+  from { opacity: 0; transform: translateY(-1.2em) scale(0.4); }
+}
