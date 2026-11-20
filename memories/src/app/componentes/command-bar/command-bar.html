@@ -1,0 +1,65 @@
+<header class="cmdbar vt-head" [class.is-hidden]="hidden()" [attr.inert]="hidden() ? '' : null">
+  <a routerLink="/app/descubre" class="cmd-mono" aria-label="mémoires: ir a Descubre">
+    <span class="cmd-word" aria-hidden="true">M</span>
+    <span class="cmd-m" aria-hidden="true">E<span class="cmd-dot"></span></span>
+    <span class="cmd-word" aria-hidden="true">MOIRES</span>
+  </a>
+
+  <nav class="cmd-seg" [appPillGroup]="active()" aria-label="Principal">
+    <span class="group-pill" aria-hidden="true"></span>
+    @for (n of items(); track n.to; let i = $index) {
+      <a [routerLink]="n.to" class="cmd-link" [class.is-on]="active() === i" [attr.aria-current]="active() === i ? 'page' : null">
+        <app-icon [name]="n.icon" [size]="17" />
+        <span>{{ n.label }}</span>
+      </a>
+    }
+  </nav>
+
+  <div class="cmd-tools">
+    <button type="button" class="cmd-k" (click)="mando.abrirPaleta()">
+      <app-icon name="search" [size]="16" />
+      <span>Buscar</span>
+      <kbd>{{ mac ? '⌘' : 'Ctrl' }} K</kbd>
+    </button>
+
+    <div class="relative">
+      <button type="button" class="cmd-icon" [attr.aria-expanded]="menu() === 'avisos'" aria-haspopup="true" [attr.aria-label]="'Avisos, ' + avisos().length + ' nuevos'" (click)="toggle('avisos')">
+        <app-icon name="bell" [size]="18" />
+        @if (avisos().length) {
+          <span class="cmd-badge" aria-hidden="true"></span>
+        }
+      </button>
+      @if (menu() === 'avisos') {
+        <div class="cmd-pop rise-in" role="region" aria-label="Avisos">
+          <p class="px-3 pb-2 pt-1 text-xs font-bold uppercase tracking-wide text-ink-2">Avisos</p>
+          @for (a of avisos(); track a.id) {
+            <a [routerLink]="a.to" class="cmd-item" (click)="menu.set(null)"><span class="chip-dot" aria-hidden="true"></span>{{ a.text }}</a>
+          } @empty {
+            <p class="px-3 py-2 text-sm text-ink-2">Nada nuevo por ahora.</p>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="relative">
+      <button type="button" class="cmd-avatar" aria-haspopup="menu" [attr.aria-expanded]="menu() === 'avatar'" [attr.aria-label]="'Tu cuenta: ' + name()" (click)="toggle('avatar')">
+        <app-avatar [name]="name()" [hue]="260" [size]="34" [photo]="store.me().photo" [ring]="true" />
+      </button>
+      @if (menu() === 'avatar') {
+        <div class="cmd-pop cmd-pop-right rise-in" role="menu" aria-label="Tu cuenta">
+          <div class="px-3 pb-3 pt-1">
+            <p class="font-bold">{{ name() }}</p>
+            <p class="text-sm text-ink-2">Plan {{ tier().name }}</p>
+          </div>
+          <a role="menuitem" routerLink="/app/suscripcion" class="cmd-item" (click)="menu.set(null)"><app-icon name="star" [size]="16" /> Plan y suscripción</a>
+          <button role="menuitem" type="button" class="cmd-item" (click)="switchTheme($event)">
+            <app-icon [name]="theme.mode() === 'dark' ? 'sun' : 'moon'" [size]="16" /> {{ theme.mode() === 'dark' ? 'Modo claro' : 'Modo nocturno' }}
+          </button>
+          <a role="menuitem" routerLink="/app/ajustes" class="cmd-item" (click)="menu.set(null)"><app-icon name="settings" [size]="16" /> Ajustes</a>
+          <a role="menuitem" routerLink="/privacidad" class="cmd-item" (click)="menu.set(null)"><app-icon name="lock" [size]="16" /> Privacidad</a>
+          <button role="menuitem" type="button" class="cmd-item text-danger" (click)="logout()"><app-icon name="log-out" [size]="16" /> Salir</button>
+        </div>
+      }
+    </div>
+  </div>
+</header>

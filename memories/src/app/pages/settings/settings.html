@@ -5,7 +5,11 @@
     <h2>Apariencia</h2>
     <div>
       <p class="text-sm text-ink-2">Elige el modo claro, el nocturno, o que siga la configuración de tu dispositivo.</p>
-      <div class="mt-4 max-w-sm"><app-theme-segmented /></div>
+      <div class="mt-4 flex flex-wrap gap-2" role="group" aria-label="Tema">
+        @for (o of themes; track o.value) {
+          <button appChip [selected]="theme.choice() === o.value" (click)="theme.set(o.value, { x: $event.clientX, y: $event.clientY })">{{ o.label }}</button>
+        }
+      </div>
     </div>
   </section>
 

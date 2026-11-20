@@ -63,6 +63,32 @@
   background: currentColor;
 }
 
+/* Anillo de intención y sello de verificación */
+:host(.has-ring) {
+  box-shadow: 0 0 0 2px var(--color-paper), 0 0 0 4px var(--tint);
+}
+.avatar-seal {
+  position: absolute;
+  right: -2%;
+  bottom: -2%;
+  display: grid;
+  place-items: center;
+  width: max(16px, 30%);
+  height: max(16px, 30%);
+  border-radius: 50%;
+  background: var(--color-ink);
+  box-shadow: 0 0 0 2px var(--color-paper);
+}
+.avatar-seal svg {
+  width: 70%;
+  height: 70%;
+  fill: none;
+  stroke: var(--color-paper);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 @keyframes af-spin { to { transform: rotate(1turn); } }
 @keyframes af-breathe { from { opacity: 0.35; } }
 

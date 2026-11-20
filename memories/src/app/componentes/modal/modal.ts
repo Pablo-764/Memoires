@@ -1,4 +1,4 @@
-import { Component, DestroyRef, ElementRef, afterNextRender, inject, input, output, viewChild } from '@angular/core'
+import { Component, DestroyRef, ElementRef, afterNextRender, inject, input, output, signal, viewChild } from '@angular/core'
 import { Icon } from '../icon/icon'
 
 // Se monta solo mientras está abierto: quien lo usa lo envuelve en un @if
@@ -14,6 +14,26 @@ export class Modal {
   readonly closed = output<void>()
 
   private readonly panel = viewChild.required<ElementRef<HTMLElement>>('panel')
+  // Arrastre del asa (solo hacia abajo); pasado el umbral, la hoja se cierra
+  protected readonly drag = signal(0)
+  private startY: number | null = null
+
+  protected grab(e: PointerEvent) {
+    this.startY = e.clientY
+    ;(e.currentTarget as HTMLElement).setPointerCapture(e.pointerId)
+  }
+
+  protected move(e: PointerEvent) {
+    if (this.startY === null) return
+    this.drag.set(Math.max(0, e.clientY - this.startY))
+  }
+
+  protected release() {
+    if (this.startY === null) return
+    this.startY = null
+    if (this.drag() > 110) this.closed.emit()
+    else this.drag.set(0)
+  }
 
   constructor() {
     const host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement

@@ -9,18 +9,20 @@ import { INTENT_ICON } from '../../modelos/intents'
 import { NAV_ITEMS } from '../../modelos/navegacion'
 import { Avatar } from '../avatar/avatar'
 import { Modal } from '../modal/modal'
-import { Navbar } from '../navbar/navbar'
-import { Sidebar } from '../sidebar/sidebar'
-import { TabBar } from '../tab-bar/tab-bar'
+import { CommandBar } from '../command-bar/command-bar'
+import { CommandPalette } from '../command-palette/command-palette'
+import { Dock } from '../dock/dock'
+import { Mando } from '../../servicios/mando'
 
 @Component({
   selector: 'app-shell',
-  imports: [RouterOutlet, Avatar, Modal, Navbar, Sidebar, TabBar],
+  imports: [RouterOutlet, Avatar, Modal, CommandBar, CommandPalette, Dock],
   styleUrl: './app-shell.css',
   templateUrl: './app-shell.html',
 })
 export class AppShell {
   protected readonly store = inject(AppStore)
+  protected readonly mando = inject(Mando)
   private readonly router = inject(Router)
   private readonly celebrate = inject(Celebrate)
 

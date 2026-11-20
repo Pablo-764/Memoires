@@ -1,0 +1,18 @@
+<nav class="dock vt-dock" aria-label="Principal">
+  @for (n of items().slice(0, 2); track n.to; let i = $index) {
+    <a [routerLink]="n.to" class="dock-link" [class.is-on]="active() === i" [attr.aria-current]="active() === i ? 'page' : null">
+      <app-icon [name]="n.icon" [size]="21" />
+      <span>{{ n.label }}</span>
+    </a>
+  }
+  <button type="button" class="dock-main" (click)="conectar()" [attr.aria-label]="mando.accion()?.label ?? 'Conectar: ir a Descubre'">
+    <span class="dock-main-in"><app-icon [name]="mando.accion() ? 'plus' : 'orbit'" [size]="24" /></span>
+    <span class="dock-main-label">{{ mando.accion()?.label ?? 'Conectar' }}</span>
+  </button>
+  @for (n of items().slice(2); track n.to; let i = $index) {
+    <a [routerLink]="n.to" class="dock-link" [class.is-on]="active() === i + 2" [attr.aria-current]="active() === i + 2 ? 'page' : null">
+      <app-icon [name]="n.icon" [size]="21" />
+      <span>{{ n.label }}</span>
+    </a>
+  }
+</nav>

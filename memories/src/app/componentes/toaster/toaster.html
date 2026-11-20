@@ -1,12 +1,23 @@
-<div class="pointer-events-none fixed inset-x-0 bottom-24 z-[60] flex flex-col items-center gap-2 px-4 md:bottom-6" aria-live="polite">
+<div class="pointer-events-none fixed inset-x-0 bottom-28 z-[60] flex flex-col items-center gap-2 px-4 md:bottom-6" aria-live="polite">
   @for (t of store.toasts(); track t.id) {
-    <button
-      animate.leave="toast-out"
-      class="toast-note rise-in pointer-events-auto flex items-center gap-2.5 bg-ink px-5 py-3 text-sm font-semibold text-paper"
-      (click)="store.dismissToast(t.id)"
-    >
-      <span class="size-2 shrink-0 rounded-full" [class]="t.tone === 'danger' ? 'bg-danger' : t.tone === 'ok' ? 'bg-hobby-tint' : 'bg-tint'" aria-hidden="true"></span>
-      {{ t.text }}
-    </button>
+    @let a = anchors()[t.id];
+    @if (a && a.x >= 0) {
+      <button animate.leave="toast-out" class="in-place pop pointer-events-auto" [style.left.px]="a.x" [style.top.px]="a.y" (click)="store.dismissToast(t.id)">
+        <span class="in-place-check" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></svg>
+        </span>
+        {{ t.text }}
+      </button>
+    } @else {
+      <button
+        animate.leave="toast-out"
+        class="toast-note rise-in pointer-events-auto flex items-center gap-2.5 bg-ink px-5 py-3 text-sm font-semibold text-paper"
+        [class.is-danger]="t.tone === 'danger'"
+        (click)="store.dismissToast(t.id)"
+      >
+        <span class="size-2 shrink-0 rounded-full" [class]="t.tone === 'danger' ? 'bg-danger' : 'bg-tint'" aria-hidden="true"></span>
+        {{ t.text }}
+      </button>
+    }
   }
 </div>

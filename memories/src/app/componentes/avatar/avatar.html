@@ -5,15 +5,20 @@
     {{ initial() }}
   }
 </span>
-@if (ring() !== 'none') {
-  @if (ring() === 'glow') {
+@if (frameRing() !== 'none') {
+  @if (frameRing() === 'glow') {
     <span class="af-glow" [style.background]="frameInfo().bg" [style.--t.px]="thickness()"></span>
   }
-  <span class="avatar-frame" [class.af-dash]="ring() === 'dash'" [style.background]="frameInfo().bg" [style.--t.px]="thickness()"></span>
-  @if (ring() === 'double') {
+  <span class="avatar-frame" [class.af-dash]="frameRing() === 'dash'" [style.background]="frameInfo().bg" [style.--t.px]="thickness()"></span>
+  @if (frameRing() === 'double') {
     <span class="af-double" [style.border-color]="accent()" [style.--t.px]="thickness()"></span>
   }
-  @if (ring() === 'orbit') {
+  @if (frameRing() === 'orbit') {
     <span class="af-orbit" [style.--t.px]="thickness()" [style.color]="accent()"><span class="af-moon"></span></span>
   }
+}
+@if (verified()) {
+  <span class="avatar-seal" aria-hidden="true">
+    <svg viewBox="0 0 24 24"><path d="m16 9-5.5 5.5L8 12" /></svg>
+  </span>
 }
