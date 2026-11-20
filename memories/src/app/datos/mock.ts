@@ -1,3 +1,4 @@
+import type { PlanPropuesto } from '../utilidades/etapas'
 import type { Intent } from '../modelos/intents'
 import type { Gender, PlanAudience, PlanSize } from '../modelos/plan-formats'
 import type { DecorationKey } from '../modelos/plans'
@@ -89,6 +90,8 @@ export interface Message {
   from: 'me' | string
   text: string
   at: number
+  // Mensaje estructurado "Proponer plan" (fecha, lugar y tipo)
+  plan?: PlanPropuesto
 }
 
 const BASE_MESSAGES: Record<string, Message[]> = {

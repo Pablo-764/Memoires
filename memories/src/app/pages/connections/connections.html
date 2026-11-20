@@ -1,100 +1,132 @@
-<div class="flex flex-wrap items-end justify-between gap-4">
-  <div>
-    <h1 class="font-display text-[clamp(2.75rem,6vw,4rem)]">Conexiones</h1>
-    <p class="mt-2 text-ink-2">Personas con las que el interés fue mutuo.</p>
-  </div>
-  <div class="search-box w-full sm:w-80">
-    <app-icon name="search" [size]="18" />
-    <input type="search" aria-label="Buscar en tus chats" placeholder="Buscar nombre, interés o mensaje…" autocomplete="off" [value]="query()" (input)="query.set($any($event.target).value)" />
-    @if (query()) {
-      <button class="swap-in grid size-8 place-items-center rounded-full" aria-label="Limpiar búsqueda" (click)="query.set('')"><app-icon name="x" [size]="16" /></button>
+<ng-template #cinta let-r>
+  <article
+    class="cinta"
+    [attr.data-intent]="r.intent"
+    [class.is-dragging]="dragging() === r.person.id"
+    [attr.draggable]="mode() === 'tablero'"
+    (dragstart)="onDragStart($event, r.person.id)"
+    (dragend)="dragging.set(null); over.set(null)"
+  >
+    <a [routerLink]="['/app/chat', r.person.id]" class="cinta-main">
+      <app-avatar [name]="r.person.name" [hue]="r.person.hue" [size]="44" [ring]="true" [verified]="r.person.verified" />
+      <span class="min-w-0 flex-1">
+        <span class="flex items-center gap-2">
+          <span class="truncate font-bold">{{ r.person.name }}</span>
+          <app-intent-badge [intent]="r.intent" />
+        </span>
+        <span class="mt-0.5 block truncate text-sm text-ink-2">{{ r.preview }}</span>
+      </span>
+    </a>
+    <!-- Medidor de hilo: más grueso, más conversación y más planes juntos -->
+    <svg class="cinta-hilo" viewBox="0 0 120 12" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M2 6 C 30 0, 50 12, 80 6 S 110 2, 118 6" [attr.stroke-width]="r.width" />
+    </svg>
+    <span class="sr-only">Hilo de grosor {{ r.width }} de 8</span>
+    <div class="cinta-meta">
+      @if (r.shared.length) {
+        <ul class="flex flex-wrap gap-x-2" aria-label="Intereses en común">
+          @for (t of r.shared; track t) {
+            <li class="chip">{{ t }}</li>
+          }
+        </ul>
+      }
+      @if (r.next) {
+        <p class="cinta-plan"><app-icon name="calendar-days" [size]="14" /> {{ r.next }}</p>
+      }
+    </div>
+    @if (confirm(); as c) {
+      @if (c.id === r.person.id) {
+        <div class="cinta-confirm swap-in" role="group" [attr.aria-label]="c.kind === 'chat' ? 'Confirmar borrar chat' : 'Confirmar eliminar conexión'">
+          <span class="text-sm">{{ c.kind === 'chat' ? '¿Borrar los mensajes solo para ti?' : '¿Eliminar la conexión? No se le avisa.' }}</span>
+          <button class="btn btn-danger btn-sm" (click)="apply(c)">{{ c.kind === 'chat' ? 'Borrar' : 'Eliminar' }}</button>
+          <button class="btn btn-ghost btn-sm" (click)="confirm.set(null)">Cancelar</button>
+        </div>
+      }
     }
+    <div class="cinta-tools">
+      <label class="sr-only" [for]="'mover-' + r.person.id">Mover a {{ r.person.name }} a otra etapa</label>
+      <select class="cinta-move" [id]="'mover-' + r.person.id" (change)="move(r.person.id, $any($event.target).value)">
+        @for (e of etapas; track e.key) {
+          <option [value]="e.key" [selected]="e.key === r.stage">{{ e.label }}</option>
+        }
+      </select>
+      <a [routerLink]="['/app/persona', r.person.id]" class="cinta-tool" [attr.aria-label]="'Ver perfil de ' + r.person.name"><app-icon name="user" [size]="16" /></a>
+      @if (r.thread.length) {
+        <button type="button" class="cinta-tool" [attr.aria-label]="'Borrar el chat con ' + r.person.name" (click)="confirm.set({ kind: 'chat', id: r.person.id })"><app-icon name="eraser" [size]="16" /></button>
+      }
+      <button type="button" class="cinta-tool" [attr.aria-label]="'Eliminar la conexión con ' + r.person.name" (click)="confirm.set({ kind: 'connection', id: r.person.id })"><app-icon name="user-minus" [size]="16" /></button>
+    </div>
+  </article>
+</ng-template>
+
+<header class="conn-head">
+  <h1 class="page-title">Conexiones</h1>
+  <div class="conn-tools">
+    <div class="search-box w-full sm:w-72">
+      <app-icon name="search" [size]="18" />
+      <input type="search" aria-label="Buscar en tus conexiones" placeholder="Nombre, interés o mensaje…" autocomplete="off" [value]="query()" (input)="query.set($any($event.target).value)" />
+    </div>
+    <div class="mode-switch" role="group" aria-label="Vista de conexiones">
+      <button type="button" [attr.aria-pressed]="mode() === 'tablero'" (click)="setMode('tablero')"><app-icon name="layout-grid" [size]="15" /> Tablero</button>
+      <button type="button" [attr.aria-pressed]="mode() === 'lista'" (click)="setMode('lista')"><app-icon name="list" [size]="15" /> Lista</button>
+    </div>
   </div>
-</div>
+</header>
+<p class="sr-only" aria-live="polite">{{ announce() }}</p>
 
 @if (all().length === 0) {
-  <div class="card mt-8 flex flex-col items-center p-10 text-center">
-    <app-seal kind="safe" size="lg" />
-    <h2 class="mt-5 text-2xl">Aún no tienes conexiones</h2>
-    <p class="mt-2 max-w-[40ch] text-ink-2">Cuando a alguien que te interesa también le intereses tú, aparecerá aquí y podrán escribirse.</p>
-    <a routerLink="/app/descubre" class="btn btn-primary mt-6">Ir a Descubre</a>
+  <!-- Estado vacío ilustrado: un hilo suelto -->
+  <div class="conn-empty">
+    <svg viewBox="0 0 320 140" class="w-full max-w-sm" aria-hidden="true">
+      <circle cx="40" cy="70" r="14" class="fill-ink" />
+      <path d="M54 70 C 110 20, 150 120, 210 70 S 270 60, 286 90" fill="none" class="stroke-ink-3" stroke-width="2.5" stroke-dasharray="5 6" stroke-linecap="round" />
+      <circle cx="292" cy="96" r="6" fill="none" class="stroke-line-strong" stroke-width="2" />
+    </svg>
+    <h2 class="font-display mt-6 text-5xl">Tu primer hilo</h2>
+    <p class="mt-3 max-w-[40ch] text-ink-2">Tus conexiones aparecerán aquí cuando el interés sea mutuo.</p>
+    <a routerLink="/app/descubre" class="btn btn-primary mt-6">Ir a Descubre <app-icon name="arrow-right" [size]="17" /></a>
   </div>
 } @else if (rows().length === 0) {
-  <p class="swap-in mt-12 text-center text-ink-2">Nada coincide con “{{ query() }}”.</p>
-} @else {
-  <div class="mt-6 flex flex-wrap items-center justify-between gap-3">
-    <!-- Cuadrícula para explorar, lista para comparar (dis-027) -->
-    <div class="mode-switch" role="group" aria-label="Vista de conexiones">
-      <button type="button" [attr.aria-pressed]="mode() === 'cuadricula'" (click)="setMode('cuadricula')">Cuadrícula</button>
-      <button type="button" [attr.aria-pressed]="mode() === 'lista'" (click)="setMode('lista')">Lista</button>
-    </div>
-    <div class="flex flex-wrap items-center gap-3">
-      <p class="text-sm text-ink-2">{{ query() ? 'Resultados de tu búsqueda' : 'Arrastra o usa las flechas para acomodarlas' }}</p>
-      @if (silentCount() && !query()) {
-        <button type="button" class="btn btn-ghost btn-sm" (click)="confirm.set({ kind: 'silent' })">
-          <app-icon name="eraser" [size]="16" /> Quitar sin mensajes ({{ silentCount() }})
-        </button>
-      }
-    </div>
+  <p class="mt-12 text-center text-ink-2">Nada coincide con “{{ query() }}”.</p>
+} @else if (mode() === 'tablero') {
+  <!-- Pestañas de etapa (celular) -->
+  <div class="stage-tabs" role="tablist" aria-label="Etapas">
+    @for (e of etapas; track e.key) {
+      <button role="tab" type="button" [attr.aria-selected]="tab() === e.key" (click)="tabChoice.set(e.key)">
+        {{ e.label }} <span class="font-mono text-xs">{{ byStage()[e.key].length }}</span>
+      </button>
+    }
   </div>
-  <p class="sr-only" aria-live="polite">{{ announce() }}</p>
-  <ul #grid class="conn-grid stagger mt-4" [class]="mode() === 'lista' ? 'is-list' : 'is-grid'" [class.is-sorting]="!!dragging()">
-    @for (r of rows(); track r.person.id; let i = $index) {
-      <li class="conn-card" [attr.data-id]="r.person.id" [attr.data-intent]="r.person.intents[0]" [class.is-dragging]="dragging() === r.person.id">
-        <a [routerLink]="['/app/chat', r.person.id]" class="conn-main">
-          @if (mode() === 'cuadricula') {
-            <div class="relative h-20"><app-banner [decoration]="r.person.decoration" /></div>
-          }
-          <div class="conn-body">
-            <app-avatar class="conn-avatar ring-4 ring-paper-2" [name]="r.person.name" [hue]="r.person.hue" [size]="mode() === 'lista' ? 44 : 60" [frame]="r.person.frame" />
-            <div class="min-w-0 flex-1">
-              <div class="flex flex-wrap items-center gap-2">
-                <p class="text-lg font-bold leading-tight">{{ r.person.name }}</p>
-                <app-intent-badge [intent]="r.person.intents[0]" />
-              </div>
-              <p class="mt-1 truncate text-sm text-ink-2">{{ r.preview }}</p>
-            </div>
-          </div>
-        </a>
-        <div class="conn-tools">
-          <a [routerLink]="['/app/persona', r.person.id]" class="link-soft mr-auto text-sm font-semibold">Ver perfil</a>
-          @if (r.thread.length) {
-            <button type="button" class="conn-tool" [attr.aria-label]="'Borrar el chat con ' + r.person.name" (click)="confirm.set({ kind: 'chat', id: r.person.id, name: r.person.name })">
-              <app-icon name="eraser" [size]="17" />
-            </button>
-          }
-          <button type="button" class="conn-tool" [attr.aria-label]="'Eliminar la conexión con ' + r.person.name" (click)="confirm.set({ kind: 'connection', id: r.person.id, name: r.person.name })">
-            <app-icon name="user-minus" [size]="17" />
-          </button>
-          @if (!query()) {
-            <button
-              type="button"
-              class="conn-tool conn-grip"
-              [attr.aria-label]="'Mover a ' + r.person.name + ', posición ' + (i + 1) + ' de ' + rows().length + '. Usa las flechas para moverla.'"
-              (pointerdown)="grab($event, r.person.id)"
-              (keydown)="nudge($event, r.person.id)"
-            >
-              <app-icon name="grip-vertical" [size]="18" />
-            </button>
+  <div class="board">
+    @for (e of etapas; track e.key) {
+      <section
+        class="col"
+        [class.is-over]="over() === e.key"
+        [class.is-tab]="tab() === e.key"
+        [attr.aria-label]="e.label"
+        (dragover)="$event.preventDefault(); over.set(e.key)"
+        (dragleave)="over.set(null)"
+        (drop)="onDrop($event, e.key)"
+      >
+        <header class="col-head">
+          <h2 class="font-bold">{{ e.label }}</h2>
+          <span class="font-mono text-xs text-ink-2">{{ byStage()[e.key].length }}</span>
+        </header>
+        <p class="col-hint">{{ e.hint }}</p>
+        <div class="col-list">
+          @for (r of byStage()[e.key]; track r.person.id) {
+            <ng-container [ngTemplateOutlet]="cinta" [ngTemplateOutletContext]="{ $implicit: r }" />
+          } @empty {
+            <p class="col-empty">Nadie en esta etapa<span class="hidden md:inline"> · arrastra aquí</span></p>
           }
         </div>
-      </li>
+      </section>
     }
-  </ul>
-}
-
-@if (confirm(); as c) {
-  <app-modal [title]="c.kind === 'silent' ? '¿Quitar ' + silentCount() + ' conexiones sin mensajes?' : c.kind === 'chat' ? '¿Borrar el chat con ' + c.name + '?' : '¿Eliminar la conexión con ' + c.name + '?'" (closed)="confirm.set(null)">
-    <p class="text-ink-2">
-      @switch (c.kind) {
-        @case ('silent') { Se quitan las conexiones en las que nadie ha escrito todavía. No se avisa a nadie y no se puede deshacer. }
-        @case ('chat') { Se borran los mensajes de esta conversación solo para ti. La conexión sigue y pueden volver a escribirse. }
-        @default { {{ c.name }} deja de estar en tus conexiones y se borra su conversación. No se le avisa y no se puede deshacer. }
-      }
-    </p>
-    <div class="mt-6 flex flex-col gap-2 sm:flex-row-reverse">
-      <button class="btn btn-danger flex-1" (click)="apply(c)">{{ c.kind === 'chat' ? 'Borrar chat' : 'Eliminar' }}</button>
-      <button class="btn btn-ghost flex-1" (click)="confirm.set(null)">Cancelar</button>
-    </div>
-  </app-modal>
+  </div>
+} @else {
+  <div class="list">
+    @for (r of rows(); track r.person.id) {
+      <ng-container [ngTemplateOutlet]="cinta" [ngTemplateOutletContext]="{ $implicit: r }" />
+    }
+  </div>
 }

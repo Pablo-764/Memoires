@@ -14,10 +14,13 @@ import { Modal } from '../../componentes/modal/modal'
 import { BlockDialog } from '../../componentes/block-dialog/block-dialog'
 import { ReportDialog } from '../../componentes/report-dialog/report-dialog'
 import { Seal } from '../../componentes/seal/seal'
+import { ChoiceChip } from '../../componentes/choice-chip/choice-chip'
+import { ideasDePlan, type PlanPropuesto } from '../../utilidades/etapas'
+import { INTENTS, type Intent } from '../../modelos/intents'
 
 @Component({
   selector: 'app-chat',
-  imports: [Seal, FormsModule, RouterLink, Avatar, Icon, Meter, Modal, BlockDialog, ReportDialog],
+  imports: [Seal, ChoiceChip, FormsModule, RouterLink, Avatar, Icon, Meter, Modal, BlockDialog, ReportDialog],
   styleUrl: './chat.css',
   templateUrl: './chat.html',
 })
@@ -47,6 +50,49 @@ export class Chat {
   protected readonly reportOpen = signal(false)
   protected readonly blockOpen = signal(false)
   protected readonly limitOpen = signal(false)
+
+  // Intención y lo que comparten: dan el color y las sugerencias de plan
+  protected readonly intent = computed<Intent>(() => {
+    const p = this.person()
+    return p ? (p.intents.find((i) => this.store.me().intents.includes(i)) ?? p.intents[0]) : 'friend'
+  })
+  protected readonly shared = computed(() => this.person()?.interests.filter((i) => this.store.me().interests.includes(i)) ?? [])
+  protected readonly ideas = computed(() => {
+    const p = this.person()
+    if (!p) return []
+    const ya = new Set(this.thread().flatMap((m) => (m.plan ? [m.plan.title] : [])))
+    return ideasDePlan(this.store.me().interests, p, this.intent()).filter((i) => !ya.has(i.title))
+  })
+  protected readonly intents = INTENTS
+  protected readonly intentKeys = Object.keys(INTENTS) as Intent[]
+
+  // Hoja "Proponer plan": fecha, lugar y tipo
+  protected readonly proposing = signal(false)
+  protected readonly draft = signal<Omit<PlanPropuesto, 'status'>>({ title: '', when: 'Sábado 11:00', place: '', intent: 'friend' })
+  protected readonly cuandos = ['Viernes 19:30', 'Sábado 11:00', 'Sábado 18:00', 'Domingo 9:00']
+  protected readonly moving = signal<string | null>(null)
+
+  protected openPropose(idea?: Omit<PlanPropuesto, 'status'>) {
+    this.draft.set(idea ?? { title: '', when: 'Sábado 11:00', place: '', intent: this.intent() })
+    this.proposing.set(true)
+  }
+
+  protected patchDraft(change: Partial<Omit<PlanPropuesto, 'status'>>) {
+    this.draft.update((d) => ({ ...d, ...change }))
+  }
+
+  protected sendProposal() {
+    const d = this.draft()
+    if (!d.title.trim() || !d.place.trim()) return
+    this.store.proposePlan(this.id(), { ...d, title: d.title.trim(), place: d.place.trim() })
+    this.proposing.set(false)
+    this.store.toast('Plan propuesto', 'ok')
+  }
+
+  protected movePlan(messageId: string, when: string) {
+    this.store.movePlan(this.id(), messageId, when)
+    this.moving.set(null)
+  }
 
   private readonly end = viewChild<ElementRef<HTMLElement>>('end')
   private readonly sendBtn = viewChild<ElementRef<HTMLElement>>('sendBtn')

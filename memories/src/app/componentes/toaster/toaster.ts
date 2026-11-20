@@ -29,7 +29,7 @@ export class Toaster {
       if (!fresh.length) return
       const next = { ...known }
       for (const t of fresh) {
-        const el = this.last && performance.now() - this.last.at < 2500 && t.tone !== 'danger' ? this.last.el : null
+        const el = this.last && performance.now() - this.last.at < 2500 && t.tone !== 'danger' && !this.last.el.closest('[role="dialog"]') ? this.last.el : null
         const r = el?.isConnected ? el.getBoundingClientRect() : null
         if (r && r.width) next[t.id] = { x: Math.min(Math.max(r.left + r.width / 2, 120), innerWidth - 120), y: Math.max(r.top - 10, 60) }
         else next[t.id] = { x: -1, y: -1 }

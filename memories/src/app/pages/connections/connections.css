@@ -1,12 +1,31 @@
+:host {
+  display: block;
+}
+
+.conn-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+}
+.conn-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
 .mode-switch {
   display: inline-flex;
   padding: 0.25rem;
   border-radius: 999px;
   background: var(--color-paper-2);
-  box-shadow: inset 0 0 0 1px var(--color-line);
 }
 .mode-switch button {
-  min-height: 2.25rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  min-height: 2.5rem;
   padding: 0 0.875rem;
   border-radius: 999px;
   font-size: 0.8125rem;
@@ -19,92 +38,181 @@
   box-shadow: var(--shadow-lift);
 }
 
-.conn-grid.is-grid {
+/* Tablero: cuatro columnas sin caja, separadas por filetes */
+.board {
   display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  margin-top: 2rem;
 }
-.conn-grid.is-list {
+@media (min-width: 768px) {
+  .board {
+    grid-template-columns: repeat(4, minmax(15rem, 1fr));
+    gap: 0;
+    overflow-x: auto;
+  }
+}
+.col {
+  display: none;
+  min-height: 24rem;
+  padding: 0 0 1rem;
+  transition: background-color var(--dur-2) ease;
+}
+.col.is-tab { display: block; }
+@media (min-width: 768px) {
+  .col { display: block; padding: 0 1rem 1rem; border-left: 1px solid var(--color-line); }
+  .col:first-child { padding-left: 0; border-left: 0; }
+}
+.col.is-over { background: var(--wash); border-radius: var(--radius-card); }
+.col-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-top: 0.25rem;
+}
+.col-hint {
+  margin-top: 0.125rem;
+  font-size: 0.8125rem;
+  color: var(--color-ink-2);
+}
+.col-list {
   display: flex;
   flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+.col-empty {
+  padding: 1.5rem 0;
+  border: 1.5px dashed var(--color-line);
   border-radius: var(--radius-card);
-  overflow: hidden;
-  box-shadow: inset 0 0 0 1px var(--color-line);
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-ink-3);
 }
 
-.conn-card {
+.stage-tabs {
+  display: flex;
+  gap: 0.25rem;
+  margin: 1.5rem -1rem 0;
+  padding: 0 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+@media (min-width: 768px) {
+  .stage-tabs { display: none; }
+}
+.stage-tabs button {
+  flex: none;
+  min-height: 2.75rem;
+  padding: 0 1rem;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 650;
+  color: var(--color-ink-2);
+  scroll-snap-align: start;
+}
+.stage-tabs button[aria-selected='true'] {
+  background: var(--color-ink);
+  color: var(--color-paper);
+}
+
+.list {
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  background: var(--color-paper-2);
-  transition: box-shadow var(--dur-2) ease, transform var(--dur-2) var(--ease-out);
+  gap: 0.75rem;
+  max-width: 52rem;
+  margin-top: 2rem;
 }
-.is-grid .conn-card {
+
+/* Cinta: una conexión en horizontal, con filo de su intención */
+.cinta {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  padding: 0.875rem 1rem 0.75rem;
   border-radius: var(--radius-card);
-  box-shadow: inset 0 0 0 1px var(--color-line);
+  background: var(--color-paper);
+  box-shadow: inset 3px 0 0 var(--tint), var(--shadow-lift);
+  transition: transform var(--dur-2) var(--ease-out), opacity var(--dur-2) ease;
 }
-.is-list .conn-card {
+.list .cinta {
   flex-direction: row;
+  flex-wrap: wrap;
   align-items: center;
-  border-top: 1px solid var(--color-line);
 }
-.is-list .conn-card:first-child {
-  border-top: 0;
-}
-
-.conn-main {
-  display: block;
-  flex: 1;
+.list .cinta-main { flex: 1 1 18rem; }
+.cinta.is-dragging { opacity: 0.4; transform: rotate(-1.5deg); }
+.cinta[draggable='true'] { cursor: grab; }
+.cinta-main {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
   min-width: 0;
 }
-.conn-body {
+.cinta-hilo {
+  width: 100%;
+  height: 12px;
+}
+.list .cinta-hilo { width: 8rem; }
+.cinta-hilo path {
+  fill: none;
+  stroke: var(--tint);
+  stroke-linecap: round;
+}
+.cinta-meta {
   display: flex;
-  align-items: flex-end;
-  gap: 0.75rem;
-  padding: 0 1.25rem;
-}
-.is-grid .conn-avatar {
-  margin-top: -1.75rem;
-}
-.is-list .conn-body {
-  align-items: center;
-  padding: 0.75rem 1rem;
-}
-
-.conn-tools {
-  display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 0.25rem;
-  padding: 0.75rem 1rem 0.75rem 1.25rem;
 }
-
-.conn-tool {
+.cinta-plan {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.8125rem;
+  font-weight: 650;
+  color: var(--tint-ink);
+}
+.cinta-tools {
+  display: flex;
+  align-items: center;
+  gap: 0.125rem;
+}
+.cinta-move {
+  min-height: 2.25rem;
+  margin-right: auto;
+  padding: 0 0.5rem;
+  border-radius: 999px;
+  background: var(--color-paper-2);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-ink);
+}
+.cinta-tool {
   display: grid;
   place-items: center;
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 999px;
   color: var(--color-ink-2);
-  transition: color var(--dur-1) ease, background-color var(--dur-1) ease;
 }
 @media (hover: hover) and (pointer: fine) {
-  .conn-tool:hover { color: var(--color-ink); background: var(--color-paper-3); }
-  .is-grid .conn-card:not(.is-dragging):hover { box-shadow: inset 0 0 0 1px var(--color-line-strong); }
-  .is-list .conn-card:not(.is-dragging):hover { background: var(--color-paper-3); }
+  .cinta-tool:hover { background: var(--color-paper-2); color: var(--color-ink); }
 }
-.conn-grip {
-  cursor: grab;
-  touch-action: none;
+.cinta-confirm {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-field);
+  background: var(--color-danger-wash);
 }
 
-/* La que se arrastra se levanta de la mesa */
-.conn-card.is-dragging {
-  position: relative;
-  z-index: 20;
-  cursor: grabbing;
-  box-shadow: inset 0 0 0 2px var(--tint-ink), var(--shadow-float) !important;
-  transition: none;
-}
-.conn-grid.is-sorting {
-  user-select: none;
+.conn-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4rem 1rem;
+  text-align: center;
 }
