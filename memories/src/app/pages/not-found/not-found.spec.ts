@@ -9,6 +9,8 @@ describe('NotFound', () => {
     await fixture.whenStable()
     const el: HTMLElement = fixture.nativeElement
     expect(el.querySelector('h1')?.textContent).toContain('Esta página no existe')
-    expect(el.textContent).toContain('Ilustración: una rosa que se endereza')
+    const links = [...el.querySelectorAll('a')].map((a) => a.getAttribute('href'))
+    expect(links).toContain('/')
+    expect(el.textContent).toContain('Ir a la portada')
   })
 })

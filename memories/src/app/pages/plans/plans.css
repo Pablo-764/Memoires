@@ -1,92 +1,68 @@
-.plan-feature {
+.suggest {
   position: absolute;
-  inset: auto 0 0;
-  padding: 5rem 1.75rem 1.75rem;
-  background: linear-gradient(to top, rgb(17 10 29 / 0.86), rgb(17 10 29 / 0.5) 62%, transparent);
+  z-index: 20;
+  inset: calc(100% + 0.375rem) 0 auto;
+  padding: 0.375rem;
+  border-radius: var(--radius-card);
+  background: var(--color-paper);
+  box-shadow: inset 0 0 0 1px var(--color-line), var(--shadow-float);
 }
-
-/* ---------- Tramado de las fotos ----------
-   La foto en gris se multiplica por una rejilla de puntos grises y un contraste alto
-   la vuelve semitono: las zonas oscuras dejan puntos grandes y las claras, pequeños. Luego dos
-   capas la tiñen: en el claro, puntos violeta sobre beige; en el oscuro, las luces
-   de la foto salen en naranja y las sombras en morado. */
-.halftone {
-  --ht-low: var(--color-accent);
-  --ht-high: var(--color-mist);
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
+.suggest-option {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 2.75rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: var(--radius-field);
+  cursor: pointer;
 }
-
-:host-context(.dark) .halftone {
-  --ht-low: var(--color-mist);
-  --ht-high: var(--color-accent);
+.suggest-option[aria-selected='true'] {
+  background: var(--wash);
 }
-
-.ht-src {
-  position: absolute;
-  inset: 0;
-  background: #fff;
-  filter: brightness(2) contrast(14);
+.suggest-option mark {
+  background: none;
+  color: var(--tint-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
-
-.ht-src img,
-.ht-photo {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.ht-src img { filter: grayscale(1) blur(1px) brightness(1.1); }
-
-.ht-src::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(closest-side, #000, #fff) 0 0 / 7px 7px;
-  mix-blend-mode: multiply;
-}
-
-.halftone::before,
-.halftone::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-}
-
-.halftone::before { background: var(--ht-low); mix-blend-mode: lighten; }
-
-.halftone::after { background: var(--ht-high); mix-blend-mode: darken; }
-
-/* La foto real queda encima, oculta, y aparece al pasar el cursor */
-.ht-photo {
-  z-index: 2;
-  opacity: 0;
-  transition: opacity 420ms var(--ease-out), transform 700ms var(--ease-out);
-}
-
 @media (hover: hover) and (pointer: fine) {
-  .lift:hover .ht-photo { opacity: 1; }
+  .suggest-option:hover { background: var(--color-paper-2); }
 }
 
-/* Único detalle en el color de la intención: la cinta de la esquina */
-.ht-tape {
+.plan-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  background: var(--color-paper-2);
+  box-shadow: inset 0 0 0 1px var(--color-line);
+}
+.plan-card.is-feature {
+  grid-column: 1 / -1;
+}
+@media (min-width: 768px) {
+  .plan-card.is-feature {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+  }
+}
+.plan-media {
+  position: relative;
+  aspect-ratio: 16 / 8;
+  overflow: hidden;
+  background: var(--wash);
+}
+.is-feature .plan-media {
+  aspect-ratio: auto;
+  min-height: 15rem;
+}
+.plan-wash {
   position: absolute;
-  top: 10px;
-  left: -14px;
-  z-index: 3;
-  width: 84px;
-  height: 22px;
-  rotate: -32deg;
-  background:
-    repeating-linear-gradient(90deg, rgb(255 255 255 / 0.25) 0 4px, transparent 4px 9px),
-    color-mix(in oklab, var(--intent-c) 70%, transparent);
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--tint-ink);
 }
-
-@media (prefers-reduced-motion: reduce) {
-  .ht-photo { transition: none; }
+@media (hover: hover) and (pointer: fine) {
+  .plan-card:hover .photo-zoom { transform: scale(1.03); }
 }

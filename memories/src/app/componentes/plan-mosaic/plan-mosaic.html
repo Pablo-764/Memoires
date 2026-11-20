@@ -1,0 +1,26 @@
+<ul class="mosaic" aria-label="Planes cumplidos">
+  @for (t of tiles(); track t.id) {
+    <li class="tile" [attr.data-intent]="t.tone" [style.grid-column]="'span ' + t.cols" [style.grid-row]="'span ' + t.rows" [style.--tilt]="t.tilt + 'deg'" [style.--o]="t.order">
+      <figure class="tile-in">
+        @if (t.photo) {
+          <img [src]="t.photo" alt="" class="tile-photo" decoding="async" />
+        } @else {
+          <span class="tile-wash" aria-hidden="true"><span class="chip-dot size-3"></span></span>
+        }
+        <figcaption class="tile-cap">
+          <span class="block font-bold leading-tight">{{ t.note }}</span>
+          <span class="mt-1 flex items-center justify-between gap-2 text-xs">
+            <span class="tabular-nums">{{ format(t.date) }}</span>
+            @if (t.people?.length) {
+              <span class="flex" aria-label="Quiénes fueron">
+                @for (p of t.people; track $index) {
+                  <span class="tile-who">{{ p }}</span>
+                }
+              </span>
+            }
+          </span>
+        </figcaption>
+      </figure>
+    </li>
+  }
+</ul>

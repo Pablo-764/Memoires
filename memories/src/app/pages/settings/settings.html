@@ -1,25 +1,18 @@
 <div class="stagger max-w-3xl">
-  <h1 class="text-[clamp(3rem,6vw,4.6rem)]">Ajustes</h1>
+  <h1 class="font-display text-[clamp(2.75rem,6vw,4rem)]">Ajustes</h1>
 
   <section class="settings-row mt-8">
     <h2>Apariencia</h2>
     <div>
-      <p class="text-sm text-ink-soft">Elige el modo claro, el nocturno, o que siga la configuración de tu dispositivo.</p>
+      <p class="text-sm text-ink-2">Elige el modo claro, el nocturno, o que siga la configuración de tu dispositivo.</p>
       <div class="mt-4 max-w-sm"><app-theme-segmented /></div>
-      <button type="button" role="switch" class="ink-switch mt-6" [attr.aria-checked]="textAlbum.on()" (click)="textAlbum.set(!textAlbum.on())">
-        <span class="ink-switch-track" aria-hidden="true"><span class="ink-switch-thumb"></span></span>
-        <span class="text-left">
-          <span class="block font-semibold">Álbum de texto</span>
-          <span class="block text-sm text-ink-soft">Los fondos, marcos y efectos de perfil se dibujan con caracteres. Las fotos no cambian.</span>
-        </span>
-      </button>
     </div>
   </section>
 
   <section class="settings-row">
     <h2>Bienestar</h2>
     <div>
-    <p class="text-sm text-ink-soft">
+    <p class="text-sm text-ink-2">
       Te avisaremos cuando pases este tiempo en mémoires durante el día. Hoy llevas {{ store.minutesToday() }} {{ store.minutesToday() === 1 ? 'minuto' : 'minutos' }}.
     </p>
     <div class="mt-4 flex flex-wrap gap-2">
@@ -33,10 +26,11 @@
 
   <section class="settings-row">
     <h2>Privacidad y seguridad</h2>
-    <ul class="flex flex-col gap-2 text-sm text-ink-soft">
+    <ul class="flex flex-col gap-3 text-sm text-ink-2">
+      <li><app-seal kind="safe" label="Tu seguridad viene incluida en todos los planes" /></li>
       <li>Personas bloqueadas: {{ store.blocked().length }}</li>
       <li>Tu ubicación exacta nunca se guarda; solo tu ciudad.</li>
-      <li><a routerLink="/privacidad" class="font-semibold text-ink underline underline-offset-4">Leer el aviso de privacidad</a></li>
+      <li><a routerLink="/privacidad" class="link-soft font-semibold">Leer el aviso de privacidad</a></li>
     </ul>
   </section>
 
@@ -50,7 +44,7 @@
 
   @if (confirmDelete()) {
     <app-modal title="Eliminar tu cuenta" (closed)="confirmDelete.set(false)">
-      <p class="text-ink-soft">Se borrarán tu perfil, tus conexiones y tus mensajes. Esta acción no se puede deshacer.</p>
+      <p class="text-ink-2">Se borrarán tu perfil, tus conexiones y tus mensajes. Esta acción no se puede deshacer.</p>
       <label class="label mt-4" for="confirm">Escribe ELIMINAR para confirmar</label>
       <input id="confirm" class="field" [(ngModel)]="typed" />
       <button class="btn btn-danger mt-4 w-full min-h-12" [disabled]="typed() !== 'ELIMINAR'" (click)="deleteAccount()">Eliminar cuenta y datos</button>

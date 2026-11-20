@@ -1,0 +1,77 @@
+.mosaic {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+  grid-auto-rows: 9.5rem;
+  grid-auto-flow: dense;
+  gap: 0.75rem;
+}
+@media (max-width: 479px) {
+  .mosaic {
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 8.5rem;
+  }
+}
+
+.tile {
+  min-width: 0;
+}
+.tile-in {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  background: var(--wash);
+  box-shadow: inset 0 0 0 1px var(--color-line);
+}
+.tile-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--dur-4) var(--ease-out);
+}
+.tile-wash {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+.tile-cap {
+  position: absolute;
+  inset: auto 0.5rem 0.5rem;
+  padding: 0.5rem 0.625rem;
+  border-radius: calc(var(--radius-card) - 0.5rem);
+  background: color-mix(in oklab, var(--color-paper) 92%, transparent);
+  color: var(--color-ink);
+  font-size: 0.875rem;
+}
+.tile-who {
+  display: grid;
+  place-items: center;
+  min-width: 1.375rem;
+  height: 1.375rem;
+  margin-left: -0.25rem;
+  padding: 0 0.25rem;
+  border-radius: 999px;
+  background: var(--tint-fill);
+  color: var(--on-tint);
+  font-size: 0.625rem;
+  font-weight: 800;
+  box-shadow: 0 0 0 2px var(--color-paper);
+}
+@media (hover: hover) and (pointer: fine) {
+  .tile:hover .tile-photo { transform: scale(1.04); }
+}
+
+/* Momento firma: las fotos caen giradas sobre la mesa y se acomodan */
+@media (prefers-reduced-motion: no-preference) {
+  .tile {
+    animation: tile-drop 700ms var(--ease-spring) both;
+    animation-delay: calc(var(--o) * 90ms);
+  }
+}
+@keyframes tile-drop {
+  0% { opacity: 0; transform: translateY(-36px) rotate(var(--tilt)) scale(1.06); }
+  45% { opacity: 1; transform: translateY(0) rotate(calc(var(--tilt) * 0.5)) scale(1); }
+}

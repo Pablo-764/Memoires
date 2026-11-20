@@ -22,7 +22,7 @@
   border-radius: 30px;
   background: var(--color-surface);
   box-shadow: var(--shadow-float);
-  transition: transform 520ms var(--ease-drawer);
+  transition: transform 520ms var(--ease-out);
   @starting-style { transform: translateX(calc(100% + 1.5rem)); }
 }
 

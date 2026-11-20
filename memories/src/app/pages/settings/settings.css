@@ -5,7 +5,7 @@
   border-top: 1px solid var(--color-line);
 }
 
-.settings-row > h2 { font-size: 2rem; }
+.settings-row > h2 { font-size: 1.125rem; font-weight: 700; }
 
 @media (min-width: 768px) {
   .settings-row { grid-template-columns: 13rem 1fr; }

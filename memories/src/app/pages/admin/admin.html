@@ -1,26 +1,35 @@
 <div class="min-h-dvh">
-  <header class="border-b border-line bg-surface">
-    <div class="mx-auto flex max-w-5xl items-center justify-between px-5 py-4">
+  <header class="border-b border-line bg-paper">
+    <div class="mx-auto flex max-w-5xl items-center justify-between px-4 py-4 sm:px-6">
       <div class="flex items-center gap-3">
         <a [routerLink]="store.homeUrl()" aria-label="Inicio de mémoires"><app-logo /></a>
-        <span class="rounded-full bg-accent px-3 py-1 text-xs font-semibold text-on-accent">Moderación</span>
+        <app-seal kind="safe" label="Moderación" />
       </div>
-      <a [routerLink]="store.homeUrl()" class="btn btn-ghost min-h-10 text-sm">Volver a la app</a>
+      <a [routerLink]="store.homeUrl()" class="btn btn-ghost btn-sm">Volver a la app</a>
     </div>
   </header>
 
-  <main class="mx-auto max-w-5xl px-5 py-10">
-    <h1 class="text-5xl">Reportes</h1>
-    <p class="mt-1 text-ink-soft">{{ pendingText() }}</p>
+  <main class="mx-auto max-w-5xl px-4 py-10 sm:px-6">
+    <h1 class="font-display text-[clamp(2.75rem,6vw,4rem)]">Reportes</h1>
+    <p class="mt-2 text-ink-2">{{ pendingText() }}</p>
 
-    <div class="relative mt-6 grid w-56 grid-cols-2 rounded-full bg-raised p-1 text-sm font-semibold shadow-[inset_0_0_0_1px_var(--color-line)]" role="tablist">
+    <dl class="mt-6 grid max-w-xl grid-cols-3 gap-px overflow-hidden rounded-(--radius-card) bg-line">
+      @for (k of counts(); track k.label) {
+        <div class="bg-paper-2 p-4">
+          <dt class="text-xs font-semibold text-ink-2">{{ k.label }}</dt>
+          <dd class="font-display mt-1 text-4xl tabular-nums" [class]="k.tone">{{ k.value }}</dd>
+        </div>
+      }
+    </dl>
+
+    <div class="relative mt-6 grid w-56 grid-cols-2 rounded-full bg-paper-2 p-1 text-sm font-semibold shadow-[inset_0_0_0_1px_var(--color-line)]" role="tablist">
       <span
         aria-hidden="true"
-        class="absolute inset-y-1 left-1 w-[calc((100%-0.5rem)/2)] rounded-full bg-surface shadow-(--shadow-lift) transition-transform duration-300 ease-(--ease-out)"
+        class="absolute inset-y-1 left-1 w-[calc((100%-0.5rem)/2)] rounded-full bg-paper shadow-(--shadow-lift) transition-transform duration-300 ease-(--ease-out)"
         [style.transform]="tab() === 'todos' ? 'translateX(100%)' : 'none'"
       ></span>
-      <button role="tab" [attr.aria-selected]="tab() === 'pendiente'" class="relative z-10 rounded-full py-2 transition-colors duration-200" [class]="tab() === 'pendiente' ? 'text-ink' : 'text-ink-mute'" (click)="setTab('pendiente')">Pendientes</button>
-      <button role="tab" [attr.aria-selected]="tab() === 'todos'" class="relative z-10 rounded-full py-2 transition-colors duration-200" [class]="tab() === 'todos' ? 'text-ink' : 'text-ink-mute'" (click)="setTab('todos')">Todos</button>
+      <button role="tab" [attr.aria-selected]="tab() === 'pendiente'" class="relative z-10 rounded-full py-2 transition-colors duration-200" [class]="tab() === 'pendiente' ? 'text-ink' : 'text-ink-3'" (click)="setTab('pendiente')">Pendientes</button>
+      <button role="tab" [attr.aria-selected]="tab() === 'todos'" class="relative z-10 rounded-full py-2 transition-colors duration-200" [class]="tab() === 'todos' ? 'text-ink' : 'text-ink-3'" (click)="setTab('todos')">Todos</button>
     </div>
 
     <ul class="stagger mt-6 flex flex-col gap-3">
@@ -31,19 +40,19 @@
             <app-avatar [name]="p?.name ?? '?'" [hue]="p?.hue ?? 0" [size]="48" />
             <div class="min-w-0">
               <div class="flex flex-wrap items-center gap-2">
-                <p class="font-display text-[1.35rem]">{{ p?.name ?? 'Usuario' }}</p>
+                <p class="text-lg font-bold">{{ p?.name ?? 'Usuario' }}</p>
                 <span class="rounded-full px-2.5 py-0.5 text-xs font-semibold capitalize" [class]="statusStyle[r.status]">{{ r.status }}</span>
               </div>
               <p class="text-sm font-medium">{{ r.reason }}</p>
-              <p class="text-sm text-ink-soft">{{ r.detail || 'Sin detalles.' }}</p>
-              <p class="mt-1 text-xs text-ink-mute">Reportado por {{ r.reporter }}, {{ timeAgo(r.at) }}</p>
+              <p class="text-sm text-ink-2">{{ r.detail || 'Sin detalles.' }}</p>
+              <p class="mt-1 text-xs text-ink-3">Reportado por {{ r.reporter }}, {{ timeAgo(r.at) }}</p>
             </div>
           </div>
           @if (r.status === 'pendiente') {
             <div class="flex flex-wrap gap-2">
-              <button class="btn btn-ghost min-h-10 text-sm" (click)="discard(r.id)">Descartar</button>
-              <button class="btn btn-soft min-h-10 text-sm" (click)="warn(r.id)">Advertir</button>
-              <button class="btn btn-danger min-h-10 text-sm" (click)="suspend(r.id, p?.name)">Suspender</button>
+              <button class="btn btn-ghost btn-sm" (click)="discard(r.id)">Descartar</button>
+              <button class="btn btn-soft btn-sm" (click)="warn(r.id)">Advertir</button>
+              <button class="btn btn-danger btn-sm" (click)="suspend(r.id, p?.name)">Suspender</button>
             </div>
           }
         </li>

@@ -5,6 +5,7 @@ import { Celebrate } from '../../servicios/celebrate'
 import { runListTransition } from '../../utilidades/list-transition'
 import { personById, type Report } from '../../datos/mock'
 import { Avatar } from '../../componentes/avatar/avatar'
+import { Seal } from '../../componentes/seal/seal'
 import { Logo } from '../../componentes/logo/logo'
 
 const STATUS_STYLE: Record<Report['status'], string> = {
@@ -23,7 +24,7 @@ function timeAgo(t: number) {
 
 @Component({
   selector: 'app-admin',
-  imports: [RouterLink, Avatar, Logo],
+  imports: [RouterLink, Avatar, Logo, Seal],
   styleUrl: './admin.css',
   templateUrl: './admin.html',
 })
@@ -38,6 +39,15 @@ export class Admin {
 
   private readonly pending = computed(() => this.store.reports().filter((r) => r.status === 'pendiente'))
   protected readonly list = computed(() => (this.tab() === 'pendiente' ? this.pending() : this.store.reports()))
+  protected readonly counts = computed(() => {
+    const r = this.store.reports()
+    return [
+      { label: 'Pendientes', value: r.filter((x) => x.status === 'pendiente').length, tone: 'text-ink' },
+      { label: 'Advertidos', value: r.filter((x) => x.status === 'advertido').length, tone: 'text-ink-2' },
+      { label: 'Suspendidos', value: r.filter((x) => x.status === 'suspendido').length, tone: 'text-danger' },
+    ]
+  })
+
   protected readonly pendingText = computed(() => {
     const n = this.pending().length
     return n === 0 ? 'No hay reportes pendientes.' : `${n} ${n === 1 ? 'reporte pendiente' : 'reportes pendientes'} de revisión.`

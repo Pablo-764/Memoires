@@ -45,12 +45,12 @@
       <ul class="flex flex-col gap-2">
         @for (m of thread(); track m.id) {
           <li class="flex" [class]="m.from === 'me' ? 'justify-end' : 'justify-start'">
-            <p class="bubble-in max-w-[78%] rounded-[20px] px-4 py-2.5 transition-opacity duration-200" [class.opacity-35]="query().trim() && !isHit(m.text)" [class]="m.from === 'me' ? 'bubble-me rounded-br-md bg-tint-fill text-on-tint' : 'bubble-them rounded-bl-md bg-paper-2 shadow-[inset_0_0_0_1px_var(--color-line)]'">@for (part of parts(m.text); track $index) {@if (part.hit) {<mark class="msg-hit">{{ part.text }}</mark>} @else {{{ part.text }}}}</p>
+            <p class="bubble-in max-w-[78%] rounded-(--radius-card) px-4 py-2.5 transition-opacity duration-200" [class.opacity-35]="query().trim() && !isHit(m.text)" [class]="m.from === 'me' ? 'bubble-me rounded-br-md bg-tint-fill text-on-tint' : 'bubble-them rounded-bl-md bg-paper-2 shadow-[inset_0_0_0_1px_var(--color-line)]'">@for (part of parts(m.text); track $index) {@if (part.hit) {<mark class="msg-hit">{{ part.text }}</mark>} @else {{{ part.text }}}}</p>
           </li>
         }
         @if (store.typing() === id()) {
           <li class="flex justify-start" animate.leave="bar-out" [attr.aria-label]="p.name + ' está escribiendo'">
-            <p class="bubble-in bubble-them flex items-center gap-1 rounded-[20px] rounded-bl-md bg-paper-2 px-4 py-3.5 shadow-[inset_0_0_0_1px_var(--color-line)]">
+            <p class="bubble-in bubble-them flex items-center gap-1 rounded-(--radius-card) rounded-bl-md bg-paper-2 px-4 py-3.5 shadow-[inset_0_0_0_1px_var(--color-line)]">
               <span class="typing-dot size-1.5 rounded-full bg-ink-mute"></span>
               <span class="typing-dot size-1.5 rounded-full bg-ink-mute"></span>
               <span class="typing-dot size-1.5 rounded-full bg-ink-mute"></span>
