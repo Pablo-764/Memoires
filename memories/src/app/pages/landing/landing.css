@@ -1,241 +1,77 @@
-.word {
-  display: inline-block;
-  overflow-x: visible;
-  overflow-y: clip;
-  padding-bottom: 0.14em;
-  margin-bottom: -0.14em;
-  vertical-align: bottom;
+:host {
+  display: block;
 }
 
-.word > * {
-  display: inline-block;
-  animation: word-up 860ms var(--ease-out) backwards;
-  animation-delay: calc(140ms + var(--i) * 52ms);
-}
-
-@keyframes word-up { from { transform: translateY(115%); } }
-
-
-.intent-pill { transition: background-color 320ms ease; }
-
-.float-card {
-  z-index: 3;
-  animation: float-in 620ms var(--ease-out) 300ms backwards;
-}
-
-@keyframes float-in { from { opacity: 0; transform: translateY(18px) scale(0.96); } }
-
-/* ---------- Cómo funciona: álbum que pasa de lado ---------- */
-.album-scroll { position: relative; padding: 5rem 0 3rem; }
-
-.album-dots { display: flex; align-items: center; gap: 0.45rem; }
-
-.album-dot {
-  width: 0.6rem;
-  height: 0.6rem;
-  border-radius: 999px;
-  background: var(--color-ink-mute);
-  opacity: 0.45;
-  transition: background-color 200ms ease, opacity 200ms ease, width 240ms var(--ease-out);
-}
-
-.album-dot.is-on { width: 1.6rem; background: var(--color-accent); opacity: 1; }
-
-.album-track { position: relative; margin-top: 2.5rem; }
-
-/* Móvil: carrusel nativo, una hoja por pantalla */
-.album-pages {
+.hero-logo {
   display: flex;
-  gap: 1rem;
-  overflow-x: auto;
-  padding: 1rem 1.25rem 2rem;
-  scroll-snap-type: x mandatory;
-  scroll-padding-inline: 1.25rem;
-  scrollbar-width: none;
+  margin-left: -0.04em;
 }
 
-.album-pages::-webkit-scrollbar { display: none; }
-
-.album-sheet {
+/* Columnas de intención: lavado plano de su tinta; la elegida se marca con una franja */
+.intent-col {
+  border-top: 1px solid var(--color-line);
+  border-left: 1px solid var(--color-line);
+}
+.intent-col:first-child {
+  border-left: 0;
+}
+@media (max-width: 1023px) {
+  .intent-col:nth-child(odd) { border-left: 0; }
+}
+@media (max-width: 639px) {
+  .intent-col { border-left: 0; }
+}
+.intent-col-btn {
   position: relative;
   display: flex;
-  flex: 0 0 86%;
   flex-direction: column;
-  padding: 2.2rem 1.6rem 1.6rem 3.2rem;
-  border-radius: 14px;
-  scroll-snap-align: center;
-  background:
-    linear-gradient(90deg, transparent 2.1rem, color-mix(in oklab, var(--offset) 80%, transparent) 2.1rem 2.2rem, transparent 2.2rem),
-    var(--paper-light),
-    var(--paper-grain),
-    var(--color-surface);
-  box-shadow: 0 0 0 1.5px var(--edge), 6px 6px 0 var(--offset);
-  rotate: var(--r);
-  transition: box-shadow 260ms ease;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+  height: 100%;
+  padding: 2rem 1.5rem 2.25rem;
+  text-align: left;
+  transition: background-color var(--dur-3) ease;
 }
-
-.album-sheet:focus-visible { outline-offset: 6px; }
-
-.album-sheet.is-on { box-shadow: 0 0 0 1.5px var(--edge), 8px 8px 0 var(--color-accent); }
-
-.album-num {
+.intent-col-btn::before {
+  content: '';
   position: absolute;
-  top: 1.1rem;
-  left: 0.75rem;
-  font-size: 1.5rem;
-  line-height: 1;
-  color: var(--color-ink-mute);
-  transition: color 200ms ease;
+  inset: 0 0 auto;
+  height: 4px;
+  background: var(--tint);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur-3) var(--ease-out);
+}
+.intent-col.is-on .intent-col-btn {
+  background: var(--wash);
+}
+.intent-col.is-on .intent-col-btn::before {
+  transform: scaleX(1);
+}
+@media (hover: hover) and (pointer: fine) {
+  .intent-col:not(.is-on) .intent-col-btn:hover {
+    background: color-mix(in oklab, var(--wash) 50%, transparent);
+  }
 }
 
-.album-sheet.is-on .album-num { color: var(--color-accent); }
-
-.album-art {
+.steps {
+  display: flex;
+  flex-direction: column;
+}
+.step {
   display: grid;
-  flex: 1;
-  place-items: center start;
-  min-height: 9.5rem;
-  margin-top: 1.5rem;
+  grid-template-columns: 3.5rem 1fr;
+  gap: 1rem;
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--color-line);
 }
-
-.album-note { margin-top: 1rem; font-size: 1.4rem; line-height: 1.1; color: var(--color-ink-soft); rotate: -1.5deg; }
-
-.album-thread { display: none; }
-
-/* Escritorio: la sección es alta y su contenido queda fijo; las hojas pasan de lado */
-@media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
-  .album-scroll {
-    height: 300vh;
-    padding: 0;
-    view-timeline-name: --album;
-  }
-
-  .album-stick {
-    position: sticky;
-    top: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    height: 100vh;
-    overflow: hidden;
-  }
-
-  .album-track {
-    width: max-content;
-    margin-top: 2rem;
-    will-change: transform;
-  }
-
-  .album-pages {
-    gap: 5vw;
-    overflow: visible;
-    padding: 1.5rem 12vw 2.5rem;
-    scroll-snap-type: none;
-  }
-
-  .album-sheet {
-    flex: 0 0 min(42rem, 62vw);
-    min-height: min(30rem, 60vh);
-    padding: 2.6rem 2.4rem 4.6rem 3.6rem;
-  }
-
-  .album-num { left: 1rem; font-size: 1.8rem; }
-
-  /* El hilo cruza las tres hojas por su franja de abajo */
-  .album-thread {
-    display: block;
-    position: absolute;
-    z-index: 2;
-    left: 12vw;
-    right: 12vw;
-    bottom: 3.6rem;
-    height: 3.2rem;
-  }
-
-  @supports (animation-timeline: view()) {
-    .album-track {
-      animation: album-slide linear both;
-      animation-timeline: --album;
-      animation-range: contain 0% contain 100%;
-    }
-  }
+.step:last-child {
+  border-bottom: 1px solid var(--color-line);
 }
-
-@keyframes album-slide {
-  to { transform: translateX(calc(-1 * var(--shift, 0px))); }
-}
-
-/* Movimiento reducido: las tres hojas apiladas, como una lista */
-@media (prefers-reduced-motion: reduce) {
-  .album-pages {
-    flex-direction: column;
-    max-width: 46rem;
-    margin-inline: auto;
-    overflow: visible;
-    scroll-snap-type: none;
-  }
-
-  .album-sheet { flex: none; rotate: none; }
-
-  .album-dots { display: none; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .word > * { animation: none; }
-  .float-card {
-    animation: fade-in 200ms ease backwards;
-    animation-delay: 0ms;
-  }
-}
-
-.intent-pill.is-ready {
-  transition: transform 460ms var(--ease-out), width 460ms var(--ease-out), height 460ms var(--ease-out), background-color 320ms ease;
-}
-
-
-/* ---------- Objeto inflado del héroe ---------- */
-.hero-inflado {
-  position: relative;
-  display: grid;
-  place-items: center;
-  aspect-ratio: 4 / 5;
-  border-radius: 14px;
-  background:
-    var(--paper-light),
-    var(--paper-grain),
-    var(--color-surface);
-  box-shadow: 0 0 0 1.5px var(--edge), 8px 8px 0 var(--offset);
-}
-
-.hero-inflado app-inflado { width: 92%; }
-
-/* ---------- Seguridad: borde superior de papel rasgado ----------
-   La profundidad del rasgado se abre un poco al entrar con el scroll. */
-@property --tear {
-  syntax: "<length>";
-  inherits: false;
-  initial-value: 14px;
-}
-
-.torn-top {
-  --tear: 14px;
-  clip-path: polygon(0% calc(var(--tear) * 0.55), 4% calc(var(--tear) * 0.2), 7% calc(var(--tear) * 0.7), 11% calc(var(--tear) * 0.35), 15% calc(var(--tear) * 0.9), 19% calc(var(--tear) * 0.4), 23% calc(var(--tear) * 0.65), 27% calc(var(--tear) * 0.15), 31% calc(var(--tear) * 0.8), 35% calc(var(--tear) * 0.45), 39% calc(var(--tear) * 1), 43% calc(var(--tear) * 0.3), 47% calc(var(--tear) * 0.75), 51% calc(var(--tear) * 0.25), 55% calc(var(--tear) * 0.85), 59% calc(var(--tear) * 0.4), 63% calc(var(--tear) * 0.6), 67% calc(var(--tear) * 0.1), 71% calc(var(--tear) * 0.7), 75% calc(var(--tear) * 0.35), 79% calc(var(--tear) * 0.95), 83% calc(var(--tear) * 0.5), 87% calc(var(--tear) * 0.2), 91% calc(var(--tear) * 0.8), 95% calc(var(--tear) * 0.4), 100% calc(var(--tear) * 0.6), 100% 100%, 0 100%);
-  padding-top: 1rem;
-}
-
-@supports (animation-timeline: view()) {
-  .torn-top {
-    animation: tear-open linear both;
-    animation-timeline: view();
-    animation-range: entry 0% entry 80%;
-  }
-}
-
-@keyframes tear-open {
-  from { --tear: 30px; }
-  to { --tear: 12px; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .torn-top { animation: none; --tear: 14px; }
+.step-num {
+  font-family: var(--font-display);
+  font-size: 2.75rem;
+  line-height: 0.9;
+  color: var(--tint-ink);
 }

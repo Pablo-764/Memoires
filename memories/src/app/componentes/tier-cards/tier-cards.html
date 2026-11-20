@@ -2,13 +2,13 @@
   @for (t of order; track t; let n = $index) {
     @let info = tiers[t];
     @let isLuc = t === 'lucidite';
-    <article appReveal class="lift relative flex flex-col rounded-[26px] p-6" [class]="isLuc ? 'night-glow' : 'card'" [style.--i]="n">
-      <h3 class="text-[1.85rem]" [class.italic]="isLuc">{{ info.name }}</h3>
-      <p class="mt-1 text-sm" class="text-ink-mute">{{ info.summary }}</p>
+    <article appReveal class="tier relative flex flex-col p-6" [class.is-lucidite]="isLuc" [class.is-current]="current() === t" [style.--i]="n">
+      <h3 class="text-xl">{{ info.name }}</h3>
+      <p class="mt-1 text-sm text-ink-2">{{ info.summary }}</p>
       <p class="mt-5 flex items-baseline gap-1.5">
-        <span class="font-display text-4xl tabular-nums">{{ info.priceUsd === 0 ? 'Gratis' : '$' + info.priceUsd }}</span>
+        <span class="font-display text-5xl tabular-nums">{{ info.priceUsd === 0 ? 'Gratis' : '$' + info.priceUsd }}</span>
         @if (info.priceUsd > 0) {
-          <span class="text-sm text-ink-mute">USD al mes ({{ mxn.format(info.priceMxn) }})</span>
+          <span class="text-sm text-ink-2">USD al mes ({{ mxn.format(info.priceMxn) }})</span>
         }
       </p>
       <ul class="mt-5 flex flex-1 flex-col gap-2.5 text-sm">
@@ -18,15 +18,15 @@
               [name]="f.ok ? 'check' : 'minus'"
               [size]="17"
               class="mt-0.5"
-              [class]="f.ok ? (isLuc ? 'text-accent' : 'text-plan') : 'text-ink-mute'"
+              [class]="f.ok ? (isLuc ? 'text-lila' : 'text-tint-ink') : 'text-ink-3'"
             />
-            <span class="text-ink-soft">{{ f.text }}</span>
+            <span class="text-ink-2">{{ f.text }}</span>
           </li>
         }
       </ul>
       <button
         class="btn mt-6 w-full"
-        [class]="isLuc ? 'btn-ghost' : t === 'free' ? 'btn-ghost' : 'btn-primary'"
+        [class]="t === 'grand' ? 'btn-primary' : 'btn-ghost'"
         [disabled]="current() === t"
         (click)="choose.emit(t)"
       >

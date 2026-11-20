@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core'
+import { Component, DestroyRef, computed, effect, inject, signal } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { Router } from '@angular/router'
 import { AppStore } from '../../servicios/app-store'
@@ -10,11 +10,11 @@ import { Logo } from '../../componentes/logo/logo'
 import { IntentPrefsEditor } from '../../componentes/intent-prefs/intent-prefs'
 import { InterestPicker } from '../../componentes/interest-picker/interest-picker'
 import { EMPTY_PREFS, GENDERS, GENDER_ORDER, usesGender, usesGroups, type Gender, type IntentPrefs } from '../../modelos/plan-formats'
-import { Inflado } from '../../componentes/inflado/inflado'
+import { IntentConstellation } from '../../componentes/intent-constellation/intent-constellation'
 
 @Component({
   selector: 'app-onboarding',
-  imports: [Inflado, FormsModule, ChoiceChip, Icon, IntentBadge, IntentPrefsEditor, InterestPicker, Logo],
+  imports: [IntentConstellation, FormsModule, ChoiceChip, Icon, IntentBadge, IntentPrefsEditor, InterestPicker, Logo],
   styleUrl: './onboarding.css',
   templateUrl: './onboarding.html',
 })
@@ -40,6 +40,12 @@ export class Onboarding {
   protected readonly prefIntents = computed(() => this.intents().filter((i) => usesGroups(i) || usesGender(i)))
   protected readonly city = signal(this.me().city)
   protected readonly bio = signal(this.me().bio)
+
+  constructor() {
+    // La página toma la tinta de la última intención elegida
+    effect(() => this.store.backdropTone.set(this.intents().at(-1) ?? null))
+    inject(DestroyRef).onDestroy(() => this.store.backdropTone.set(null))
+  }
 
   protected readonly canNext = computed(() => {
     const s = this.step()

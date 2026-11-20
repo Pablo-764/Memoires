@@ -1,0 +1,12 @@
+.tier {
+  border-radius: var(--radius-card);
+  background: var(--color-paper-2);
+  box-shadow: inset 0 0 0 1px var(--color-line);
+}
+.tier.is-lucidite {
+  background: var(--color-lila-wash);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--color-lila) 35%, transparent);
+}
+.tier.is-current {
+  box-shadow: inset 0 0 0 2px var(--color-ink);
+}

@@ -1,0 +1,36 @@
+.intent-card {
+  display: block;
+  padding: 1.25rem;
+  border-radius: var(--radius-card);
+  background: var(--color-paper-2);
+  box-shadow: inset 0 0 0 1px var(--color-line);
+  text-align: left;
+  transition: background-color var(--dur-2) ease, box-shadow var(--dur-2) ease, transform var(--dur-1) var(--ease-out);
+}
+.intent-card:active {
+  transform: scale(0.98);
+}
+.intent-card[aria-pressed='true'] {
+  background: var(--wash);
+  box-shadow: inset 0 0 0 2px var(--tint-ink);
+}
+.intent-check {
+  display: grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  color: transparent;
+  box-shadow: inset 0 0 0 1.5px var(--color-line-strong);
+  transition: background-color var(--dur-2) ease, color var(--dur-2) ease;
+}
+.intent-card[aria-pressed='true'] .intent-check {
+  background: var(--tint-fill);
+  color: var(--on-tint);
+  box-shadow: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .intent-card[aria-pressed='false']:hover {
+    box-shadow: inset 0 0 0 1px var(--color-line-strong);
+  }
+}

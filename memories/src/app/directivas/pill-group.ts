@@ -25,7 +25,7 @@ export class PillGroup {
 
   private place() {
     const pill = this.host.querySelector<HTMLElement>('.group-pill')
-    const active = this.host.querySelector<HTMLElement>('[aria-pressed="true"], [aria-selected="true"]')
+    const active = this.host.querySelector<HTMLElement>('[aria-pressed="true"], [aria-selected="true"], [aria-checked="true"]')
     if (!pill) return
     pill.style.visibility = active ? '' : 'hidden'
     if (!active) return
