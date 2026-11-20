@@ -15,14 +15,14 @@
   font-family: 'Memoires Display', var(--font-display);
   letter-spacing: 0.01em;
   /* el punto del acento sobresale; se reserva su espacio */
-  padding-top: 0.3em;
+  padding-top: 0.24em;
 }
 .logo-l { display: inline-block; }
 .logo-e { position: relative; }
 .logo-dot {
   position: absolute;
   left: 50%;
-  top: -0.34em;
+  top: -0.27em;
   width: 0.26em;
   height: 0.26em;
   translate: -20% 0;

@@ -3,12 +3,12 @@
   <input type="search" aria-label="Buscar intereses" placeholder="Buscar un interés…" autocomplete="off" [value]="query()" (input)="query.set($any($event.target).value)" />
 </div>
 @for (g of groups(); track g.name) {
-  <h3 class="mb-2 mt-5 text-[1.5rem]">{{ g.name }}</h3>
+  <h3 class="mb-2 mt-6 text-base font-bold">{{ g.name }}</h3>
   <div class="flex flex-wrap gap-2">
     @for (i of g.items; track i) {
       <button appChip [selected]="selected().includes(i)" (click)="toggled.emit(i)">{{ i }}</button>
     }
   </div>
 } @empty {
-  <p class="swap-in mt-5 text-sm text-ink-mute">Nada coincide con “{{ query() }}”.</p>
+  <p class="swap-in mt-5 text-sm text-ink-3">Nada coincide con “{{ query() }}”.</p>
 }

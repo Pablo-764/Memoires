@@ -1,4 +1,4 @@
-<h3 class="text-[1.7rem]">Para {{ label() }}</h3>
+<h3 class="text-lg font-bold">Para {{ label() }}</h3>
 
 @if (groups()) {
   <fieldset class="mt-3">
@@ -11,8 +11,8 @@
               <span [style.--i]="$index"></span>
             }
           </span>
-          <span class="font-display text-[1.45rem] leading-none">{{ sizeInfo[k].label }}</span>
-          <span class="text-xs text-ink-mute">{{ sizeInfo[k].hint }}</span>
+          <span class="text-base font-bold leading-tight">{{ sizeInfo[k].label }}</span>
+          <span class="text-xs text-ink-3">{{ sizeInfo[k].hint }}</span>
         </button>
       }
     </div>
@@ -23,7 +23,7 @@
       @for (a of peopleOrder; track a) {
         <button type="button" class="size-tile" [attr.aria-pressed]="value().people === a" (click)="value.set({ sizes: value().sizes, genders: value().genders, people: a })">
           <span class="font-semibold">{{ peopleInfo[a].label }}</span>
-          <span class="text-xs text-ink-mute">{{ peopleInfo[a].hint }}</span>
+          <span class="text-xs text-ink-3">{{ peopleInfo[a].hint }}</span>
         </button>
       }
     </div>
@@ -40,6 +40,6 @@
         </button>
       }
     </div>
-    <p class="mt-1.5 text-xs text-ink-mute">Sin marcar ninguno, te mostramos a todas las personas.</p>
+    <p class="mt-1.5 text-xs text-ink-3">Sin marcar ninguno, te mostramos a todas las personas.</p>
   </fieldset>
 }
