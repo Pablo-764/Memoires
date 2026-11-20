@@ -1,0 +1,49 @@
+<label class="label" [for]="id">{{ label() }}</label>
+<div class="tags">
+  @for (v of values(); track v) {
+    <span class="tag">
+      {{ v }}
+      <button type="button" class="tag-x" [attr.aria-label]="'Quitar ' + v" (click)="remove(v)"><app-icon name="x" [size]="13" /></button>
+    </span>
+  }
+  @if (values().length < max() || max() === 1) {
+    <input
+      [id]="id"
+      class="tag-input"
+      role="combobox"
+      aria-autocomplete="list"
+      [attr.aria-controls]="id + '-lista'"
+      [attr.aria-expanded]="open() && suggestions().length > 0"
+      [attr.aria-activedescendant]="open() && suggestions().length ? id + '-' + active() : null"
+      autocomplete="off"
+      [placeholder]="values().length && max() === 1 ? 'Cambiar…' : placeholder()"
+      [value]="query()"
+      (input)="query.set($any($event.target).value); open.set(true); active.set(0)"
+      (focus)="open.set(true)"
+      (blur)="open.set(false)"
+      (keydown)="onKey($event)"
+    />
+  }
+</div>
+@if (open() && suggestions().length) {
+  <ul [id]="id + '-lista'" role="listbox" class="tag-list swap-in" [attr.aria-label]="'Sugerencias para ' + label()">
+    @for (s of suggestions(); track s; let i = $index) {
+      <li
+        [id]="id + '-' + i"
+        role="option"
+        tabindex="-1"
+        [attr.aria-selected]="i === active()"
+        class="tag-option"
+        (mousedown)="$event.preventDefault()"
+        (click)="add(s)"
+        (keydown.enter)="add(s)"
+      >
+        @if (allowCustom() && !options().includes(s)) {
+          Agregar “{{ s }}”
+        } @else {
+          {{ s }}
+        }
+      </li>
+    }
+  </ul>
+}

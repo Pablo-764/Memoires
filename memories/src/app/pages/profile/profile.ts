@@ -5,7 +5,7 @@ import { AppStore, type Profile as ProfileData } from '../../servicios/app-store
 import { Celebrate } from '../../servicios/celebrate'
 import { BANNERS, EFFECTS, FRAMES, NAME_STYLES, THEMES, bannerOf, canUse, effectOf, frameOf, groupsOf, nameStyleOf, type DecorTier, type Rarity, type Theme } from '../../modelos/decor'
 import { fitImage } from '../../utilidades/image'
-import { CITIES, INTENTS, INTENT_ORDER, type Intent } from '../../modelos/intents'
+import { CITIES, INTENTS, INTENT_ICON, INTENT_ORDER, type Intent } from '../../modelos/intents'
 import { Avatar } from '../../componentes/avatar/avatar'
 import { Banner } from '../../componentes/banner/banner'
 import { ChoiceChip } from '../../componentes/choice-chip/choice-chip'
@@ -16,13 +16,16 @@ import { PillGroup } from '../../directivas/pill-group'
 import { IntentPrefsEditor } from '../../componentes/intent-prefs/intent-prefs'
 import { InterestPicker } from '../../componentes/interest-picker/interest-picker'
 import { ProfileQr } from '../../componentes/profile-qr/profile-qr'
+import { TagField } from '../../componentes/tag-field/tag-field'
+import { Seal } from '../../componentes/seal/seal'
 import { EMPTY_PREFS, GENDERS, GENDER_ORDER, usesGender, usesGroups, type IntentPrefs } from '../../modelos/plan-formats'
 
 type Tab = 'about' | 'themes' | 'banners' | 'frames' | 'effects' | 'names'
+export type Paso = 'sobre' | 'intereses' | 'busca' | 'momentos' | 'estilo' | 'seguridad' | 'compartir'
 
 @Component({
   selector: 'app-profile',
-  imports: [FormsModule, RouterLink, Avatar, Banner, ChoiceChip, Effect, Icon, IntentBadge, IntentPrefsEditor, InterestPicker, PillGroup, ProfileQr],
+  imports: [FormsModule, RouterLink, Avatar, Banner, ChoiceChip, Effect, Icon, IntentBadge, IntentPrefsEditor, InterestPicker, PillGroup, ProfileQr, TagField, Seal],
   styleUrl: './profile.css',
   templateUrl: './profile.html',
 })
@@ -52,7 +55,76 @@ export class Profile {
     { key: 'effects', label: 'Efectos', count: EFFECTS.length - 1 },
     { key: 'names', label: 'Nombre', count: NAME_STYLES.length - 1 },
   ]
-  protected readonly tab = signal<Tab>('about')
+  protected readonly tab = signal<Tab>('themes')
+
+  // Editor en pasos (dis-019): la vista previa de la izquierda cambia mientras se edita
+  protected readonly pasos: { key: Paso; label: string }[] = [
+    { key: 'sobre', label: 'Sobre ti' },
+    { key: 'intereses', label: 'Intereses' },
+    { key: 'busca', label: 'Qué buscas' },
+    { key: 'momentos', label: 'Momentos' },
+    { key: 'estilo', label: 'Estilo' },
+    { key: 'seguridad', label: 'Seguridad' },
+    { key: 'compartir', label: 'Compartir' },
+  ]
+  protected readonly paso = signal<Paso>('sobre')
+  protected readonly pasoIndex = computed(() => this.pasos.findIndex((p) => p.key === this.paso()))
+
+  protected irA(delta: number) {
+    const i = Math.min(this.pasos.length - 1, Math.max(0, this.pasoIndex() + delta))
+    this.paso.set(this.pasos[i].key)
+    scrollTo({ top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' })
+  }
+
+  // Anillo de perfil completo: qué cuenta y qué falta
+  protected readonly checklist = computed(() => {
+    const d = this.draft()
+    return [
+      { ok: !!d.photo, label: 'una foto', paso: 'sobre' as Paso },
+      { ok: d.bio.trim().length >= 20, label: 'una descripción', paso: 'sobre' as Paso },
+      { ok: d.prompts.filter((p) => p.a.trim()).length >= 2, label: 'dos preguntas', paso: 'sobre' as Paso },
+      { ok: !!(d.occupation || d.education), label: 'trabajo o estudios', paso: 'sobre' as Paso },
+      { ok: d.interests.length >= 5, label: '5 intereses', paso: 'intereses' as Paso },
+      { ok: d.intents.length > 0, label: 'qué buscas', paso: 'busca' as Paso },
+      { ok: d.gallery.length > 0, label: 'un momento', paso: 'momentos' as Paso },
+      { ok: !!(d.favorites.music || d.favorites.movie || d.favorites.food), label: 'un favorito', paso: 'sobre' as Paso },
+    ]
+  })
+  protected readonly completo = computed(() => Math.round((this.checklist().filter((c) => c.ok).length / this.checklist().length) * 100))
+  protected readonly falta = computed(() => this.checklist().filter((c) => !c.ok))
+
+  // Preguntas: carrusel de tarjetas; cada tarjeta cambia de pregunta sin select
+  protected readonly cambiando = signal<number | null>(null)
+  protected readonly preguntasLibres = computed(() => this.promptOptions.filter((o) => !this.draft().prompts.some((p) => p.q === o)))
+
+  // Momentos: se arrastran para ordenar; la subida muestra una polaroid revelándose (dis-025)
+  protected readonly revelando = signal(false)
+  protected readonly arrastrando = signal<number | null>(null)
+
+  protected moverMomento(from: number, to: number) {
+    const g = [...this.draft().gallery]
+    if (to < 0 || to >= g.length || from === to) return
+    const [x] = g.splice(from, 1)
+    g.splice(to, 0, x)
+    this.patch({ gallery: g })
+  }
+
+  protected soltarMomento(e: DragEvent, to: number) {
+    e.preventDefault()
+    const from = this.arrastrando()
+    if (from !== null) this.moverMomento(from, to)
+    this.arrastrando.set(null)
+  }
+
+  protected teclaMomento(e: KeyboardEvent, i: number) {
+    if (e.key === 'ArrowLeft') this.moverMomento(i, i - 1)
+    else if (e.key === 'ArrowRight') this.moverMomento(i, i + 1)
+    else return
+    e.preventDefault()
+  }
+
+  // Una tarjeta por intención: se activa o desactiva
+  protected readonly intentIcons = INTENT_ICON
   protected readonly tabLook = [
     { shape: 'arch', tone: 'accent' },
     { shape: 'leaf', tone: 'accent' },
@@ -179,11 +251,14 @@ export class Profile {
     input.value = ''
     if (!file) return
     this.uploadError.set('')
+    this.revelando.set(true)
     try {
       const url = await fitImage(file, 640, 640)
       this.patch({ gallery: [...this.draft().gallery, url].slice(0, 6) })
     } catch (error) {
       this.uploadError.set(error instanceof Error ? error.message : 'No se pudo leer la imagen.')
+    } finally {
+      this.revelando.set(false)
     }
   }
 
