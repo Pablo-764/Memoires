@@ -14,7 +14,7 @@
 
   @if (nudgeOpen()) {
     <app-modal title="Llevas un buen rato aquí" (closed)="store.snooze(15)">
-      <p class="text-ink-soft">
+      <p class="text-ink-2">
         Hoy has usado mémoires durante <strong class="text-ink">{{ store.minutesToday() }} minutos</strong>. Conocer gente también pasa fuera
         de la pantalla: quizá es buen momento para estirarte, tomar agua o salir a caminar.
       </p>
@@ -35,7 +35,7 @@
             <app-avatar [name]="person.name" [hue]="person.hue" [size]="84" [frame]="person.frame" class="match-right -ml-5 ring-4 ring-paper" />
           </div>
         </div>
-        <p class="enter text-ink-soft" style="--d: 420ms">A {{ person.name }} también le interesa conocerte. Ya pueden conversar.</p>
+        <p class="enter text-ink-2" style="--d: 420ms">A {{ person.name }} también le interesa conocerte. Ya pueden conversar.</p>
         <div class="enter mt-6 flex flex-col gap-2 sm:flex-row-reverse" style="--d: 520ms">
           <button class="btn btn-primary flex-1" (click)="openMatchChat(person.id)">Enviar mensaje</button>
           <button class="btn btn-ghost flex-1" (click)="store.clearMatch()">Seguir descubriendo</button>

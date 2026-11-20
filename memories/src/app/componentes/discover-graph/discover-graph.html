@@ -26,7 +26,6 @@
       >
         <circle [attr.cx]="p.x" [attr.cy]="p.y" r="26" class="person-ring" />
         <circle [attr.cx]="p.x" [attr.cy]="p.y" r="19" class="person-dot" />
-        <text [attr.x]="p.x" [attr.y]="p.y + 6" class="person-initial" aria-hidden="true">{{ p.initial }}</text>
         <text [attr.x]="p.lx" [attr.y]="p.ly" [attr.text-anchor]="p.anchor" class="person-name" aria-hidden="true">{{ p.name }}</text>
       </g>
     </g>

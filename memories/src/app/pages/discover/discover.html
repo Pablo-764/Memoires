@@ -85,7 +85,7 @@
       </div>
 
       <div class="mt-5 grid grid-cols-[auto_1fr] gap-3" [attr.data-intent]="intentFor(current())">
-        <button #passBtn class="btn btn-ghost min-h-13 px-5" [attr.aria-label]="'Pasar a ' + current()!.person.name" (click)="act('pass')">
+        <button #passBtn class="btn btn-ghost min-h-13 px-5" [attr.aria-label]="'Ahora no, pasar a ' + current()!.person.name" (click)="act('pass')">
           <app-icon name="x" [size]="20" /> Ahora no
         </button>
         <button #likeBtn class="btn btn-primary min-h-13" [attr.aria-label]="'Me interesa ' + current()!.person.name" (click)="act('like')">

@@ -2,7 +2,7 @@
   position: fixed;
   inset: 0;
   z-index: 49;
-  background: #110a1d73;
+  background: color-mix(in oklab, var(--color-ink) 45%, transparent);
   transition: opacity 320ms ease;
   @starting-style { opacity: 0; }
 }
@@ -20,7 +20,7 @@
   overscroll-behavior: contain;
   padding: 1.5rem;
   border-radius: 30px;
-  background: var(--color-surface);
+  background: var(--color-paper-2);
   box-shadow: var(--shadow-float);
   transition: transform 520ms var(--ease-out);
   @starting-style { transform: translateX(calc(100% + 1.5rem)); }
@@ -54,7 +54,7 @@
   margin-top: 0.75rem;
   padding: 0.25rem;
   border-radius: 20px;
-  background: var(--color-raised);
+  background: var(--color-paper-3);
 }
 
 .seg button {
@@ -65,13 +65,13 @@
   border-radius: 999px;
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--color-ink-soft);
+  color: var(--color-ink-2);
   transition: color 240ms ease;
 }
 
 .seg button[aria-pressed="true"] { color: var(--color-ink); }
 
-.seg-pill { position: absolute; left: 0; top: 0; border-radius: 999px; background: var(--color-surface); box-shadow: var(--shadow-lift); }
+.seg-pill { position: absolute; left: 0; top: 0; border-radius: 999px; background: var(--color-paper-2); box-shadow: var(--shadow-lift); }
 
 .range-double { position: relative; height: 2rem; margin-top: 0.5rem; }
 
@@ -83,7 +83,7 @@
   background: var(--color-line);
 }
 
-.range-fill { position: absolute; top: 0.85rem; bottom: 0.85rem; border-radius: 999px; background: var(--color-accent); }
+.range-fill { position: absolute; top: 0.85rem; bottom: 0.85rem; border-radius: 999px; background: var(--tint-fill); }
 
 .range-double input {
   position: absolute;
@@ -99,8 +99,8 @@
   width: 1.6rem;
   height: 1.6rem;
   border-radius: 999px;
-  background: var(--color-surface);
-  box-shadow: inset 0 0 0 2px var(--color-accent), var(--shadow-lift);
+  background: var(--color-paper-2);
+  box-shadow: inset 0 0 0 2px var(--tint-ink), var(--shadow-lift);
   pointer-events: auto;
   cursor: grab;
 }
@@ -110,8 +110,8 @@
   height: 1.6rem;
   border: 0;
   border-radius: 999px;
-  background: var(--color-surface);
-  box-shadow: inset 0 0 0 2px var(--color-accent), var(--shadow-lift);
+  background: var(--color-paper-2);
+  box-shadow: inset 0 0 0 2px var(--tint-ink), var(--shadow-lift);
   pointer-events: auto;
 }
 
@@ -129,7 +129,7 @@
   width: 1.45rem;
   height: 1.45rem;
   border-radius: 999px;
-  background: #fff;
+  background: var(--color-paper);
   box-shadow: var(--shadow-lift);
   transition: transform 300ms var(--ease-out);
 }

@@ -1,5 +1,5 @@
 :host {
-  color: #fff;
+  color: var(--color-on-avatar);
   font-weight: 800;
   line-height: 1;
 }

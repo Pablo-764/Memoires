@@ -53,6 +53,9 @@
   --color-qr-paper: #fbfaf7;
   --color-qr-ink: #1a1814;
 
+  /* Inicial sobre el círculo del avatar (todos los tonos tienen la misma luz) */
+  --color-on-avatar: #ffffff;
+
   /* Botón de PayPal: su amarillo de marca es obligatorio */
   --color-paypal: #ffc439;
   --color-on-paypal: #1f1a33;
@@ -88,26 +91,6 @@
   --color-friend-wash: var(--friend-wash);
   --color-plan-wash: var(--plan-wash);
   --color-hobby-wash: var(--hobby-wash);
-
-  /* Compatibilidad con los nombres anteriores mientras se rehacen las páginas (E3 a E7).
-     Se borra en E9. */
-  --color-mist: var(--color-paper);
-  --color-surface: var(--color-paper-2);
-  --color-raised: var(--color-paper-3);
-  --color-ink-soft: var(--color-ink-2);
-  --color-ink-mute: var(--color-ink-3);
-  --color-accent: var(--tint-fill);
-  --color-accent-hover: var(--tint-fill);
-  --color-on-accent: var(--on-tint);
-  --color-accent-soft: var(--wash);
-  --color-night: var(--wash);
-  --color-night-soft: var(--color-paper-3);
-  --color-safe: var(--color-paper-2);
-  --color-romance-soft: var(--romance-wash);
-  --color-friend-soft: var(--friend-wash);
-  --color-plan-soft: var(--plan-wash);
-  --color-hobby-soft: var(--hobby-wash);
-  --color-danger-soft: var(--color-danger-wash);
 }
 
 :root {
@@ -401,12 +384,6 @@
     font-weight: 600;
     color: var(--color-ink-2);
   }
-  /* Antes era letra manuscrita; ahora una nota en cursiva discreta */
-  .hand {
-    font-style: italic;
-    font-weight: 500;
-    color: var(--color-ink-2);
-  }
 
   /* Botón redondo de ícono */
   .glass-icon {
@@ -425,29 +402,6 @@
     .glass-icon:hover { background: var(--color-paper-2); }
   }
 
-  /* Interruptor */
-  .ink-switch { display: inline-flex; align-items: center; min-height: 2.75rem; }
-  .ink-switch-track {
-    position: relative;
-    width: 2.75rem;
-    height: 1.5rem;
-    border-radius: 999px;
-    background: var(--color-paper-3);
-    box-shadow: inset 0 0 0 1.5px var(--color-line-strong);
-    transition: background-color var(--dur-2) ease;
-  }
-  .ink-switch-thumb {
-    position: absolute;
-    top: 0.1875rem;
-    left: 0.1875rem;
-    width: 1.125rem;
-    height: 1.125rem;
-    border-radius: 50%;
-    background: var(--color-ink);
-    transition: transform var(--dur-2) var(--ease-spring), background-color var(--dur-2) ease;
-  }
-  .ink-switch[aria-checked="true"] .ink-switch-track { background: var(--tint-fill); box-shadow: none; }
-  .ink-switch[aria-checked="true"] .ink-switch-thumb { transform: translateX(1.25rem); background: var(--on-tint); }
 
   /* Barra segmentada de intenciones (pill-group): una píldora se desliza a la opción */
   .pill-group {
@@ -516,7 +470,6 @@
   .group-pill[data-tone="friend"] { --pill: var(--friend-fill); }
   .group-pill[data-tone="plan"] { --pill: var(--plan-fill); }
   .group-pill[data-tone="hobby"] { --pill: var(--hobby-fill); }
-  .group-echo { display: none; }
 
   /* Mosaico de tamaño de grupo */
   .size-tile {
@@ -546,7 +499,6 @@
     color: var(--color-ink);
     box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--tint) 30%, transparent);
   }
-  .note-tape { display: none; }
   .note-meter {
     display: block;
     height: 4px;
@@ -563,11 +515,6 @@
     box-shadow: var(--shadow-float);
   }
 
-  /* Fondos de bloque destacados */
-  .night-glow { background: var(--wash); }
-  .safe-glow { background: var(--color-paper-2); }
-  .hero-tint { background: transparent; }
-  .print-edge { box-shadow: inset 0 0 0 1px var(--color-line); }
   .meter-on-night span { color: var(--color-ink-2); }
 }
 
@@ -584,7 +531,6 @@
   @starting-style { opacity: 0; transform: translateY(10px); }
 }
 .enter { animation: enter-rise var(--dur-3) var(--ease-out) var(--d, 0ms) backwards; }
-.enter-photo { animation: enter-rise var(--dur-4) var(--ease-out) 120ms backwards; }
 .pop { animation: pop-in var(--dur-2) var(--ease-spring) backwards; }
 .swap-in { animation: swap-in var(--dur-2) var(--ease-out) backwards; }
 .error-in { animation: swap-in var(--dur-2) var(--ease-out) backwards; }

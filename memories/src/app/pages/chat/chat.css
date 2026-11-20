@@ -23,7 +23,7 @@
   .bubble-in { transform: none; transition: opacity 200ms ease; }
 }
 
-.msg-hit { border-radius: 4px; padding: 0 2px; color: var(--color-on-accent); background: var(--color-accent); }
+.msg-hit { border-radius: 4px; padding: 0 2px; color: var(--on-tint); background: var(--tint-fill); }
 
 /* Caja de mensaje: crece línea por línea mientras escribes; solo al llegar al tope aparece el scroll */
 .msg-box {

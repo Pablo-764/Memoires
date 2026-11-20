@@ -143,3 +143,10 @@
 @media (hover: hover) and (pointer: fine) {
   .upload-tile:hover { background: var(--color-paper-2); }
 }
+
+.tab-count {
+  font-weight: 500;
+}
+.intent-tab:not(.is-on) .tab-count {
+  color: var(--color-ink-3);
+}
