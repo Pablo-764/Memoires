@@ -1,0 +1,51 @@
+<div class="pal-scrim fade-in" aria-hidden="true" (click)="mando.cerrarPaleta()"></div>
+<div class="pal rise-in" role="dialog" aria-modal="true" aria-label="Buscar en mémoires">
+  <div class="pal-search">
+    <app-icon name="search" [size]="20" />
+    <input
+      #q
+      type="text"
+      role="combobox"
+      aria-label="Buscar personas, conversaciones, planes o acciones"
+      aria-controls="pal-lista"
+      aria-expanded="true"
+      aria-autocomplete="list"
+      [attr.aria-activedescendant]="results().length ? 'pal-' + active() : null"
+      placeholder="Busca personas, conversaciones, planes o “tema”…"
+      autocomplete="off"
+      [value]="query()"
+      (input)="onInput($any($event.target).value)"
+      (keydown)="onKey($event)"
+    />
+    <kbd>Esc</kbd>
+  </div>
+  <ul id="pal-lista" role="listbox" class="pal-list" aria-label="Resultados">
+    @for (g of groups(); track g.grupo) {
+      <li role="presentation" class="pal-group">{{ g.grupo }}</li>
+      @for (c of g.items; track c.id) {
+        <li
+          [id]="'pal-' + c.index"
+          role="option"
+          tabindex="-1"
+          class="pal-item"
+          [attr.aria-selected]="c.index === active()"
+          (mouseenter)="active.set(c.index)"
+          (mousedown)="$event.preventDefault()"
+          (click)="exec(c)"
+          (keydown.enter)="exec(c)"
+        >
+          <app-icon [name]="c.icon" [size]="17" />
+          <span class="min-w-0 flex-1">
+            <span class="block truncate font-semibold">@for (part of parts(c.label); track $index) {@if (part.hit) {<mark>{{ part.text }}</mark>} @else {{{ part.text }}}}</span>
+            @if (c.hint) {
+              <span class="block truncate text-xs text-ink-2">{{ c.hint }}</span>
+            }
+          </span>
+          <app-icon class="pal-go" name="arrow-right" [size]="15" />
+        </li>
+      }
+    } @empty {
+      <li role="presentation" class="px-4 py-6 text-center text-sm text-ink-2">Nada coincide con “{{ query() }}”.</li>
+    }
+  </ul>
+</div>

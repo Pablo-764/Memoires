@@ -1,16 +1,18 @@
-<div class="min-h-dvh md:grid md:grid-cols-[248px_1fr]">
+<div class="min-h-dvh">
   <a href="#contenido" class="sr-only z-50 rounded-full bg-tint-fill px-4 py-2 text-on-tint focus:not-sr-only focus:fixed focus:left-4 focus:top-4" (click)="skipToContent($event)">
     Saltar al contenido
   </a>
 
-  <app-sidebar [items]="nav()" [active]="activeIndex()" />
-  <app-navbar />
+  <app-command-bar [items]="nav()" [active]="activeIndex()" />
 
-  <main id="contenido" tabindex="-1" class="vt-page mx-auto w-full max-w-5xl px-4 pb-28 pt-6 outline-none md:px-10 md:pb-16 md:pt-10" [attr.data-page]="page()">
+  <main id="contenido" tabindex="-1" class="vt-page canvas outline-none" [attr.data-page]="page()">
     <router-outlet />
   </main>
 
-  <app-tab-bar [items]="nav()" [active]="activeIndex()" />
+  <app-dock [items]="nav()" [active]="activeIndex()" />
+  @if (mando.paletaAbierta()) {
+    <app-command-palette />
+  }
 
   @if (nudgeOpen()) {
     <app-modal title="Llevas un buen rato aquí" (closed)="store.snooze(15)">
