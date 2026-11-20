@@ -11,12 +11,13 @@ import { Icon } from '../icon/icon'
 import { IntentBadge } from '../intent-badge/intent-badge'
 import { BlockDialog } from '../block-dialog/block-dialog'
 import { ReportDialog } from '../report-dialog/report-dialog'
+import { Seal } from '../seal/seal'
 
 const easeBack = (t: number) => 1 + 2.2 * Math.pow(t - 1, 3) + 1.2 * Math.pow(t - 1, 2)
 
 @Component({
   selector: 'app-swipe-card',
-  imports: [RouterLink, Avatar, Banner, Effect, Icon, IntentBadge, BlockDialog, ReportDialog],
+  imports: [RouterLink, Avatar, Banner, Effect, Icon, IntentBadge, BlockDialog, ReportDialog, Seal],
   styleUrl: './swipe-card.css',
   templateUrl: './swipe-card.html',
   host: { class: 'block size-full' },
