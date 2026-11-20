@@ -2,65 +2,175 @@
   display: block;
 }
 
-.view-switch {
+/* El mapa ocupa el lienzo; la ficha flota a la derecha (abajo en celular) */
+.disc {
+  position: relative;
+  min-height: calc(100svh - 12rem);
+}
+@media (min-width: 1024px) {
+  .disc { min-height: calc(100svh - 10.5rem); }
+}
+
+.disc-tools {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.mode-switch {
   display: inline-flex;
   padding: 0.25rem;
   border-radius: 999px;
   background: var(--color-paper-2);
-  box-shadow: inset 0 0 0 1px var(--color-line);
 }
-.view-switch button {
-  min-height: 2.25rem;
+.mode-switch button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  min-height: 2.5rem;
   padding: 0 0.875rem;
   border-radius: 999px;
   font-size: 0.8125rem;
   font-weight: 650;
   color: var(--color-ink-2);
-  transition: background-color var(--dur-1) ease, color var(--dur-1) ease;
 }
-.view-switch button[aria-pressed='true'] {
+.mode-switch button[aria-pressed='true'] {
   background: var(--color-paper);
   color: var(--color-ink);
   box-shadow: var(--shadow-lift);
 }
 
-.suggest-row {
-  display: flex;
-  align-items: center;
-  gap: 0.625rem;
-  width: 100%;
-  min-height: 2.75rem;
-  padding: 0 0.875rem;
-  border-radius: var(--radius-field);
-  font-size: 0.875rem;
-  text-align: left;
-  transition: background-color var(--dur-1) ease, box-shadow var(--dur-1) ease;
+.disc-map {
+  height: 52svh;
+  min-height: 22rem;
+  margin: 0 -1rem;
 }
-.suggest-row[aria-pressed='true'] {
-  background: var(--wash);
-  box-shadow: inset 0 0 0 1.5px var(--tint-ink);
-}
-@media (hover: hover) and (pointer: fine) {
-  .suggest-row[aria-pressed='false']:hover {
-    background: var(--color-paper-2);
+@media (min-width: 1024px) {
+  .disc-map {
+    position: absolute;
+    inset: 3.5rem 24rem 1.5rem -2.5rem;
+    height: auto;
+    margin: 0;
   }
 }
-
-/* Baraja: las de atrás asoman como hojas apiladas */
-.deck {
-  display: grid;
-  height: max(26rem, calc(100dvh - 22rem));
-  max-height: 36rem;
+.disc-legend {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-ink-2);
+  text-align: center;
 }
-.deck-card {
+@media (min-width: 1024px) {
+  .disc-legend { position: absolute; left: 0; bottom: 0; text-align: left; }
+}
+
+/* Ficha flotante */
+.ficha {
+  position: relative;
+  z-index: 2;
+  margin: -1rem -1rem 0;
+  padding: 1.5rem 1.25rem 1.25rem;
+  border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
+  background: var(--color-paper);
+  box-shadow: inset 0 3px 0 var(--tint), 0 -12px 40px -24px rgb(26 24 20 / 0.4);
+}
+@media (min-width: 1024px) {
+  .ficha {
+    position: absolute;
+    top: 3.5rem;
+    right: 0;
+    width: 22rem;
+    max-height: calc(100% - 3.5rem);
+    margin: 0;
+    overflow-y: auto;
+    border-radius: var(--radius-sheet);
+    box-shadow: inset 0 3px 0 var(--tint), var(--shadow-float);
+  }
+}
+.ficha-h {
+  margin: 1.25rem 0 0.375rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-ink-2);
+}
+.ficha-acts {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+}
+.ficha-acts kbd {
+  padding: 0.0625rem 0.375rem;
+  border-radius: 6px;
+  background: color-mix(in oklab, currentColor 14%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+.ficha-pass {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 3rem;
+  padding: 0 1.125rem;
+  border-radius: 999px;
+  background: var(--color-paper-2);
+  font-weight: 650;
+  transition: transform var(--dur-1) var(--ease-out), background-color var(--dur-1) ease;
+}
+.ficha-pass:active { transform: translateY(2px); }
+@media (hover: hover) and (pointer: fine) {
+  .ficha-pass:hover { background: var(--color-paper-3); }
+}
+.ficha-safe {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  border-radius: 999px;
+  padding: 0 0.375rem;
+}
+.ficha-prefs {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-line);
+}
+.ficha-prefs summary {
+  min-height: 2.75rem;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 650;
+}
+
+/* Mazo: abanico de tres tarjetas en perspectiva */
+.fan {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: max(26rem, calc(100svh - 24rem));
+  max-height: 36rem;
+  margin-top: 1.5rem;
+  perspective: 1200px;
+}
+@media (min-width: 1024px) {
+  .fan { margin-right: 24rem; height: calc(100svh - 14rem); }
+}
+.fan-card {
   grid-area: 1 / 1;
+  width: min(24rem, 100%);
+  height: 100%;
   transition: transform var(--dur-3) var(--ease-out), opacity var(--dur-3) ease;
 }
-.deck-card[data-depth='1'] {
-  transform: translateY(10px) scale(0.96);
-  opacity: 0.7;
-}
-.deck-card[data-depth='2'] {
-  transform: translateY(20px) scale(0.92);
-  opacity: 0.4;
+.fan-card[data-depth='1'] { transform: translateX(-14%) rotate(-7deg) translateZ(-60px); opacity: 0.85; }
+.fan-card[data-depth='2'] { transform: translateX(14%) rotate(7deg) translateZ(-120px); opacity: 0.7; }
+
+.disc-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4rem 1rem;
+  text-align: center;
 }

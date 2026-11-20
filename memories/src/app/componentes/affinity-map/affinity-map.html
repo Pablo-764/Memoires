@@ -1,0 +1,69 @@
+<svg class="map" [attr.viewBox]="'0 0 ' + w() + ' ' + h()" role="group" aria-label="Mapa de afinidad: más cerca de ti, más intereses en común">
+  <!-- Anillos de distancia -->
+  @for (k of [1, 2, 3]; track k) {
+    <circle [attr.cx]="cx()" [attr.cy]="cy()" [attr.r]="dialR + 70 + (k - 1) * ((Math.min(w(), h()) / 2 - 46 - dialR - 70) / 2)" class="ring" aria-hidden="true" />
+  }
+
+  <!-- Hilos de afinidad: de ti a la persona enfocada, con los intereses en común -->
+  @if (threadFor(); as t) {
+    <g class="threads" [attr.data-intent]="t.intent" aria-hidden="true">
+      <line [attr.x1]="cx()" [attr.y1]="cy()" [attr.x2]="place(t).x" [attr.y2]="place(t).y" class="thread" />
+      @for (s of t.shared.slice(0, 3); track s; let k = $index) {
+        <text [attr.x]="point(t, 0.58 + k * 0.14).x" [attr.y]="point(t, 0.58 + k * 0.14).y - 8" class="thread-label">{{ s }}</text>
+        <circle [attr.cx]="point(t, 0.58 + k * 0.14).x" [attr.cy]="point(t, 0.58 + k * 0.14).y" r="3.5" class="thread-bead" />
+      }
+    </g>
+  }
+
+  <!-- Personas -->
+  @for (n of nodes(); track n.id; let i = $index) {
+    @let p = place(n);
+    <g
+      class="node"
+      [attr.data-intent]="n.intent"
+      [class.is-on]="selected() === n.id"
+      [style.transform]="'translate(' + p.x + 'px, ' + p.y + 'px) scale(' + p.s + ')'"
+      [style.opacity]="p.o"
+      [style.--i]="i"
+      role="button"
+      tabindex="0"
+      [attr.aria-label]="n.label"
+      [attr.aria-pressed]="selected() === n.id"
+      (click)="pick.emit(n.id)"
+      (keydown)="key($event, () => pick.emit(n.id))"
+      (pointerenter)="hover.set(n.id)"
+      (pointerleave)="hover.set(null)"
+      (focus)="hover.set(n.id)"
+      (blur)="hover.set(null)"
+    >
+      <circle [attr.r]="n.r + 7" class="node-halo" />
+      <circle [attr.r]="n.r" class="node-dot" />
+      <text [attr.y]="selected() === n.id ? -(n.r + 12) : n.r + 18" class="node-name" aria-hidden="true">{{ n.name }}</text>
+    </g>
+  }
+
+  <!-- Dial de intenciones alrededor de ti -->
+  <g class="dial">
+    @for (a of arcs(); track a.intent) {
+      <g [attr.data-intent]="a.intent" class="arc" [class.is-on]="filter() === a.intent" [class.is-off]="!a.enabled">
+        <g
+          class="arc-btn"
+          [attr.role]="a.enabled ? 'button' : null"
+          [attr.tabindex]="a.enabled ? 0 : null"
+          [attr.aria-label]="'Ver solo ' + intents[a.intent].label.toLowerCase()"
+          [attr.aria-pressed]="a.enabled ? filter() === a.intent : null"
+          (click)="a.enabled && filterChange.emit(filter() === a.intent ? 'any' : a.intent)"
+          (keydown)="a.enabled && key($event, () => filterChange.emit(filter() === a.intent ? 'any' : a.intent))"
+        >
+          <path [attr.d]="a.d" class="arc-hit" />
+          <path [attr.d]="a.d" class="arc-path" />
+        </g>
+        <text [attr.x]="a.lx" [attr.y]="a.ly" class="arc-label" aria-hidden="true">{{ intents[a.intent].short }}</text>
+      </g>
+    }
+    <g class="me" role="button" tabindex="0" aria-label="Ver todas las intenciones" [attr.aria-pressed]="filter() === 'any'" (click)="filterChange.emit('any')" (keydown)="key($event, () => filterChange.emit('any'))">
+      <circle [attr.cx]="cx()" [attr.cy]="cy()" r="30" class="me-dot" />
+      <text [attr.x]="cx()" [attr.y]="cy() + 5" class="me-label" aria-hidden="true">tú</text>
+    </g>
+  </g>
+</svg>

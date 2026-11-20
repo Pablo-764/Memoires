@@ -1,112 +1,149 @@
 <h1 class="sr-only">Descubre</h1>
 
-<div class="flex flex-wrap items-center justify-between gap-3">
-  <div class="shape-bar" [appPillGroup]="store.filters().intent" role="group" aria-label="Qué buscas">
-    <span class="group-pill" aria-hidden="true"></span>
-    <button type="button" data-tone="accent" class="intent-tab" [class.is-on]="store.filters().intent === 'any'" [attr.aria-pressed]="store.filters().intent === 'any'" (click)="store.setFilters({ intent: 'any' })">Todo</button>
-    @for (i of store.me().intents; track i) {
-      <button type="button" class="intent-tab" [attr.data-tone]="i" [class.is-on]="store.filters().intent === i" [attr.aria-pressed]="store.filters().intent === i" (click)="store.setFilters({ intent: i })">
-        <app-icon [name]="icons[i]" [size]="16" /> {{ intents[i].short }}
-      </button>
-    }
-  </div>
-
-  <div class="flex items-center gap-2">
-    <!-- En celular: tarjeta o constelación (dis-027) -->
-    <div class="view-switch lg:hidden" role="group" aria-label="Vista">
-      <button type="button" [attr.aria-pressed]="view() === 'tarjeta'" (click)="setView('tarjeta')">Tarjeta</button>
-      <button type="button" [attr.aria-pressed]="view() === 'constelacion'" (click)="setView('constelacion')">Constelación</button>
+<div class="disc">
+  <!-- Barra mínima: modo y afinar (los filtros de intención viven en el dial) -->
+  <div class="disc-tools">
+    <div class="mode-switch" role="group" aria-label="Vista">
+      <button type="button" [attr.aria-pressed]="mode() === 'mapa'" (click)="setMode('mapa')"><app-icon name="orbit" [size]="16" /> Mapa</button>
+      <button type="button" [attr.aria-pressed]="mode() === 'mazo'" (click)="setMode('mazo')"><app-icon name="layout-grid" [size]="16" /> Mazo</button>
     </div>
-    <button class="btn btn-ghost btn-sm relative" [attr.aria-label]="'Afinar sugerencias, ' + activeFilters() + ' filtros activos'" (click)="filtersOpen.set(true)">
-      <app-icon name="sliders-horizontal" [size]="17" />
-      <span class="hidden sm:inline">Afinar</span>
+    <button class="btn btn-ghost btn-sm" [attr.aria-label]="'Afinar sugerencias, ' + activeFilters() + ' filtros activos'" (click)="filtersOpen.set(true)">
+      <app-icon name="sliders-horizontal" [size]="16" /> Afinar
       @if (activeFilters() > 0) {
-        <span class="pop grid size-5 place-items-center rounded-full bg-tint-fill text-xs font-bold text-on-tint">{{ activeFilters() }}</span>
+        <span class="grid size-5 place-items-center rounded-full bg-tint-fill text-xs font-bold text-on-tint">{{ activeFilters() }}</span>
       }
     </button>
   </div>
-</div>
 
-@if (selected(); as i) {
-  <div class="swap-in mt-4 flex flex-col gap-2">
-    @if (groups(i)) {
-      <div class="flex flex-wrap gap-1.5" role="group" aria-label="Con cuántas personas">
-        @for (k of sizeOrder; track k) {
-          <button appChip [selected]="prefs().sizes.includes(k)" (click)="toggleSize(k)">{{ sizeInfo[k].label }}</button>
-        }
-      </div>
-      <div class="flex flex-wrap gap-1.5" role="group" aria-label="Con qué tipo de personas">
-        @for (a of peopleOrder; track a) {
-          <button appChip [selected]="prefs().people === a" (click)="patchPrefs({ people: a })">{{ peopleInfo[a].label }}</button>
-        }
-      </div>
-    }
-    @if (gendered(i)) {
-      <div class="flex flex-wrap gap-1.5" role="group" aria-label="Qué género te interesa conocer">
-        @for (g of genderOrder; track g) {
-          <button appChip [selected]="prefs().genders.includes(g)" (click)="toggleGender(g)">{{ genderInfo[g].seek }}</button>
-        }
-      </div>
-    }
-  </div>
-}
-
-@if (deck().length) {
-  <div class="mt-6 grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_25rem] xl:gap-12">
-    <!-- Constelación (momento firma) y su lista equivalente -->
-    <section class="min-w-0" [class.max-lg:hidden]="view() !== 'constelacion'" aria-labelledby="constelacion-titulo">
-      <h2 id="constelacion-titulo" class="text-sm font-semibold text-ink-2">Tu constelación de hoy</h2>
-      <app-discover-graph class="mx-auto mt-2 max-w-[560px]" [interests]="store.me().interests" [suggestions]="suggestions()" [selected]="current()?.person?.id ?? null" [intentOf]="intentOf" (pick)="pickPerson($event)" />
-      <ul class="mt-4 grid gap-2 sm:grid-cols-2" aria-label="Lista de sugerencias">
-        @for (s of suggestions().slice(0, 8); track s.person.id) {
-          <li [attr.data-intent]="intentFor(s)">
-            <button type="button" class="suggest-row" [attr.aria-pressed]="current()?.person?.id === s.person.id" (click)="pickPerson(s.person.id)">
-              <span class="chip-dot size-2.5" aria-hidden="true"></span>
-              <span class="min-w-0 flex-1 truncate">
-                <span class="font-semibold">{{ s.person.name }}, {{ s.person.age }}</span>
-                <span class="text-ink-2">
-                  · {{ s.sharedInterests.length ? s.sharedInterests.slice(0, 2).join(', ') : intents[intentFor(s)].label }}
-                </span>
-              </span>
-            </button>
-          </li>
-        }
-      </ul>
-    </section>
-
-    <!-- Baraja -->
-    <section class="mx-auto w-full max-w-[25rem]" [class.max-lg:hidden]="view() !== 'tarjeta'" aria-label="Persona sugerida">
-      <div class="deck">
+  @if (suggestions().length) {
+    @if (mode() === 'mapa') {
+      <app-affinity-map
+        class="disc-map"
+        [suggestions]="suggestions()"
+        [selected]="current()?.person?.id ?? null"
+        [intentOf]="intentOf"
+        [myIntents]="store.me().intents"
+        [filter]="store.filters().intent"
+        [leaving]="leaving()"
+        (pick)="focusId.set($event)"
+        (filterChange)="store.setFilters({ intent: $event })"
+      />
+      <p class="disc-legend">Más cerca de ti, más en común. Usa ← y → para decidir.</p>
+    } @else {
+      <!-- Mazo: abanico de tres tarjetas en perspectiva -->
+      <div class="fan" aria-label="Mazo de sugerencias">
         @for (s of deck(); track s.person.id; let i = $index) {
-          <div class="deck-card" [attr.data-depth]="i" [style.z-index]="3 - i">
-            <app-swipe-card [s]="s" [active]="i === 0" [intent]="intentFor(s)" [canLike]="canLike" [decide]="onDecide" (pull)="onPull($event)" (launch)="onLaunch($event)" />
+          <div class="fan-card" [attr.data-depth]="i" [style.z-index]="3 - i">
+            <app-swipe-card [s]="s" [active]="i === 0" [intent]="intentFor(s)" [canLike]="canLike" [decide]="onDecide" (launch)="onLaunch($event)" />
           </div>
         }
       </div>
+    }
 
-      <div class="mt-5 grid grid-cols-[auto_1fr] gap-3" [attr.data-intent]="intentFor(current())">
-        <button #passBtn class="btn btn-ghost min-h-13 px-5" [attr.aria-label]="'Ahora no, pasar a ' + current()!.person.name" (click)="act('pass')">
-          <app-icon name="x" [size]="20" /> Ahora no
-        </button>
-        <button #likeBtn class="btn btn-primary min-h-13" [attr.aria-label]="'Me interesa ' + current()!.person.name" (click)="act('like')">
-          @for (k of [intentFor(current())]; track k) {
-            <app-icon class="pop" [name]="icons[k]" [size]="20" [filled]="k === 'romance'" />
-          }
-          Me interesa
-        </button>
+    <!-- Ficha flotante de la persona elegida (hoja inferior en celular) -->
+    @if (current(); as c) {
+      <aside class="ficha" [attr.data-intent]="intentFor(c)" aria-label="Persona elegida" aria-live="polite">
+        @for (k of [c.person.id]; track k) {
+          <div class="swap-in">
+            <div class="flex items-start gap-4">
+              <app-avatar [name]="c.person.name" [hue]="c.person.hue" [size]="64" [ring]="true" [verified]="c.person.verified" />
+              <div class="min-w-0 flex-1">
+                <h2 class="font-display text-[2.5rem]">{{ c.person.name }}, <span class="tabular-nums">{{ c.person.age }}</span></h2>
+                <p class="mt-1 flex flex-wrap items-center gap-x-2 text-sm text-ink-2">
+                  <span class="inline-flex items-center gap-1"><app-icon name="map-pin" [size]="14" /> {{ c.person.city }}</span>
+                  @if (c.person.verified) {
+                    <app-seal kind="verified" label="Verificado" />
+                  }
+                </p>
+              </div>
+            </div>
+            <div class="mt-3 flex flex-wrap gap-1.5">
+              @for (i of c.person.intents; track i) {
+                <app-intent-badge [intent]="i" />
+              }
+            </div>
+
+            <h3 class="ficha-h">Por qué te la sugerimos</h3>
+            <p class="text-sm">Los dos buscan {{ c.sharedIntents.map(intentLabel).join(' y ') }}.</p>
+            @if (c.sharedInterests.length) {
+              <ul class="mt-2 flex flex-wrap gap-1" aria-label="Intereses en común">
+                @for (t of c.sharedInterests; track t) {
+                  <li class="chip is-on">{{ t }}</li>
+                }
+              </ul>
+            }
+
+            <h3 class="ficha-h">Su plan ideal</h3>
+            <p class="text-sm">{{ planText() }}</p>
+            <p class="mt-3 line-clamp-2 text-sm text-ink-2">{{ c.person.bio }}</p>
+
+            <div class="ficha-acts">
+              <button class="ficha-pass" (click)="decide('pass')" [attr.aria-label]="'Ahora no, pasar a ' + c.person.name">
+                <kbd aria-hidden="true">←</kbd> Ahora no
+              </button>
+              <button class="btn btn-primary flex-1" (click)="decide('like')" [attr.aria-label]="'Me interesa ' + c.person.name">
+                Me interesa <kbd aria-hidden="true">→</kbd>
+              </button>
+            </div>
+            <div class="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1">
+              <a [routerLink]="['/app/persona', c.person.id]" class="btn btn-ghost btn-sm">Ver perfil completo</a>
+              <button class="ficha-safe" (click)="reportOpen.set(true)"><app-seal kind="report" label="Reportar" /></button>
+              <button class="ficha-safe" (click)="blockOpen.set(true)"><app-seal kind="block" label="Bloquear" /></button>
+            </div>
+
+            @if (selected(); as i) {
+              <details class="ficha-prefs">
+                <summary>Preferencias para {{ intents[i].label.toLowerCase() }}</summary>
+                <div class="mt-2 flex flex-col gap-1">
+                  @if (groups(i)) {
+                    <div class="flex flex-wrap gap-1" role="group" aria-label="Con cuántas personas">
+                      @for (k of sizeOrder; track k) {
+                        <button appChip [selected]="prefs().sizes.includes(k)" (click)="toggleSize(k)">{{ sizeInfo[k].label }}</button>
+                      }
+                    </div>
+                    <div class="flex flex-wrap gap-1" role="group" aria-label="Con qué tipo de personas">
+                      @for (a of peopleOrder; track a) {
+                        <button appChip [selected]="prefs().people === a" (click)="patchPrefs({ people: a })">{{ peopleInfo[a].label }}</button>
+                      }
+                    </div>
+                  }
+                  @if (gendered(i)) {
+                    <div class="flex flex-wrap gap-1" role="group" aria-label="Qué género te interesa conocer">
+                      @for (g of genderOrder; track g) {
+                        <button appChip [selected]="prefs().genders.includes(g)" (click)="toggleGender(g)">{{ genderInfo[g].seek }}</button>
+                      }
+                    </div>
+                  }
+                </div>
+              </details>
+            }
+          </div>
+        }
+      </aside>
+
+      @if (reportOpen()) {
+        <app-report-dialog [personId]="c.person.id" [name]="c.person.name" (closed)="reportOpen.set(false)" />
+      }
+      @if (blockOpen()) {
+        <app-block-dialog [personId]="c.person.id" [name]="c.person.name" (closed)="blockOpen.set(false)" />
+      }
+    }
+  } @else {
+    <div class="disc-empty rise-in">
+      <svg viewBox="0 0 200 200" class="w-40" aria-hidden="true">
+        <circle cx="100" cy="100" r="70" fill="none" class="stroke-line" stroke-dasharray="3 7" />
+        <circle cx="100" cy="100" r="14" class="fill-ink" />
+        <line x1="114" y1="100" x2="168" y2="64" class="stroke-ink-3" stroke-width="2" stroke-dasharray="4 5" />
+      </svg>
+      <h2 class="font-display mt-4 text-5xl">Ya viste a todos</h2>
+      <p class="mt-3 max-w-[40ch] text-ink-2">Amplía tus filtros, agrega intereses o únete a un plan para conocer gente en persona.</p>
+      <div class="mt-6 flex flex-wrap justify-center gap-4">
+        <a routerLink="/app/planes" class="btn btn-primary">Ver planes cerca <app-icon name="arrow-right" [size]="17" /></a>
+        <a routerLink="/app/perfil" class="btn btn-ghost">Editar intereses</a>
       </div>
-    </section>
-  </div>
-} @else {
-  <div class="card rise-in mx-auto mt-16 flex w-full max-w-[30rem] flex-col items-center p-10 text-center">
-    <h2 class="font-display text-4xl">Ya viste a todos</h2>
-    <p class="mt-3 text-ink-2">Amplía tus filtros, agrega intereses a tu perfil o únete a un plan para conocer gente en persona.</p>
-    <div class="mt-6 flex flex-wrap justify-center gap-2">
-      <a routerLink="/app/planes" class="btn btn-primary">Ver planes cerca</a>
-      <a routerLink="/app/perfil" class="btn btn-ghost">Editar intereses</a>
     </div>
-  </div>
-}
+  }
+</div>
 
 @if (filtersOpen()) {
   <app-filters-panel animate.leave="drawer-leaving" (closed)="filtersOpen.set(false)" />
@@ -118,9 +155,9 @@
       Tu plan {{ limits().name }} incluye {{ limits().weeklyMatches }} matches por semana. Se renuevan el lunes, o puedes
       {{ store.tier() === 'free' ? 'pasarte a Grand para tener el triple.' : 'pasarte a Lucidité para tenerlos ilimitados.' }}
     </p>
-    <div class="mt-6 flex flex-col gap-2 sm:flex-row-reverse">
-      <button class="btn btn-primary flex-1" (click)="goToSubscription()">{{ store.tier() === 'free' ? 'Ver Grand' : 'Ver Lucidité' }}</button>
-      <button class="btn btn-ghost flex-1" (click)="limitOpen.set(false)">Esperar al lunes</button>
+    <div class="mt-6 flex flex-col gap-3">
+      <button class="btn btn-primary" (click)="goToSubscription()">{{ store.tier() === 'free' ? 'Ver Grand' : 'Ver Lucidité' }}</button>
+      <button class="btn btn-ghost self-center" (click)="limitOpen.set(false)">Esperar al lunes</button>
     </div>
   </app-modal>
 }
