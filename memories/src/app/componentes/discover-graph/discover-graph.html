@@ -1,0 +1,49 @@
+<svg viewBox="-40 -10 680 620" class="graph" role="group" aria-label="Constelación de sugerencias: tú al centro, tus intereses y las personas que los comparten">
+  <circle [attr.cx]="c" [attr.cy]="c" r="132" class="orbit" aria-hidden="true" />
+  <circle [attr.cx]="c" [attr.cy]="c" r="238" class="orbit" aria-hidden="true" />
+
+  <!-- Hilos: tú → tus intereses -->
+  <g aria-hidden="true">
+    @for (n of ring(); track n.name; let i = $index) {
+      <line [attr.x1]="c" [attr.y1]="c" [attr.x2]="n.x" [attr.y2]="n.y" class="thread thread-me" pathLength="1" [style.--i]="i" />
+    }
+  </g>
+
+  <!-- Personas y sus hilos hacia los intereses en común -->
+  @for (p of people(); track p.id) {
+    <g class="person" [attr.data-intent]="p.intent" [class.is-on]="selected() === p.id" [class.is-dim]="selected() && selected() !== p.id" [style.--o]="p.order">
+      @for (l of p.links; track $index) {
+        <line [attr.x1]="p.x" [attr.y1]="p.y" [attr.x2]="l.x" [attr.y2]="l.y" class="thread thread-person" pathLength="1" aria-hidden="true" />
+      }
+      <g
+        class="person-hit"
+        role="button"
+        tabindex="0"
+        [attr.aria-label]="p.label"
+        [attr.aria-pressed]="selected() === p.id"
+        (click)="pick.emit(p.id)"
+        (keydown)="onKey($event, p.id)"
+      >
+        <circle [attr.cx]="p.x" [attr.cy]="p.y" r="26" class="person-ring" />
+        <circle [attr.cx]="p.x" [attr.cy]="p.y" r="19" class="person-dot" />
+        <text [attr.x]="p.x" [attr.y]="p.y + 6" class="person-initial" aria-hidden="true">{{ p.initial }}</text>
+        <text [attr.x]="p.lx" [attr.y]="p.ly" [attr.text-anchor]="p.anchor" class="person-name" aria-hidden="true">{{ p.name }}</text>
+      </g>
+    </g>
+  }
+
+  <!-- Intereses -->
+  <g aria-hidden="true">
+    @for (n of ring(); track n.name; let i = $index) {
+      <g class="interest" [style.--i]="i">
+        <circle [attr.cx]="n.x" [attr.cy]="n.y" r="7" class="interest-dot" />
+        <text [attr.x]="n.lx" [attr.y]="n.ly" [attr.text-anchor]="n.anchor" class="interest-name">{{ n.name }}</text>
+      </g>
+    }
+  </g>
+
+  <g aria-hidden="true" class="me">
+    <circle [attr.cx]="c" [attr.cy]="c" r="30" class="me-dot" />
+    <text [attr.x]="c" [attr.y]="c + 6" class="me-label">Tú</text>
+  </g>
+</svg>
