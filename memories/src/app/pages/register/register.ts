@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core'
+import { Component, inject, input, signal } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { Router, RouterLink } from '@angular/router'
 import { AppStore } from '../../servicios/app-store'
@@ -23,6 +23,8 @@ function ageFrom(date: string) {
 export class Register {
   private readonly store = inject(AppStore)
   private readonly router = inject(Router)
+  /** Intención elegida al arrastrar el hilo en la portada (?intencion=friend). */
+  readonly intencion = input<string>()
 
   protected readonly name = signal('')
   protected readonly email = signal('')
@@ -44,6 +46,7 @@ export class Register {
     this.errors.set(next)
     if (Object.keys(next).length) return
     this.store.register({ name: this.name().trim(), email: this.email(), age })
-    this.router.navigateByUrl('/bienvenida')
+    const i = this.intencion()
+    this.router.navigate(['/bienvenida'], i ? { queryParams: { intencion: i } } : {})
   }
 }

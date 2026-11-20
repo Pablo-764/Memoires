@@ -1,4 +1,4 @@
-import { Component, DestroyRef, computed, effect, inject, signal } from '@angular/core'
+import { Component, DestroyRef, OnInit, computed, effect, inject, input, signal } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { Router } from '@angular/router'
 import { AppStore } from '../../servicios/app-store'
@@ -18,7 +18,15 @@ import { IntentConstellation } from '../../componentes/intent-constellation/inte
   styleUrl: './onboarding.css',
   templateUrl: './onboarding.html',
 })
-export class Onboarding {
+export class Onboarding implements OnInit {
+  /** Intención que llega desde la portada; se deja elegida si aún no hay ninguna. */
+  readonly intencion = input<string>()
+
+  ngOnInit() {
+    const i = this.intencion() as Intent | undefined
+    if (i && i in INTENTS && !this.intents().length) this.intents.set([i])
+  }
+
   private readonly store = inject(AppStore)
   private readonly router = inject(Router)
 

@@ -3,6 +3,12 @@
     <div>
       <a routerLink="/"><app-logo /></a>
       <p class="mt-3 max-w-[30ch] text-ink-2">Di qué buscas y conoce a quien busca lo mismo en tu ciudad.</p>
+      @if (qr(); as url) {
+        <div class="mt-5 flex items-center gap-3">
+          <app-profile-qr class="w-24" [url]="url" label="Código QR para abrir mémoires" />
+          <p class="max-w-[16ch] text-xs text-ink-2">Escanéalo para abrir mémoires en tu celular.</p>
+        </div>
+      }
     </div>
     <nav aria-labelledby="pie-producto">
       <h2 id="pie-producto" class="pie-title">Producto</h2>

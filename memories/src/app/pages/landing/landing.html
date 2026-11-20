@@ -1,123 +1,100 @@
-<header class="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
-  <a routerLink="/" (click)="toTop()"><app-logo /></a>
-  <nav class="flex items-center gap-1 sm:gap-2" aria-label="Cuenta">
-    <button appThemeIcon aria-label="Cambiar tema" class="text-ink-2"></button>
-    <a routerLink="/entrar" class="btn btn-sm">Iniciar sesión</a>
-    <a routerLink="/registro" class="btn btn-primary btn-sm hidden sm:inline-flex">Crear cuenta</a>
-  </nav>
-</header>
+<!-- Héroe a pantalla completa: la constelación viva -->
+<section class="hero" aria-labelledby="hero-titulo">
+  <app-hero-constellation [counts]="counts()" [active]="hovered()" (chosen)="start($event)" />
 
-<!-- Héroe: la marca primero, luego la acción, luego la constelación -->
-<section class="mx-auto max-w-6xl px-4 pb-16 pt-4 sm:px-6 md:pb-24 md:pt-10">
-  <app-logo size="hero" class="hero-logo" />
+  <header class="hero-top">
+    <a routerLink="/" (click)="toTop()"><app-logo size="sm" /></a>
+    <nav class="flex items-center gap-1" aria-label="Cuenta">
+      <button appThemeIcon aria-label="Cambiar tema" class="text-ink-2"></button>
+      <a routerLink="/entrar" class="btn btn-ghost btn-sm">Iniciar sesión</a>
+    </nav>
+  </header>
 
-  <div class="mt-8 grid items-center gap-10 lg:mt-12 lg:grid-cols-[1fr_minmax(0,460px)] lg:gap-16">
-    <div>
-      <h1 data-hero-in class="max-w-[18ch] text-[clamp(1.75rem,4.2vw,2.75rem)] font-bold leading-[1.1] tracking-tight">
-        Di qué buscas. Conoce a quien busca <span class="text-tint-ink">lo mismo</span>.
-      </h1>
-      <p data-hero-in class="mt-4 max-w-[46ch] text-lg text-ink-2">
-        Pareja, amistad, compañía para un plan o alguien con tu pasatiempo. Lo dices desde el principio y te mostramos a quienes buscan lo
-        mismo en tu ciudad.
-      </p>
-
-      <fieldset data-hero-in class="mt-8">
-        <legend class="mb-3 text-sm font-semibold text-ink-2">Hoy busco</legend>
-        <div class="shape-bar" [appPillGroup]="intent()" role="radiogroup" aria-label="Hoy busco">
-          <span class="group-pill" aria-hidden="true"></span>
-          @for (i of order; track i) {
-            <button type="button" role="radio" class="intent-tab" [attr.aria-checked]="i === intent()" [attr.data-tone]="i" [class.is-on]="i === intent()" (click)="intent.set(i)">
-              {{ intents[i].short }}
-            </button>
-          }
-        </div>
-        <p class="mt-3 text-sm text-ink-2" aria-live="polite">
-          <span class="font-semibold tabular-nums text-ink">{{ sample() }} personas</span> en Guadalajara buscan {{ intents[intent()].label.toLowerCase() }}.
-        </p>
-      </fieldset>
-
-      <div data-hero-in class="mt-8 flex flex-wrap gap-3">
-        <a routerLink="/registro" class="btn btn-primary min-h-12 px-6 text-base">Crear mi cuenta</a>
-        <a href="#como-funciona" class="btn btn-ghost min-h-12 px-6 text-base" (click)="scrollToSteps($event)">Cómo funciona</a>
-      </div>
+  <div class="hero-copy">
+    <p class="hero-kicker">Arrastra un hilo de <span class="font-bold text-ink">tú</span> a lo que buscas</p>
+    <h1 id="hero-titulo" class="hero-title">Di qué buscas.<br />Conoce a quien busca lo mismo.</h1>
+    <!-- Equivalente accesible del hilo: elegir la intención con un botón -->
+    <div class="hero-pick" role="group" aria-label="Empezar con una intención">
+      @for (i of order; track i) {
+        <button
+          type="button"
+          class="hero-intent"
+          [attr.data-intent]="i"
+          (mouseenter)="hovered.set(i)"
+          (mouseleave)="hovered.set(null)"
+          (focus)="hovered.set(i)"
+          (blur)="hovered.set(null)"
+          (click)="start(i)"
+        >
+          <span class="chip-dot" aria-hidden="true"></span>
+          {{ intents[i].label }}
+          <span class="font-mono text-xs text-ink-2">{{ counts()[i] }}</span>
+        </button>
+      }
     </div>
-
-    <app-intent-constellation class="mx-auto w-full max-w-[460px]" [active]="intent()" />
   </div>
+  <a href="#como-funciona" class="hero-scroll" aria-label="Ver cómo funciona"><app-icon name="arrow-right" [size]="18" /></a>
 </section>
 
-<!-- Las cuatro intenciones: retícula editorial de tintas planas (mirai) -->
-<section class="border-y border-line bg-paper/70" aria-labelledby="intenciones-titulo">
-  <h2 id="intenciones-titulo" class="sr-only">Las cuatro intenciones</h2>
-  <ol class="mx-auto grid max-w-6xl sm:grid-cols-2 lg:grid-cols-4">
-    @for (i of order; track i; let n = $index) {
-      <li class="intent-col" [attr.data-intent]="i" [class.is-on]="i === intent()">
-        <button type="button" class="intent-col-btn" [attr.aria-pressed]="i === intent()" (click)="intent.set(i)">
-          <span class="text-sm font-bold tabular-nums text-tint-ink">0{{ n + 1 }}</span>
-          <span class="font-display mt-6 block text-[clamp(2.25rem,3.4vw,3rem)]">{{ intents[i].short }}</span>
-          <span class="mt-3 block max-w-[30ch] text-ink-2">{{ intents[i].description }}</span>
-          <span class="mt-6 inline-flex items-center gap-2 text-sm font-semibold">
-            <span class="chip-dot" aria-hidden="true"></span>
-            <span class="tabular-nums">{{ count(i) }}</span> personas cerca
-          </span>
-        </button>
+<!-- Cómo funciona: tres capítulos con la misma escena fija que se transforma -->
+<section id="como-funciona" class="story" aria-labelledby="como-titulo">
+  <h2 id="como-titulo" class="sr-only">Cómo funciona</h2>
+  <div class="story-stage" aria-hidden="true">
+    <svg viewBox="0 0 400 400" class="scene" [attr.data-ch]="chapter()">
+      <circle cx="200" cy="200" r="150" class="scene-orbit" />
+      @for (i of order; track i; let k = $index) {
+        <g class="scene-intent" [attr.data-intent]="i">
+          <circle [attr.cx]="200 + 130 * Math.cos(k * 1.5708 - 0.785)" [attr.cy]="200 + 130 * Math.sin(k * 1.5708 - 0.785)" r="16" class="scene-dot" />
+        </g>
+      }
+      @for (p of [0, 1, 2, 3, 4]; track p) {
+        <g class="scene-person" [style.--p]="p">
+          <line x1="200" y1="200" [attr.x2]="200 + (70 + p * 16) * Math.cos(p * 1.25 + 0.4)" [attr.y2]="200 + (70 + p * 16) * Math.sin(p * 1.25 + 0.4)" class="scene-thread" />
+          <circle [attr.cx]="200 + (70 + p * 16) * Math.cos(p * 1.25 + 0.4)" [attr.cy]="200 + (70 + p * 16) * Math.sin(p * 1.25 + 0.4)" r="9" class="scene-node" />
+        </g>
+      }
+      <g class="scene-chat">
+        <path d="M200 200 C 240 160, 270 170, 286 132" class="scene-knot" pathLength="1" />
+        <rect x="236" y="70" width="128" height="36" rx="18" class="scene-bubble" />
+        <rect x="60" y="300" width="112" height="34" rx="17" class="scene-bubble scene-bubble-me" />
+      </g>
+      <circle cx="200" cy="200" r="22" class="scene-me" />
+      <text x="200" y="206" class="scene-me-label">tú</text>
+    </svg>
+  </div>
+  <ol class="story-steps">
+    @for (c of chapters; track c.title; let i = $index) {
+      <li #chapterEl class="story-step" [attr.data-ch]="i" [class.is-on]="chapter() === i">
+        <span class="font-mono text-sm text-tint-ink">Capítulo {{ i + 1 }} de 3</span>
+        <h3 class="font-display mt-3 text-[clamp(2.5rem,5vw,4.25rem)]">{{ c.title }}</h3>
+        <p class="mt-4 max-w-[34ch] text-lg text-ink-2">{{ c.text }}</p>
       </li>
     }
   </ol>
 </section>
 
-<section id="como-funciona" class="mx-auto max-w-6xl scroll-mt-4 px-4 py-20 sm:px-6 md:py-28" aria-labelledby="como-titulo">
-  <div class="grid gap-10 md:grid-cols-[0.8fr_1.2fr]">
-    <div appReveal>
-      <h2 id="como-titulo" class="font-display text-5xl md:text-6xl">Cómo funciona</h2>
-      <p class="mt-4 max-w-[32ch] text-ink-2">Tres pasos. Sin perfiles infinitos ni algoritmos que adivinan.</p>
-    </div>
-    <ol class="steps">
-      @for (s of steps; track s[0]; let i = $index) {
-        <li appReveal class="step">
-          <span class="step-num" aria-hidden="true">{{ i + 1 }}</span>
-          <div>
-            <h3 class="text-xl">{{ s[0] }}</h3>
-            <p class="mt-1.5 max-w-[48ch] text-ink-2">{{ s[1] }}</p>
-          </div>
-        </li>
-      }
-    </ol>
+<!-- Seguridad: el sello -->
+<section id="seguridad" class="safety" aria-labelledby="seguridad-titulo">
+  <div class="safety-seal">
+    <app-seal kind="safe" size="lg" />
   </div>
-</section>
-
-<section id="seguridad" class="scroll-mt-4 border-t border-line bg-paper-2" aria-labelledby="seguridad-titulo">
-  <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6 md:py-28">
-    <div appReveal class="flex flex-wrap items-end justify-between gap-6">
-      <div>
-        <app-seal kind="safe" size="lg" label="Incluida en todos los planes" />
-        <h2 id="seguridad-titulo" class="font-display mt-6 text-5xl md:text-6xl">Seguridad primero</h2>
-      </div>
-      <p class="max-w-[40ch] text-ink-2">Es la prioridad del producto, no un extra: también en el plan gratuito.</p>
-    </div>
-    <ul class="mt-12 grid gap-px overflow-hidden rounded-(--radius-card) bg-line sm:grid-cols-2 lg:grid-cols-3">
-      @for (s of safety; track s.title) {
-        <li appReveal class="bg-paper p-6">
-          <app-seal [kind]="s.kind" size="md" />
-          <h3 class="mt-4 text-lg">{{ s.title }}</h3>
-          <p class="mt-1.5 text-ink-2">{{ s.text }}</p>
-        </li>
-      }
+  <div>
+    <h2 id="seguridad-titulo" class="font-display text-[clamp(2.75rem,6vw,5rem)]">Seguridad, en todos los planes</h2>
+    <ul class="safety-list">
+      <li><app-seal kind="verified" size="md" /><span><strong>Perfiles verificados a la vista.</strong> El sello aparece antes de que decidas.</span></li>
+      <li><app-seal kind="report" size="md" /><span><strong>Reportar y bloquear a un toque.</strong> La persona bloqueada deja de verte.</span></li>
+      <li><app-seal kind="safe" size="md" /><span><strong>Chat solo con interés mutuo.</strong> Nadie te escribe si tú no quisiste.</span></li>
+      <li><app-seal kind="private" size="md" /><span><strong>Tu ciudad, nunca tu ubicación.</strong> No guardamos coordenadas.</span></li>
     </ul>
   </div>
 </section>
 
-<section id="precios" class="mx-auto max-w-6xl scroll-mt-4 px-4 py-20 sm:px-6 md:py-28" aria-labelledby="precios-titulo">
-  <div appReveal class="grid gap-4 md:grid-cols-[0.8fr_1.2fr] md:gap-10">
-    <h2 id="precios-titulo" class="font-display text-5xl md:text-6xl">Precios</h2>
-    <p class="max-w-[52ch] text-ink-2 md:pt-2">
-      Puedes usar mémoires gratis: incluye 15 matches y 4,000 palabras de mensajes por semana. Si necesitas más, hay dos suscripciones.
-      Se pagan con PayPal o Google Pay y se cancelan cuando quieras.
-    </p>
-  </div>
+<section id="precios" class="prices" aria-labelledby="precios-titulo">
+  <h2 id="precios-titulo" class="font-display text-[clamp(2.75rem,6vw,5rem)]">Gratis para empezar</h2>
+  <p class="mt-3 max-w-[52ch] text-ink-2">15 matches y 4,000 palabras por semana sin pagar. Si quieres más, dos suscripciones que cancelas cuando quieras.</p>
   <div class="mt-10">
     <app-tier-cards [ctaLabel]="cta" (choose)="router.navigateByUrl('/registro')" />
   </div>
 </section>
 
-<app-footer />
+<app-footer [qr]="qrUrl" />
