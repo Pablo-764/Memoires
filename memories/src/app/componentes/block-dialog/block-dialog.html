@@ -1,5 +1,5 @@
 <app-modal [title]="'¿Bloquear a ' + name() + '?'" (closed)="closed.emit()">
-  <p class="text-ink-soft">{{ name() }} dejará de verte en sus sugerencias y ya no podrá escribirte. No le avisaremos.</p>
+  <p class="text-ink-2">{{ name() }} dejará de verte en sus sugerencias y ya no podrá escribirte. No le avisaremos.</p>
   <div class="mt-6 flex flex-col gap-2 sm:flex-row-reverse">
     <button class="btn btn-danger flex-1" (click)="confirm()">Bloquear</button>
     <button class="btn btn-ghost flex-1" (click)="closed.emit()">Cancelar</button>

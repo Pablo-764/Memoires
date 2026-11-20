@@ -1,6 +1,6 @@
 <div class="mb-1.5 flex items-baseline justify-between gap-3 text-sm">
-  <span class="font-medium text-ink-soft">{{ label() }}</span>
-  <span class="tabular-nums text-ink-mute">{{ leftLabel() }}</span>
+  <span class="font-medium text-ink-2">{{ label() }}</span>
+  <span class="tabular-nums text-ink-3">{{ leftLabel() }}</span>
 </div>
 <div
   class="h-2 overflow-hidden rounded-full bg-line"
@@ -11,7 +11,7 @@
 >
   <div
     class="bar-grow h-full origin-left rounded-full"
-    [class]="unlimited() ? 'bg-plan' : pct() > 85 ? 'bg-romance' : 'bg-accent'"
+    [class]="unlimited() ? 'bg-plan-tint' : pct() > 85 ? 'bg-romance-tint' : 'bg-tint-fill'"
     [style.transform]="'scaleX(' + pct() / 100 + ')'"
   ></div>
 </div>

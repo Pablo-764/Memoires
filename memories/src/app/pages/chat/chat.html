@@ -2,7 +2,7 @@
   <div class="mx-auto flex h-[calc(100dvh-11rem)] max-w-3xl flex-col md:h-[calc(100dvh-5rem)]">
     <header class="chat-head flex items-center gap-2 border-b border-line pb-3">
       <a routerLink="/app/conexiones" class="btn btn-icon -ml-2" aria-label="Volver a conexiones"><app-icon name="arrow-left" [size]="20" /></a>
-      <a [routerLink]="['/app/persona', p.id]" class="flex min-w-0 flex-1 items-center gap-3" [attr.aria-label]="'Ver perfil de ' + p.name">
+      <a [routerLink]="['/app/persona', p.id]" class="flex min-w-0 flex-1 items-center gap-3">
         <app-avatar [name]="p.name" [hue]="p.hue" [size]="44" [frame]="p.frame" />
         <span class="min-w-0">
           <span class="flex items-center gap-2">
@@ -51,9 +51,9 @@
         @if (store.typing() === id()) {
           <li class="flex justify-start" animate.leave="bar-out" [attr.aria-label]="p.name + ' está escribiendo'">
             <p class="bubble-in bubble-them flex items-center gap-1 rounded-(--radius-card) rounded-bl-md bg-paper-2 px-4 py-3.5 shadow-[inset_0_0_0_1px_var(--color-line)]">
-              <span class="typing-dot size-1.5 rounded-full bg-ink-mute"></span>
-              <span class="typing-dot size-1.5 rounded-full bg-ink-mute"></span>
-              <span class="typing-dot size-1.5 rounded-full bg-ink-mute"></span>
+              <span class="typing-dot size-1.5 rounded-full bg-ink-3"></span>
+              <span class="typing-dot size-1.5 rounded-full bg-ink-3"></span>
+              <span class="typing-dot size-1.5 rounded-full bg-ink-3"></span>
             </p>
           </li>
         }

@@ -24,7 +24,8 @@ export async function startLandingMotion(root: HTMLElement): Promise<() => void>
     const tl = gsap.timeline({ defaults: { ease: 'power3.out' } })
     tl.fromTo(letters, { scaleY: 0, yPercent: 30, opacity: 0 }, { scaleY: 1, yPercent: 0, opacity: 1, transformOrigin: '50% 100%', duration: 0.7, stagger: 0.06, ease: 'back.out(1.8)' })
     if (dot) tl.fromTo(dot, { y: -140, opacity: 0, scale: 0.4 }, { y: 0, opacity: 1, scale: 1, duration: 0.8, ease: 'bounce.out' }, '-=0.25')
-    tl.fromTo(root.querySelectorAll('[data-hero-in]'), { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, stagger: 0.08 }, '-=0.5')
+    // El texto ya está visible (es lo que mide el LCP); solo se asienta un poco
+    tl.from(root.querySelectorAll('[data-hero-in]'), { y: 10, duration: 0.5, stagger: 0.06 }, 0)
     tl.add(() => root.classList.remove('hero-pending'))
 
     // El logotipo se queda atrás al bajar (scrub)

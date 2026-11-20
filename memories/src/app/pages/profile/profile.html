@@ -57,7 +57,7 @@
         <button type="button" role="tab" [attr.data-shape]="tabLook[n].shape" [attr.data-tone]="tabLook[n].tone" class="intent-tab" [class.is-on]="tab() === t.key" [attr.aria-selected]="tab() === t.key" (click)="tab.set(t.key)">
           {{ t.label }}
           @if (t.count) {
-            <span class="tabular-nums opacity-60">{{ t.count }}</span>
+            <span class="tab-count tabular-nums">{{ t.count }}</span>
           }
         </button>
       }
@@ -157,7 +157,7 @@
                   @for (g of draft().gallery; track $index; let i = $index) {
                     <button type="button" class="group relative aspect-square overflow-hidden rounded-2xl" aria-label="Quitar foto" (click)="removeMoment(i)">
                       <img [src]="g" alt="" class="size-full object-cover" />
-                      <span class="absolute inset-0 grid place-items-center bg-black/45 text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100"><app-icon name="x" [size]="20" /></span>
+                      <span class="absolute inset-0 grid place-items-center bg-ink/50 text-paper opacity-0 transition-opacity duration-200 group-hover:opacity-100"><app-icon name="x" [size]="20" /></span>
                     </button>
                   }
                   @if (draft().gallery.length < 6) {

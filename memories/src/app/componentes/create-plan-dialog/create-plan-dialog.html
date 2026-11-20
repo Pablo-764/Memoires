@@ -16,7 +16,7 @@
               }
             </span>
             <span class="text-base font-bold leading-tight">{{ info[k].label }}</span>
-            <span class="text-xs text-ink-mute">{{ info[k].hint }}</span>
+            <span class="text-xs text-ink-3">{{ info[k].hint }}</span>
           </button>
         }
       </div>
@@ -34,7 +34,7 @@
         @for (a of audiences; track a) {
           <button type="button" class="size-tile" [attr.aria-pressed]="audience() === a" (click)="audience.set(a)">
             <span class="font-semibold">{{ audienceInfo[a].label }}</span>
-            <span class="text-xs text-ink-mute">{{ audienceInfo[a].hint }}</span>
+            <span class="text-xs text-ink-3">{{ audienceInfo[a].hint }}</span>
           </button>
         }
       </div>

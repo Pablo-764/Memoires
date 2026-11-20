@@ -9,10 +9,10 @@ import { Seal } from '../../componentes/seal/seal'
 import { Logo } from '../../componentes/logo/logo'
 
 const STATUS_STYLE: Record<Report['status'], string> = {
-  pendiente: 'bg-friend-soft text-friend',
-  descartado: 'bg-mist text-ink-mute',
-  advertido: 'bg-hobby-soft text-hobby',
-  suspendido: 'bg-danger-soft text-danger',
+  pendiente: 'bg-friend-wash text-friend',
+  descartado: 'bg-paper text-ink-3',
+  advertido: 'bg-hobby-wash text-hobby',
+  suspendido: 'bg-danger-wash text-danger',
 }
 
 function timeAgo(t: number) {

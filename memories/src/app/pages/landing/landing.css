@@ -2,7 +2,7 @@
   display: block;
 }
 
-:host(.hero-pending) :is(.hero-logo .logo-l, .hero-logo .logo-dot, [data-hero-in]) {
+:host(.hero-pending) :is(.hero-logo .logo-l, .hero-logo .logo-dot) {
   opacity: 0;
 }
 

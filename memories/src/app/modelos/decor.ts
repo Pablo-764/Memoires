@@ -90,7 +90,7 @@ const b = (key: string, label: string, group: string, scene: BannerScene, css: s
 })
 
 export const BANNERS: Banner[] = [
-  { key: 'none', label: 'Sin fondo', group: 'Cielos', css: 'var(--color-raised)', scene: 'static', colors: [], tier: 'free' },
+  { key: 'none', label: 'Sin fondo', group: 'Cielos', css: 'var(--color-paper-3)', scene: 'static', colors: [], tier: 'free' },
   b('aurora', 'Aurora', 'Cielos', 'aurora', 'linear-gradient(180deg, #0d2a3a, #1b4b5c)', ['#5ff2c4', '#9f8bff', '#ff9ccd'], 'grand'),
   b('marea', 'Marea', 'Cielos', 'waves', 'linear-gradient(180deg, #cfe6ff, #8fb9f6)', ['#ffffff99', '#6c9eea', '#3f6fc6'], 'grand'),
   b('crepusculo', 'Crepúsculo', 'Cielos', 'sun', 'linear-gradient(180deg, #2b1b4d, #7b3f98 58%, #f08a5d)', ['#ffd08a', '#ff8a5c'], 'grand'),
