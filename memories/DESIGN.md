@@ -1,133 +1,138 @@
-# Sistema de diseño de mémoires
+# Sistema de diseño de mémoires · "Constelación de intenciones"
 
-Fuente de verdad: `src/styles.css` (bloques `@theme` y `.dark`). Este documento resume las decisiones; si algo cambia en el código, se actualiza aquí.
+Fuente de verdad del código: `src/styles.css` (bloque `@theme`, `:root`, `.dark` y `[data-intent]`). Si algo cambia allá, se actualiza aquí. Ningún componente usa colores sueltos: todo sale de estos tokens.
 
-## Idea
+## 1. Idea
 
-La interfaz es un álbum de recuerdos: papel con grano, tinta impresa con sombra desplazada, cinta adhesiva, notas a mano y polaroids. No hay vidrio ni desenfoques decorativos.
+Cada persona es un punto; sus intereses son hilos que la unen con otras. La interfaz es papel neutro con un patrón *asanoha* casi invisible, y **el color lo pone la intención activa**: pareja, amistad, un plan o un pasatiempo. Al cambiar de intención cambia la tinta de toda la UI, como cambia la tirada de un impreso (mirai) o el reino en LinNeo.
 
-## Color
+Tres reglas que se revisan en cada pantalla:
 
-Cada tema tiene su propia pareja de colores y reparte 60-30-10: 60 % base (fondos), 30 % superficies y texto, 10 % acento (botones principales, enlaces, selección, lo activo y números clave).
+1. **Dos bases y una tinta** (dis-043). Papel y tinta neutros hacen el 90 %; la tinta de la intención va en la acción principal, lo activo y los puntos del grafo. Nunca en párrafos ni fondos grandes.
+2. **Un momento firma por página** (dis-023). Lo demás se mueve 150 a 250 ms o no se mueve.
+3. **La seguridad se ve.** Verificación, reporte y bloqueo tienen su propio lenguaje (el sello) y están siempre a un toque.
 
-| Tema | Base | Acento | Nunca |
-|---|---|---|---|
-| Claro | Beige (tono 80) | Violeta y lila (tono 300) | Morado oscuro en bloques, naranja |
-| Oscuro | Morado (tono 300) | Naranja (tono 55) | Beige, lila |
+## 2. Color
 
-- **Claro.** Beige y violeta son complementarios en el círculo de pintor. El beige casi no tiene croma, así que el violeta resalta sin gritar. La jerarquía se arma en un esquema monocromático: lila claro para superficies destacadas, lila medio para decoración, violeta para acción y violeta muy oscuro para el texto.
-- **Oscuro.** Morado y naranja están a 115° en OKLCH, dos vértices de una tríada. Dan el máximo contraste de temperatura y de luminosidad. El texto es blanco con un toque de naranja.
-- **Hilo entre temas.** Los dos comparten el tono 300, así la marca se reconoce al cambiar de tema.
-
-### Tokens
+### Bases
 
 | Token | Claro | Oscuro | Uso |
 |---|---|---|---|
-| `mist` | `#f7f2e8` | `#110a1d` | Fondo de página |
-| `surface` | `#fefcf8` | `#1a1228` | Tarjetas, campos |
-| `raised` | `#fbf6ef` | `#251c36` | Superficie elevada |
-| `line` / `line-strong` | `#e6ded3` / `#8b7e6d` | `#352c45` / `#796e8e` | Divisores / bordes de controles |
-| `ink` | `#2e1f46` | `#f8ece3` | Texto principal |
-| `ink-soft` / `ink-mute` | `#524569` / `#635975` | `#dac6b8` / `#b6a08f` | Texto secundario / terciario |
-| `accent` / `accent-hover` | `#6e3ead` / `#5c2f95` | `#fc984c` / `#fdb57e` | Acción principal |
-| `on-accent` | `#ffffff` | `#0c0519` | Texto sobre el acento |
-| `accent-soft` | `#ede5fe` | naranja al 14 % | Selección, fondos suaves |
-| `lila` | `#d2c0f5` | (no se usa en texto) | Decoración sin intención |
-| `night` | `#e4d9fd` | `#0c0519` | Bloque destacado: panel de plan, Lucidité |
-| `safe` | `#ede5fe` | `#321e24` | Sección de seguridad |
-| `danger` | `#af2b25` | `#f68678` | Errores (siempre con ícono y texto) |
+| `paper` | `#F7F5F0` | `#16140F` | Fondo de página |
+| `paper-2` | `#EFECE5` | `#211E19` | Tarjetas, campos, barra lateral |
+| `paper-3` | `#E5E1D8` | `#2C2923` | Chips, rellenos, hover |
+| `line` | `#D8D4CC` | `#3A3630` | Divisores y bordes de tarjeta |
+| `line-strong` | `#8E877C` | `#6E675D` | Borde de controles (3:1) |
+| `ink` | `#1A1814` | `#F2EEE7` | Texto principal (16.3:1 / 15.9:1) |
+| `ink-2` | `#57524B` | `#B4ACA1` | Texto secundario (7.1:1 / 8.2:1) |
+| `ink-3` | `#6E6860` | `#9A9288` | Metadatos; solo sobre `paper` y `paper-2` (5.1:1 / 6.0:1) |
 
-Variables de material (en `:root` y `.dark`): `--offset` (sombra desplazada: lila en el claro, naranja apagado en el oscuro), `--edge` (borde de tinta), `--paper-grain` (ruido SVG teñido), `--polaroid` y `--polaroid-ink`, `--note-bg` y `--note-ink`, `--marker` (resaltador).
+### Tinta por intención
 
-### Intenciones (hexada)
+Sacadas de la paleta semántica de *disco* (iroFactory) y ajustadas a AA. Cada intención tiene cuatro valores:
 
-Son los únicos colores fuera de las dos parejas. Tienen la misma luz y el mismo croma para que ninguna pese más, y solo van en piezas pequeñas: chips, hilo, cinta y el detalle del tramado.
+- `tint`: el pigmento. Puntos, hilos, grafo, ilustración. No se usa para texto.
+- `tint-ink`: la misma tinta como texto sobre papel (≥ 4.5:1 incluso sobre `paper-3`).
+- `tint-fill` y `on-tint-fill`: botón principal y su texto.
+- `wash`: lavado muy claro (o papel virado en oscuro) para la franja de la intención.
 
-| Intención | Tono | Claro (texto / suave) | Oscuro |
+| Intención | Color de disco | `tint` claro | `tint-ink` claro | Relleno / texto | `tint` oscuro |
+|---|---|---|---|---|---|
+| Pareja (`romance`) | rosa | `#D04A72` | `#B03A5F` (5.3:1) | `#B03A5F` / blanco (5.8:1) | `#F2729A` (6.7:1) |
+| Amistad (`friend`) | mostaza | `#E09A1E` | `#875A06` (5.5:1) | `#E09A1E` / tinta (7.4:1) | `#F0B040` (9.6:1) |
+| Un plan (`plan`) | cielo | `#3A6FD0` | `#2C5BB4` (5.9:1) | `#2C5BB4` / blanco (6.4:1) | `#7FA6F5` (7.6:1) |
+| Pasatiempo (`hobby`) | menta | `#2E9A62` | `#21714A` (5.5:1) | `#21714A` / blanco (6.0:1) | `#4CCB8A` (9.0:1) |
+| Marca (sin intención) | índigo | `#4A50C8` | `#4A50C8` (5.9:1) | `#4A50C8` / blanco (6.4:1) | `#9096F6` (6.9:1) |
+
+En oscuro el texto sobre relleno es el papel oscuro (6.7:1 a 9.6:1). Contrastes medidos con la fórmula de WCAG 2.1.
+
+**Cómo se aplica.** `ThemeService` pone `data-intent` en `<html>`. Cada página declara su intención (Descubre: la pestaña elegida; Persona y Chat: la intención principal en común; el resto: la preferida del usuario). Las clases de Tailwind `bg-tint-fill`, `text-tint-ink`, `bg-wash` leen variables que cambian con ese atributo, así que un componente no sabe ni le importa qué intención hay.
+
+Los cuatro colores fijos (`romance`, `friend`, `plan`, `hobby`) también existen sueltos para las insignias de intención, que deben verse con su color sin importar la intención activa.
+
+### Estados y seguridad
+
+| Token | Claro | Oscuro | Uso |
 |---|---|---|---|
-| Pareja (`romance`) | 355 | `#93506c` / `#fdeaf1` | `#f2a3c1` |
-| Amistad (`friend`) | 95 | `#7a681c` / `#f5f0e0` | `#d2bd70` |
-| Plan (`plan`) | 175 | `#0d7a66` / `#e2f5ef` | `#71d3ba` |
-| Pasatiempo (`hobby`) | 245 | `#346e9c` / `#e4f2fe` | `#86c5fa` |
+| `danger` | `#B42424` | `#F36767` | Reportar, bloquear, borrar, errores. Siempre con ícono y texto |
+| `ok` | `= hobby-ink` | `= hobby` | Confirmaciones |
+| `seal` | `ink` sobre `paper-2` | igual | El sello de seguridad: neutro a propósito, para no confundirse con ninguna intención |
+| `lila` | `#7A3CB8` | `#B884F0` | Solo Lucidité (plan de pago más alto) |
 
-Un contenedor con `data-intent="…"` define `--intent-c` y `--intent-soft`; la cinta (`--tape`) y el hilo (`--thread`) los toman de ahí. Sin intención usan el acento del tema.
+## 3. Tipografía
 
-### Contraste (WCAG 2.1)
-
-Todo texto pasa 4.5:1 y los bordes de controles 3:1 en ambos temas. Peores casos: `ink-mute` sobre `night` 4.86 en el claro; intenciones sobre su fondo suave 4.63; blanco sobre las intenciones 5.26 o más; `line-strong` 3.5.
-
-### Sombras
-
-- Claro: teñidas de violeta (`rgb(46 31 70 / …)`), nunca negras.
-- Oscuro: negras, con un borde interior de luz naranja al 4 %.
-
-## Tipografía
-
-| Rol | Fuente | Notas |
+| Rol | Familia | Dónde |
 |---|---|---|
-| Títulos | Syne (ExtraBold) | Ancha y geométrica; da la voz |
-| Palabras destacadas | Fraunces itálica | En el acento del tema |
-| Texto | Space Grotesk | Grotesca legible |
-| Notas a mano | Caveat | Subtítulos, polaroids, etiquetas flotantes |
-| Datos y arte ASCII | Space Mono Bold | Microetiquetas con datos reales (`.mono-tag`: matches por semana, palabras del chat, cupo `3/6`, fecha y hora); nunca numeraciones de adorno |
+| Display | **Mémoires Display**: Blackout Midnight (Tyler Finck, OFL) ampliada con Fontificar para `é ñ á í ó ú ü ¿ ¡` y Latin Extended. Renombrada porque "Blackout" es nombre reservado | Logotipo y títulos de 32 px o más, en mayúsculas. Nunca en párrafos |
+| Texto | **Plus Jakarta Sans** variable (OFL), la de *disco* | Todo lo demás |
 
-Las cuatro son libres (SIL OFL) y se instalan desde Fontsource.
+Escala (razón ~1.25, base 16): `xs 12 · sm 14 · base 16 · lg 18 · xl 22 · 2xl 28 · 3xl 36 · 4xl 48 · 5xl 64 · 6xl 88`.
 
-## Movimiento
+- Interlineado: 1.6 en texto, 1.15 en títulos de texto y 0.9 en display.
+- Ancho de lectura: 60 a 68 caracteres (`max-w-prose`).
+- Números con `tabular-nums` en contadores, precios y tiempos.
+- `text-wrap: balance` en títulos y `pretty` en párrafos.
+- Display con `letter-spacing: .01em`; las versalitas no se fuerzan, la fuente ya es de mayúsculas.
 
-- Duraciones: de 120 a 760 ms en la interfaz (botones 160–260 ms, cambios de página 560–620 ms, entradas 380–760 ms). Los trazos del hilo tardan 1.1 s (corto) y 2.2 s (largo).
-- Curvas: `--ease-out` `cubic-bezier(0.23, 1, 0.32, 1)` para entradas y respuestas; `--ease-in-out` `cubic-bezier(0.77, 0, 0.175, 1)` para cambios de estado; `--ease-drawer` `cubic-bezier(0.32, 0.72, 0, 1)` para paneles.
-- Todo se anima con `transform`, `opacity` o `clip-path`. Con `prefers-reduced-motion` se quitan las animaciones y los hilos aparecen ya dibujados.
+## 4. Espacio, forma y profundidad
 
-## Piezas
+- Espaciado en múltiplos de 4 px (Tailwind por defecto). Huecos de sección: 48 / 64 / 96.
+- Radios: `sm 12`, `md 20`, `lg 28`, `pill`. Controles en píldora; tarjetas en `md`; hojas y modales en `lg`.
+- Profundidad plana, como impreso: borde de 1 px `line`. Solo lo que flota (modal, aviso, menú) lleva sombra: `0 24px 60px` de tinta al 16 %.
+- Alto mínimo de lo que se toca: 44 px.
 
-- **Hoja de sección** (`.page-sheet`): papel beige o morado con grano y una luz suave (`--paper-light`): brillo lila o naranja arriba a la derecha y sombra tibia abajo a la izquierda.
-- **Hilo** (`app-thread`): trazo a mano que une dos avatares. En "Cómo funciona" cruza las tres hojas de lado y se dibuja con el scroll; corto en cada conexión (la persona y tú).
-- **Álbum horizontal** ("Cómo funciona"): en escritorio la sección mide 300vh, su contenido queda fijo y el scroll vertical pasa las tres hojas de lado (`animation-timeline`, con respaldo en JS). Indicador de puntos y "1/3" en el acento. En móvil es un carrusel con `scroll-snap`; con movimiento reducido, las hojas se apilan. Cada hoja se puede enfocar con teclado.
-- **Tramado** (fotos de Planes): semitono de dos tintas; un solo detalle (la cinta de la esquina) en el color de la intención. Al pasar el cursor se ve la foto a color.
-- **Etiquetas flotantes** (Descubre): hasta cuatro intereses en común alrededor de la tarjeta, en el color de la intención. Solo en pantallas de 900 px o más; la tarjeta ya los dice en texto.
-- **Nota adhesiva**: lila con texto violeta en el claro; naranja claro con texto morado en el oscuro.
-- **Mancha de tinta** (cambio de tema, `servicios/ink.ts` y `servicios/theme.ts`): salpicaduras abstractas generadas una vez por sesión en un canvas de 768 px: un cuerpo con lóbulos, de 5 a 8 brazos largos que se adelgazan y terminan en una gota (a veces con otra suelta más allá), borde fibroso con hilitos y salpicaduras finas. Se usan como imagen `blob:`; se preparan al pasar por el botón de tema o al abrir Ajustes y, mientras tanto, se usan las siluetas SVG de respaldo. Cada una va girada a un ángulo al azar y nunca se repite la anterior. Hacia oscuro (1.6 s): caen 5 o 6 gotas alrededor del botón, nace la mancha, crece rápido hasta media pantalla, se queda un momento para que se aprecie la forma y luego termina de cubrir. Hacia claro (1.45 s): el mismo recorrido al revés hacia el botón, y quedan 2 o 3 gotas que se evaporan al final. Una orilla mojada de unos 8 px sigue el borde y se desvanece (morado `night` hacia oscuro, `lila` hacia claro), con un elemento fijo temporal con su propio `view-transition-name` y máscara en anillo (`mask-composite: exclude`). El ícono del botón se aplasta a 0.9 al clic y rebota. La mancha crece hasta cubrir la esquina más lejana desde cualquier origen. Las animaciones se cancelan al terminar. Con "Sistema", sin View Transitions, con movimiento reducido o sin cambio de modo, el cambio es directo.
-- **Ver con Lucidité** (Suscripción): interruptor que cruza el perfil propio sin y con el tema Celestial (fondo, marco con alas, efecto y nombre).
-- **Conexiones**: cada tarjeta tiene borrar chat, eliminar conexión (con confirmación) y una agarradera para moverla. Al arrastrarla se inclina según la velocidad, como las fotos del tablero, las demás se hacen a un lado (FLIP) y al soltar se acomoda con rebote. Con teclado, las flechas la mueven una posición. Un botón quita de una vez las conexiones sin mensajes.
+## 5. Fondo
 
-- **Objeto inflado de texto** (`app-inflado`, render en `utilidades/inflado-render.ts`, frases en `datos/inflados.ts`): globo de cromo dibujado con letras (ASCII). Cada celda de pantalla muestra la letra de las frases que cae en ese punto de la superficie; de frente es una letra por celda, así el texto se lee entero. Se mece unos 22° en lugar de girar completo. Formas por intención: corazón, taza, boleto y estrella, cubiertas de palabras bonitas ("eres mi lugar favorito", "un café contigo", "un atardecer juntos"…) con el nombre de Arleth entre ellas, siempre en su propio color. Letras de la sombra a la luz: violeta oscuro → violeta en el claro, naranja → durazno en el oscuro. Al aparecer se escribe hasta llenarse (2 s); al cambiar de intención se desinfla y se vuelve a llenar (600 ms). Con movimiento reducido o en equipos modestos, cuadro fijo. Va en el héroe, en la conexión nueva, al final de la bienvenida (estrella con tus intereses) y en la colección de efectos "Inflados" de Lucidité (cubierto con el nombre de la persona).
-- **Arleth**: su nombre aparece en las frases del inflado, en el fondo tipográfico, en la persona de ejemplo de la intención Pareja (19 años, ya conectada contigo y con una conversación iniciada), en el ramo ASCII de los fondos "Jardín de texto" (y la variante "Jardín de Arleth"), en un plan cumplido ("flores para Arleth"), en la 404, en Descanso, en el álbum de "Cómo funciona", en la bienvenida y en el pie.
-- **Planes cumplidos** (Planes): polaroids arrastrables de los planes a los que fuiste, con la foto en tramado (o la nota a mano en grande si no hay foto), la fecha en Space Mono y las iniciales de quienes fueron. Flechas para moverlas; cuadrícula fija con movimiento reducido; si no hay, una cámara ASCII que se decodifica.
-- **Seguridad** (portada): borde superior de papel rasgado que se abre un poco con el scroll.
-- **Pie**: columnas de producto, legal, contacto y equipo.
-- **Un solo botón sólido por vista**: en la portada, "Crear cuenta" del encabezado y Lucidité en precios van en contorno.
+- **Asanoha** (de iroFactory, reescrito como CSS): la hoja de cáñamo trazada en `ink` a 5 % de opacidad, fija detrás de todo.
+- **Dos luces**: manchas radiales de `tint` y `brand` que derivan muy despacio; `multiply` de día y `screen` de noche a 70 %. Con movimiento reducido se quedan quietas.
 
-## Un momento animado por página
+## 6. Movimiento
 
-Cada página tiene un solo protagonista en movimiento; lo demás son transiciones de 150 a 250 ms.
+| Token | Valor | Uso |
+|---|---|---|
+| `--ease-out` | `cubic-bezier(.16, 1, .3, 1)` | Entradas, aparecer |
+| `--ease-in-out` | `cubic-bezier(.65, 0, .35, 1)` | Ir y volver, cambios de lugar |
+| `--spring` | `linear(...)` con un rebote corto | Confirmar, el nudo de "conectar" |
+| `--dur-1/2/3/4` | `150 / 250 / 400 / 600 ms` | Hover / cambio de estado / entrada / momento firma |
 
-| Página | Protagonista |
+- `:active` de botones a `scale(.97)`; hover solo con `(hover: hover) and (pointer: fine)`.
+- Navegación entre páginas con View Transitions (deslizar y desvanecer, menos de 400 ms; dis-101).
+- `prefers-reduced-motion`: todo pasa a desvanecido de 150 ms o a nada; el grafo aparece ya armado.
+- GSAP y Lenis solo en el navegador y solo en la landing (desplazamiento suave y el florecer del logotipo).
+
+### Momentos firma
+
+| Página | Momento |
 |---|---|
-| Portada | El objeto inflado del héroe (el hilo del álbum queda como movimiento ligado al scroll) |
-| Descubre | Las etiquetas flotantes |
-| Conexiones | El hilo corto de cada conexión |
-| Planes | El tablero de planes cumplidos |
-| Conexión nueva | El objeto inflado de esa intención |
-| Ajustes | La mancha de tinta |
-| Descanso | El vapor de la taza ASCII |
-| 404 | La flor que se endereza |
+| Landing | La palabra MÉMOIRES florece letra por letra y el acento de la `É` cae como un punto que tira hilos hacia las cuatro intenciones (dis-084) |
+| Descubre | El grafo radial se arma: tú al centro, tus intereses se abren en anillo y las personas llegan por sus hilos |
+| Conectar | Dos hilos se anudan sobre la tarjeta y la tarjeta vuela a Conexiones; el contador rebota (dis-071, dis-059) |
+| Planes | El álbum en mosaico se acomoda como fotos que caen sobre una mesa |
+| Cambio de tema | Círculo que se abre desde el botón (View Transition) |
 
-Por esta regla se quitaron la presión en los títulos, el rastro de fotos del héroe, las fotos del héroe y el tablero "Tu álbum" de la portada (ahora vive en Planes).
+## 7. Componentes
 
-## Arte ASCII
+| Componente | Notas |
+|---|---|
+| Botón | `primary` (relleno de la intención), `secondary` (borde `line-strong`), `ghost`, `danger`. Píldora, 44 px, ícono opcional a la izquierda |
+| Tarjeta | `paper-2`, borde `line`, radio `md`, padding 20/24 |
+| Chip | Píldora de 32 px. `intent` lleva un punto del color de su intención; `selected` usa `wash` y borde `tint` |
+| Campo | Etiqueta arriba, ayuda abajo, error con ícono. Borde `line-strong`, foco con anillo de 2 px `tint` |
+| Modal / hoja | Hoja inferior en móvil, centrado en escritorio. Radio `lg`, sombra, foco atrapado, Esc cierra |
+| Navegación | Escritorio: riel izquierdo de 248 px (logotipo, 4 secciones, tu plan, tema y tú). Móvil: barra superior con logotipo y barra de pestañas inferior de 4 secciones |
+| Sello | Escudo con borde dentado (como timbre). Variantes: verificado, reportar, bloquear. Siempre visible en la tarjeta de una persona |
+| Insignia de intención | Punto + nombre, color fijo de su intención |
+| Avatar | Inicial sobre `paper-3` o foto; aro opcional (decoración) |
+| Aviso (toast) | Abajo al centro, con ícono por tono, 3.2 s |
 
-- Segunda voz gráfica: dibujos de línea "a máquina de escribir", hechos a mano, en Space Mono Bold (solo para el arte, nunca para texto de lectura).
-- Solo piezas grandes y detalladas (de 7 a 16 líneas y hasta 54 columnas, con letra de 7 a 13 px); nada de glifos sueltos ni dibujos de 3 líneas.
-- Datos en `datos/ascii.ts`; el componente `app-ascii` los pinta. En cada línea, `{…}` marca la única parte en el color de la intención y `«…»` el detalle suave.
-- Color: trazo en el acento (violeta o naranja), detalle en lila o durazno, una parte en la intención.
-- Cada `<pre>` lleva `aria-hidden` y una descripción oculta ("Ilustración: …").
-- Modo `decode`: el dibujo se escribe carácter por carácter, cada uno pasa por `. : + *` y se fija en el orden del trazo. Se usa en los estados vacíos y en las esquinas de Descubre; nunca en títulos.
-- Dónde: las cuatro esquinas de Descubre en pantallas anchas, a 10.5 px, que se vuelven a escribir al cambiar lo que se busca: Todo (cerezas, rosa, ramo de Arleth, maceta), Pareja (cerezas, rosa, ramo, corazón con el nombre de Arleth), Amistad (tetera, taza, pan dulce, maceta), Plan (globo, boletos "¿vamos?" con Arleth, tienda bajo las estrellas, lupa) y Pasatiempo (guitarra, paleta, dado, notas); el color de la parte destacada sigue a la intención; estados vacíos (Conexiones, búsqueda, chat sin mensajes, Planes sin resultados), Descanso (taza con vapor), 404 (flor marchita que se endereza al pasar el cursor) y tarjetas de planes sin foto (una pieza por intención).
-- **Planes sin foto**: la pieza sale de las palabras del plan (correr, juegos, concierto, lectura, café, comida); si no hay coincidencia, la de su intención.
-- **Modo álbum de texto** (Ajustes, se recuerda en el navegador): los fondos se vuelven jardín de texto con sus colores, los marcos un aro de `*` y `+`, y los efectos caracteres. Nunca toca las fotos.
-- **Jardín de texto** (fondos de perfil): flores, cerezas y una taza acomodadas lejos del avatar. Variantes Papel y Noche (Grand), Menta y Que crece (Lucidité; las piezas se revelan de abajo hacia arriba una vez).
+## 8. Pantallas (wireframes en `docs/evolucion/wireframes.png`)
 
-## Fuera de este sistema
+- **Landing**: héroe con el logotipo grande y una sola frase; las cuatro intenciones como cuatro columnas de tinta plana (retícula editorial de mirai); seguridad; planes de precio; pie.
+- **Descubre**: pestañas de intención arriba; en escritorio, grafo radial a la izquierda y la tarjeta de la persona elegida a la derecha; en móvil, la tarjeta primero y el grafo como alternativa ("Ver como constelación"). Siempre hay una lista equivalente para teclado y lector de pantalla.
+- **Perfil**: tarjeta compacta que se expande (dis-034) a la vista completa; QR del perfil para compartir.
+- **Chat**: cabecera con la persona, el sello y "reportar / bloquear" a un toque; mensajes; caja que crece.
+- **Planes**: filtros encadenados (zona, luego colonia) y buscador; mosaico de planes cumplidos.
 
-Los estilos coleccionables del perfil (fondos, marcos, efectos y nombres en `modelos/decor.ts` y sus CSS) conservan sus propios colores: son contenido que cada persona elige, no parte de la interfaz. Lo mismo para los botones de PayPal y Google Pay, que siguen los lineamientos de cada marca.
+## 9. Créditos
+
+En `THIRD_PARTY_NOTICES.md`: iroFactory y Fontificar (MIT, RemLam), Blackout (OFL, Tyler Finck), Plus Jakarta Sans (OFL). LinNeo (AGPL) solo aportó ideas; no hay código suyo en este proyecto.

@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Wireframes mémoires</title>
+<style>
+  :root { --b: #cfccc6; --b2: #b9b5ae; --b3: #9e9a93; --t: #4a4741; --bg: #f2f1ee; }
+  * { box-sizing: border-box; margin: 0; }
+  body { background: var(--bg); font: 13px/1.4 system-ui, sans-serif; color: #2b2925; padding: 32px; }
+  h1 { font-size: 22px; margin-bottom: 4px; }
+  .note { color: var(--t); margin-bottom: 28px; }
+  .row { display: grid; grid-template-columns: 720px 200px 1fr; gap: 28px; align-items: start; margin-bottom: 40px; }
+  .row h2 { font-size: 15px; margin-bottom: 6px; }
+  .row p { color: var(--t); max-width: 40ch; }
+  .d, .m { background: #fbfaf8; border: 1px solid var(--b2); border-radius: 10px; position: relative; overflow: hidden; display: grid; gap: 8px; padding: 10px; }
+  .d { width: 720px; height: 450px; }
+  .m { width: 200px; height: 430px; border-radius: 22px; }
+  .x { background: var(--b); border-radius: 6px; display: grid; place-items: center; color: var(--t); font-size: 12px; text-align: center; padding: 4px; }
+  .x2 { background: var(--b2); } .x3 { background: var(--b3); color: #141310; } .pill { border-radius: 999px; } .c { border-radius: 50%; }
+  .line { height: 8px; background: var(--b); border-radius: 4px; }
+  .rail { grid-row: 1 / -1; }
+</style>
+</head>
+<body>
+<h1>mémoires · wireframes en bloques grises (dis-064)</h1>
+<p class="note">Solo tamaños y jerarquía. Más oscuro = más importante. Escritorio a 1440 px (escala 1:2) y móvil a 390 px.</p>
+
+<div class="row">
+  <div class="d" style="grid-template-columns: 1fr 1fr 1fr 1fr; grid-template-rows: 36px 190px 1fr 50px;">
+    <div class="x" style="grid-column: 1 / -1;">barra: logotipo · entrar · crear cuenta</div>
+    <div class="x x3" style="grid-column: 1 / 4; font-size: 26px;">MÉMOIRES (florece)</div>
+    <div class="x x2">frase + 2 botones</div>
+    <div class="x">Pareja</div><div class="x">Amistad</div><div class="x">Un plan</div><div class="x">Pasatiempo</div>
+    <div class="x" style="grid-column: 1 / 3;">seguridad: sello + 3 garantías</div>
+    <div class="x" style="grid-column: 3 / 5;">planes: Gratuito · Grand · Lucidité</div>
+  </div>
+  <div class="m" style="grid-template-rows: 28px 120px 40px repeat(4, 34px) 1fr;">
+    <div class="x">logo · menú</div>
+    <div class="x x3" style="font-size: 16px;">MÉMOIRES</div>
+    <div class="x x2 pill">crear cuenta</div>
+    <div class="x">Pareja</div><div class="x">Amistad</div><div class="x">Un plan</div><div class="x">Pasatiempo</div>
+    <div class="x">seguridad · planes</div>
+  </div>
+  <div><h2>Landing</h2><p>Lo primero es la marca; lo segundo, la acción "crear cuenta"; lo tercero, las cuatro intenciones como columnas de tinta plana. Un solo momento: el florecer del logotipo.</p></div>
+</div>
+
+<div class="row">
+  <div class="d" style="grid-template-columns: 150px 1fr 280px; grid-template-rows: 36px 1fr 60px;">
+    <div class="x rail">riel: logo · Descubre · Conexiones · Planes · Perfil · tu plan · tema</div>
+    <div class="x pill" style="grid-column: 2 / 4;">pestañas de intención · filtros</div>
+    <div class="x x2 c" style="width: 240px; height: 240px; justify-self: center; align-self: center;">grafo radial: tú al centro, intereses en anillo, personas afuera</div>
+    <div class="x x3">tarjeta de la persona elegida + sello</div>
+    <div class="x" style="grid-column: 2 / 3;">lista equivalente (teclado / lector)</div>
+    <div class="x x3 pill">Ahora no · Me interesa</div>
+  </div>
+  <div class="m" style="grid-template-rows: 28px 30px 1fr 44px 30px;">
+    <div class="x">logo · tema</div>
+    <div class="x pill">pestañas de intención</div>
+    <div class="x x3">tarjeta deslizable + sello</div>
+    <div class="x x3 pill">Ahora no · Me interesa</div>
+    <div class="x">tab bar</div>
+  </div>
+  <div><h2>Descubre</h2><p>En escritorio el grafo es el momento firma y la tarjeta es la decisión. En móvil la tarjeta va primero y el grafo se abre con "Ver como constelación".</p></div>
+</div>
+
+<div class="row">
+  <div class="d" style="grid-template-columns: 150px 1fr 220px; grid-template-rows: 120px 1fr 1fr;">
+    <div class="x rail">riel</div>
+    <div class="x x2">fondo del perfil (decoración)</div>
+    <div class="x x3">QR para compartir</div>
+    <div class="x x3">avatar · nombre · sello verificado · intenciones</div>
+    <div class="x">editar: estilos · privacidad</div>
+    <div class="x" style="grid-column: 2 / 4;">tarjeta que se expande: bio, preguntas, favoritos, galería</div>
+  </div>
+  <div class="m" style="grid-template-rows: 80px 70px 1fr 50px 30px;">
+    <div class="x x2">fondo</div>
+    <div class="x x3">avatar · nombre · sello</div>
+    <div class="x">tarjeta expandible</div>
+    <div class="x x3">QR</div>
+    <div class="x">tab bar</div>
+  </div>
+  <div><h2>Perfil</h2><p>La tarjeta compacta es lo que ven los demás; al tocarla crece a la vista completa (dis-034). El QR del perfil siempre a la vista.</p></div>
+</div>
+
+<div class="row">
+  <div class="d" style="grid-template-columns: 150px 240px 1fr; grid-template-rows: 50px 1fr 50px;">
+    <div class="x rail">riel</div>
+    <div class="x" style="grid-row: 1 / 4;">conexiones (lista)</div>
+    <div class="x x3">persona · sello · reportar · bloquear</div>
+    <div class="x">mensajes</div>
+    <div class="x x2 pill">caja que crece · enviar</div>
+  </div>
+  <div class="m" style="grid-template-rows: 40px 1fr 40px;">
+    <div class="x x3">← persona · sello · ⋯</div>
+    <div class="x">mensajes</div>
+    <div class="x x2 pill">mensaje · enviar</div>
+  </div>
+  <div><h2>Chat</h2><p>Reportar y bloquear viven en la cabecera, a un toque. El límite de palabras se ve como una línea que se llena, no como un número suelto.</p></div>
+</div>
+
+<div class="row">
+  <div class="d" style="grid-template-columns: 150px 1fr 1fr 1fr; grid-template-rows: 36px 36px 140px 1fr;">
+    <div class="x rail">riel</div>
+    <div class="x pill" style="grid-column: 2 / 5;">buscador con sugerencias</div>
+    <div class="x pill">zona</div><div class="x pill">colonia</div><div class="x x3 pill">crear plan</div>
+    <div class="x x2">plan</div><div class="x x2">plan</div><div class="x x2">plan</div>
+    <div class="x" style="grid-column: 2 / 5;">álbum en mosaico de planes cumplidos</div>
+  </div>
+  <div class="m" style="grid-template-rows: 30px 30px 1fr 1fr 30px;">
+    <div class="x pill">buscar</div>
+    <div class="x pill">zona → colonia</div>
+    <div class="x x2">planes</div>
+    <div class="x">mosaico</div>
+    <div class="x">tab bar</div>
+  </div>
+  <div><h2>Planes</h2><p>Filtros encadenados: primero la zona y luego la colonia de esa zona. El álbum en mosaico es el momento firma.</p></div>
+</div>
+</body>
+</html>
