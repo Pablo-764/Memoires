@@ -1,16 +1,12 @@
 <div
   role="radiogroup"
-  (pointerenter)="theme.prepare()"
-  (focusin)="theme.prepare()"
   aria-label="Tema"
-  class="relative grid rounded-full p-1 text-sm font-semibold"
-  [class]="onNight() ? 'bg-white/8' : 'bg-raised shadow-[inset_0_0_0_1px_var(--color-line)]'"
+  class="relative grid rounded-full bg-paper-2 p-1 text-sm font-semibold shadow-[inset_0_0_0_1px_var(--color-line)]"
   [style.grid-template-columns]="'repeat(' + options().length + ', 1fr)'"
 >
   <span
     aria-hidden="true"
-    class="absolute inset-y-1 left-1 rounded-full transition-transform duration-300 ease-(--ease-out)"
-    [class]="onNight() ? 'bg-white/14' : 'bg-surface shadow-(--shadow-lift)'"
+    class="absolute inset-y-1 left-1 rounded-full bg-paper shadow-(--shadow-lift) transition-transform duration-300 ease-(--ease-out)"
     [style.width]="'calc((100% - 0.5rem) / ' + options().length + ')'"
     [style.transform]="'translateX(' + index() * 100 + '%)'"
   ></span>
@@ -19,8 +15,8 @@
       type="button"
       role="radio"
       [attr.aria-checked]="current() === o.value"
-      class="relative z-10 rounded-full px-2 py-1.5 transition-colors duration-200"
-      [class]="optionClass(o.value)"
+      class="relative z-10 min-h-9 rounded-full px-2 transition-colors duration-200"
+      [class]="current() === o.value ? 'text-ink' : 'text-ink-3 hover:text-ink'"
       (click)="theme.set(o.value, { x: $event.clientX, y: $event.clientY })"
     >
       {{ o.label }}

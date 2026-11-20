@@ -1,112 +1,53 @@
-/* Fondo tipográfico de toda la aplicación. Sin encapsulación: las clases llevan prefijo kt-. */
-app-backdrop {
+:host {
   position: fixed;
   inset: 0;
   z-index: -1;
   overflow: hidden;
   pointer-events: none;
-  contain: strict;
-  transition: background-color 900ms var(--ease-in-out);
+  background: var(--color-paper);
+  transition: background-color var(--dur-2) ease;
 }
 
-/* El muro: más grande que la ventana y girado para que las filas crucen en diagonal */
-.kt-wall {
+/* Hoja de cáñamo trazada en tinta al 5 % (patrón generado por trigonometría) */
+.asanoha {
   position: absolute;
-  left: -35vw;
-  top: -30vh;
-  width: 170vw;
-  display: flex;
-  flex-direction: column;
-  gap: 0.08em;
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: clamp(64px, 14vh, 160px);
-  line-height: 1.04;
-  letter-spacing: -0.04em;
-  white-space: nowrap;
-  transform: rotate(-9deg);
-  user-select: none;
+  inset: 0;
+  background: var(--color-ink);
+  opacity: 0.05;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='76.21' height='132' viewBox='0 0 76.21 132'%3E%3Cg fill='none' stroke='black' stroke-width='1' stroke-linecap='round'%3E%3Cpath transform='translate(0.0 0.0)' d='M76.2 22.0L76.2 66.0L38.1 88.0L-0.0 66.0L-0.0 22.0L38.1 0.0ZM38.1 44.0L76.2 22.0M38.1 44.0L76.2 66.0M38.1 44.0L38.1 88.0M38.1 44.0L-0.0 66.0M38.1 44.0L-0.0 22.0M38.1 44.0L38.1 0.0M38.1 44.0L63.5 44.0M76.2 22.0L63.5 44.0M76.2 66.0L63.5 44.0M38.1 44.0L50.8 66.0M76.2 66.0L50.8 66.0M38.1 88.0L50.8 66.0M38.1 44.0L25.4 66.0M38.1 88.0L25.4 66.0M-0.0 66.0L25.4 66.0M38.1 44.0L12.7 44.0M-0.0 66.0L12.7 44.0M-0.0 22.0L12.7 44.0M38.1 44.0L25.4 22.0M-0.0 22.0L25.4 22.0M38.1 0.0L25.4 22.0M38.1 44.0L50.8 22.0M38.1 0.0L50.8 22.0M76.2 22.0L50.8 22.0'/%3E%3Cpath transform='translate(38.1 66.0)' d='M76.2 22.0L76.2 66.0L38.1 88.0L-0.0 66.0L-0.0 22.0L38.1 0.0ZM38.1 44.0L76.2 22.0M38.1 44.0L76.2 66.0M38.1 44.0L38.1 88.0M38.1 44.0L-0.0 66.0M38.1 44.0L-0.0 22.0M38.1 44.0L38.1 0.0M38.1 44.0L63.5 44.0M76.2 22.0L63.5 44.0M76.2 66.0L63.5 44.0M38.1 44.0L50.8 66.0M76.2 66.0L50.8 66.0M38.1 88.0L50.8 66.0M38.1 44.0L25.4 66.0M38.1 88.0L25.4 66.0M-0.0 66.0L25.4 66.0M38.1 44.0L12.7 44.0M-0.0 66.0L12.7 44.0M-0.0 22.0L12.7 44.0M38.1 44.0L25.4 22.0M-0.0 22.0L25.4 22.0M38.1 0.0L25.4 22.0M38.1 44.0L50.8 22.0M38.1 0.0L50.8 22.0M76.2 22.0L50.8 22.0'/%3E%3Cpath transform='translate(-38.1 66.0)' d='M76.2 22.0L76.2 66.0L38.1 88.0L-0.0 66.0L-0.0 22.0L38.1 0.0ZM38.1 44.0L76.2 22.0M38.1 44.0L76.2 66.0M38.1 44.0L38.1 88.0M38.1 44.0L-0.0 66.0M38.1 44.0L-0.0 22.0M38.1 44.0L38.1 0.0M38.1 44.0L63.5 44.0M76.2 22.0L63.5 44.0M76.2 66.0L63.5 44.0M38.1 44.0L50.8 66.0M76.2 66.0L50.8 66.0M38.1 88.0L50.8 66.0M38.1 44.0L25.4 66.0M38.1 88.0L25.4 66.0M-0.0 66.0L25.4 66.0M38.1 44.0L12.7 44.0M-0.0 66.0L12.7 44.0M-0.0 22.0L12.7 44.0M38.1 44.0L25.4 22.0M-0.0 22.0L25.4 22.0M38.1 0.0L25.4 22.0M38.1 44.0L50.8 22.0M38.1 0.0L50.8 22.0M76.2 22.0L50.8 22.0'/%3E%3Cpath transform='translate(38.1 -66.0)' d='M76.2 22.0L76.2 66.0L38.1 88.0L-0.0 66.0L-0.0 22.0L38.1 0.0ZM38.1 44.0L76.2 22.0M38.1 44.0L76.2 66.0M38.1 44.0L38.1 88.0M38.1 44.0L-0.0 66.0M38.1 44.0L-0.0 22.0M38.1 44.0L38.1 0.0M38.1 44.0L63.5 44.0M76.2 22.0L63.5 44.0M76.2 66.0L63.5 44.0M38.1 44.0L50.8 66.0M76.2 66.0L50.8 66.0M38.1 88.0L50.8 66.0M38.1 44.0L25.4 66.0M38.1 88.0L25.4 66.0M-0.0 66.0L25.4 66.0M38.1 44.0L12.7 44.0M-0.0 66.0L12.7 44.0M-0.0 22.0L12.7 44.0M38.1 44.0L25.4 22.0M-0.0 22.0L25.4 22.0M38.1 0.0L25.4 22.0M38.1 44.0L50.8 22.0M38.1 0.0L50.8 22.0M76.2 22.0L50.8 22.0'/%3E%3Cpath transform='translate(-38.1 -66.0)' d='M76.2 22.0L76.2 66.0L38.1 88.0L-0.0 66.0L-0.0 22.0L38.1 0.0ZM38.1 44.0L76.2 22.0M38.1 44.0L76.2 66.0M38.1 44.0L38.1 88.0M38.1 44.0L-0.0 66.0M38.1 44.0L-0.0 22.0M38.1 44.0L38.1 0.0M38.1 44.0L63.5 44.0M76.2 22.0L63.5 44.0M76.2 66.0L63.5 44.0M38.1 44.0L50.8 66.0M76.2 66.0L50.8 66.0M38.1 88.0L50.8 66.0M38.1 44.0L25.4 66.0M38.1 88.0L25.4 66.0M-0.0 66.0L25.4 66.0M38.1 44.0L12.7 44.0M-0.0 66.0L12.7 44.0M-0.0 22.0L12.7 44.0M38.1 44.0L25.4 22.0M-0.0 22.0L25.4 22.0M38.1 0.0L25.4 22.0M38.1 44.0L50.8 22.0M38.1 0.0L50.8 22.0M76.2 22.0L50.8 22.0'/%3E%3C/g%3E%3C/svg%3E") repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='76.21' height='132' viewBox='0 0 76.21 132'%3E%3Cg fill='none' stroke='black' stroke-width='1' stroke-linecap='round'%3E%3Cpath transform='translate(0.0 0.0)' d='M76.2 22.0L76.2 66.0L38.1 88.0L-0.0 66.0L-0.0 22.0L38.1 0.0ZM38.1 44.0L76.2 22.0M38.1 44.0L76.2 66.0M38.1 44.0L38.1 88.0M38.1 44.0L-0.0 66.0M38.1 44.0L-0.0 22.0M38.1 44.0L38.1 0.0M38.1 44.0L63.5 44.0M76.2 22.0L63.5 44.0M76.2 66.0L63.5 44.0M38.1 44.0L50.8 66.0M76.2 66.0L50.8 66.0M38.1 88.0L50.8 66.0M38.1 44.0L25.4 66.0M38.1 88.0L25.4 66.0M-0.0 66.0L25.4 66.0M38.1 44.0L12.7 44.0M-0.0 66.0L12.7 44.0M-0.0 22.0L12.7 44.0M38.1 44.0L25.4 22.0M-0.0 22.0L25.4 22.0M38.1 0.0L25.4 22.0M38.1 44.0L50.8 22.0M38.1 0.0L50.8 22.0M76.2 22.0L50.8 22.0'/%3E%3Cpath transform='translate(38.1 66.0)' d='M76.2 22.0L76.2 66.0L38.1 88.0L-0.0 66.0L-0.0 22.0L38.1 0.0ZM38.1 44.0L76.2 22.0M38.1 44.0L76.2 66.0M38.1 44.0L38.1 88.0M38.1 44.0L-0.0 66.0M38.1 44.0L-0.0 22.0M38.1 44.0L38.1 0.0M38.1 44.0L63.5 44.0M76.2 22.0L63.5 44.0M76.2 66.0L63.5 44.0M38.1 44.0L50.8 66.0M76.2 66.0L50.8 66.0M38.1 88.0L50.8 66.0M38.1 44.0L25.4 66.0M38.1 88.0L25.4 66.0M-0.0 66.0L25.4 66.0M38.1 44.0L12.7 44.0M-0.0 66.0L12.7 44.0M-0.0 22.0L12.7 44.0M38.1 44.0L25.4 22.0M-0.0 22.0L25.4 22.0M38.1 0.0L25.4 22.0M38.1 44.0L50.8 22.0M38.1 0.0L50.8 22.0M76.2 22.0L50.8 22.0'/%3E%3Cpath transform='translate(-38.1 66.0)' d='M76.2 22.0L76.2 66.0L38.1 88.0L-0.0 66.0L-0.0 22.0L38.1 0.0ZM38.1 44.0L76.2 22.0M38.1 44.0L76.2 66.0M38.1 44.0L38.1 88.0M38.1 44.0L-0.0 66.0M38.1 44.0L-0.0 22.0M38.1 44.0L38.1 0.0M38.1 44.0L63.5 44.0M76.2 22.0L63.5 44.0M76.2 66.0L63.5 44.0M38.1 44.0L50.8 66.0M76.2 66.0L50.8 66.0M38.1 88.0L50.8 66.0M38.1 44.0L25.4 66.0M38.1 88.0L25.4 66.0M-0.0 66.0L25.4 66.0M38.1 44.0L12.7 44.0M-0.0 66.0L12.7 44.0M-0.0 22.0L12.7 44.0M38.1 44.0L25.4 22.0M-0.0 22.0L25.4 22.0M38.1 0.0L25.4 22.0M38.1 44.0L50.8 22.0M38.1 0.0L50.8 22.0M76.2 22.0L50.8 22.0'/%3E%3Cpath transform='translate(38.1 -66.0)' d='M76.2 22.0L76.2 66.0L38.1 88.0L-0.0 66.0L-0.0 22.0L38.1 0.0ZM38.1 44.0L76.2 22.0M38.1 44.0L76.2 66.0M38.1 44.0L38.1 88.0M38.1 44.0L-0.0 66.0M38.1 44.0L-0.0 22.0M38.1 44.0L38.1 0.0M38.1 44.0L63.5 44.0M76.2 22.0L63.5 44.0M76.2 66.0L63.5 44.0M38.1 44.0L50.8 66.0M76.2 66.0L50.8 66.0M38.1 88.0L50.8 66.0M38.1 44.0L25.4 66.0M38.1 88.0L25.4 66.0M-0.0 66.0L25.4 66.0M38.1 44.0L12.7 44.0M-0.0 66.0L12.7 44.0M-0.0 22.0L12.7 44.0M38.1 44.0L25.4 22.0M-0.0 22.0L25.4 22.0M38.1 0.0L25.4 22.0M38.1 44.0L50.8 22.0M38.1 0.0L50.8 22.0M76.2 22.0L50.8 22.0'/%3E%3Cpath transform='translate(-38.1 -66.0)' d='M76.2 22.0L76.2 66.0L38.1 88.0L-0.0 66.0L-0.0 22.0L38.1 0.0ZM38.1 44.0L76.2 22.0M38.1 44.0L76.2 66.0M38.1 44.0L38.1 88.0M38.1 44.0L-0.0 66.0M38.1 44.0L-0.0 22.0M38.1 44.0L38.1 0.0M38.1 44.0L63.5 44.0M76.2 22.0L63.5 44.0M76.2 66.0L63.5 44.0M38.1 44.0L50.8 66.0M76.2 66.0L50.8 66.0M38.1 88.0L50.8 66.0M38.1 44.0L25.4 66.0M38.1 88.0L25.4 66.0M-0.0 66.0L25.4 66.0M38.1 44.0L12.7 44.0M-0.0 66.0L12.7 44.0M-0.0 22.0L12.7 44.0M38.1 44.0L25.4 22.0M-0.0 22.0L25.4 22.0M38.1 0.0L25.4 22.0M38.1 44.0L50.8 22.0M38.1 0.0L50.8 22.0M76.2 22.0L50.8 22.0'/%3E%3C/g%3E%3C/svg%3E") repeat;
+  mask-size: 76.21px 132px;
 }
 
-.kt-row { will-change: transform; }
-
-.kt-track {
-  display: flex;
-  width: max-content;
-  animation: kt-marquee 90s linear infinite;
-}
-
-.kt-track.kt-reverse { animation-direction: reverse; }
-
-@keyframes kt-marquee {
-  from { transform: translate3d(0, 0, 0); }
-  to { transform: translate3d(-50%, 0, 0); }
-}
-
-.kt-run { display: flex; align-items: center; flex-shrink: 0; }
-
-.kt-word { padding: 0 0.12em; }
-
-.kt-serif {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-weight: 500;
-  font-variation-settings: "SOFT" 100, "WONK" 1;
-  letter-spacing: -0.02em;
-}
-
-.kt-sep {
-  width: 0.22em;
-  height: 0.22em;
-  margin: 0 0.2em;
-  flex-shrink: 0;
-  rotate: 45deg;
-  border-radius: 0.04em;
-}
-
-/* Contorno: siempre visible y muy tenue */
-.kt-outline {
-  color: transparent;
-  -webkit-text-stroke: 1.2px color-mix(in oklab, var(--color-ink) 10%, transparent);
-}
-
-.kt-outline .kt-sep { box-shadow: inset 0 0 0 1.2px color-mix(in oklab, var(--color-ink) 10%, transparent); }
-
-/* Ventana de color: sin aro, solo un borde que se desvanece */
-.kt-window {
+/* Luces: multiply de día, screen de noche y más bajas para no restar contraste */
+.light {
   position: absolute;
-  left: 0;
-  top: 0;
-  width: 420px;
-  height: 420px;
-  overflow: hidden;
+  width: 70vmax;
+  height: 70vmax;
   border-radius: 50%;
-  -webkit-mask-image: radial-gradient(closest-side, #000 35%, transparent 100%);
-  mask-image: radial-gradient(closest-side, #000 35%, transparent 100%);
-  opacity: 0;
-  will-change: transform, opacity;
-  transition: opacity 500ms ease;
+  mix-blend-mode: multiply;
+  opacity: 0.16;
+  transition: background-color var(--dur-4) ease;
 }
-
-.kt-window-inner {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100vw;
-  height: 100vh;
-  will-change: transform;
+.light-a {
+  top: -30vmax;
+  right: -20vmax;
+  background: radial-gradient(closest-side, var(--tint), transparent);
+  animation: drift-a 48s var(--ease-in-out) infinite alternate;
 }
+.light-b {
+  bottom: -35vmax;
+  left: -25vmax;
+  background: radial-gradient(closest-side, var(--brand-tint), transparent);
+  opacity: 0.1;
+  animation: drift-b 60s var(--ease-in-out) infinite alternate;
+}
+:host-context(.dark) .light { mix-blend-mode: screen; opacity: 0.12; }
+:host-context(.dark) .light-b { opacity: 0.08; }
 
-.kt-fill .kt-row { color: var(--tone); }
-
-.kt-fill .kt-sep { background: currentColor; }
-
-app-backdrop.is-live .kt-window { opacity: 0.55; }
-
-.dark .kt-outline { -webkit-text-stroke-color: color-mix(in oklab, var(--color-ink) 12%, transparent); }
-
-.dark app-backdrop.is-live .kt-window { opacity: 0.45; }
+@keyframes drift-a { to { transform: translate(-12vmax, 10vmax); } }
+@keyframes drift-b { to { transform: translate(14vmax, -8vmax); } }
 
 @media (prefers-reduced-motion: reduce) {
-  .kt-track { animation: none; }
+  .light { animation: none; }
 }

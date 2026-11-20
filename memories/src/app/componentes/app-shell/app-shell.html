@@ -1,12 +1,12 @@
-<div class="min-h-dvh md:grid md:grid-cols-[272px_1fr]">
-  <a href="#contenido" class="sr-only z-50 rounded-full bg-accent px-4 py-2 text-on-accent focus:not-sr-only focus:fixed focus:left-4 focus:top-4" (click)="skipToContent($event)">
+<div class="min-h-dvh md:grid md:grid-cols-[248px_1fr]">
+  <a href="#contenido" class="sr-only z-50 rounded-full bg-tint-fill px-4 py-2 text-on-tint focus:not-sr-only focus:fixed focus:left-4 focus:top-4" (click)="skipToContent($event)">
     Saltar al contenido
   </a>
 
   <app-sidebar [items]="nav()" [active]="activeIndex()" />
   <app-navbar />
 
-  <main id="contenido" tabindex="-1" class="vt-page page-sheet mx-auto w-full max-w-5xl px-4 pb-32 pt-6 outline-none md:my-4 md:px-10 md:pb-12 md:pt-10" [attr.data-page]="page()">
+  <main id="contenido" tabindex="-1" class="vt-page mx-auto w-full max-w-5xl px-4 pb-28 pt-6 outline-none md:px-10 md:pb-16 md:pt-10" [attr.data-page]="page()">
     <router-outlet />
   </main>
 
@@ -28,12 +28,11 @@
   @if (matchPerson(); as person) {
     <app-modal title="¡Es una conexión!" (closed)="store.clearMatch()">
       <div class="text-center">
-        <app-inflado class="mx-auto -mb-6 w-48" [intent]="person.intents[0]" [turns]="1" [decorative]="true" />
         <div class="my-4 flex justify-center">
           <div class="relative flex items-center" [attr.data-intent]="person.intents[0]">
             <span class="match-ring" aria-hidden="true"></span>
-            <app-avatar [name]="displayName()" [hue]="260" [size]="84" [frame]="store.me().frame" [photo]="store.me().photo" class="match-left ring-4 ring-surface" />
-            <app-avatar [name]="person.name" [hue]="person.hue" [size]="84" [frame]="person.frame" class="match-right -ml-5 ring-4 ring-surface" />
+            <app-avatar [name]="displayName()" [hue]="260" [size]="84" [frame]="store.me().frame" [photo]="store.me().photo" class="match-left ring-4 ring-paper" />
+            <app-avatar [name]="person.name" [hue]="person.hue" [size]="84" [frame]="person.frame" class="match-right -ml-5 ring-4 ring-paper" />
           </div>
         </div>
         <p class="enter text-ink-soft" style="--d: 420ms">A {{ person.name }} también le interesa conocerte. Ya pueden conversar.</p>

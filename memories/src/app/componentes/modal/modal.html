@@ -1,16 +1,17 @@
-<div class="fixed inset-0 z-50 grid place-items-end sm:place-items-center">
-  <div class="fade-in absolute inset-0 bg-[#110a1d]/55" tabindex="-1" aria-hidden="true" (click)="closed.emit()" (keydown.escape)="closed.emit()"></div>
+<div class="fixed inset-0 z-50 grid place-items-end sm:place-items-center sm:p-6">
+  <div class="fade-in absolute inset-0 bg-ink/45" tabindex="-1" aria-hidden="true" (click)="closed.emit()" (keydown.escape)="closed.emit()"></div>
   <div
     #panel
     role="dialog"
     aria-modal="true"
     [attr.aria-label]="title()"
-    class="modal-panel sheet relative max-h-[92dvh] w-full overflow-y-auto overscroll-contain rounded-t-[16px] bg-surface p-6 sm:rounded-[14px]"
+    class="modal-panel sheet relative max-h-[92dvh] w-full overflow-y-auto overscroll-contain rounded-t-(--radius-sheet) bg-paper p-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:rounded-(--radius-sheet) sm:p-8"
     [class]="wide() ? 'sm:max-w-2xl' : 'sm:max-w-md'"
   >
+    <div class="mx-auto -mt-2 mb-4 h-1 w-10 rounded-full bg-line sm:hidden" aria-hidden="true"></div>
     <div class="mb-4 flex items-start justify-between gap-4">
-      <h2 class="text-[1.85rem]">{{ title() }}</h2>
-      <button type="button" data-close class="btn -mr-2 -mt-1 size-10 min-h-0 p-0 text-ink-mute" aria-label="Cerrar" (click)="closed.emit()">
+      <h2 class="text-2xl">{{ title() }}</h2>
+      <button type="button" data-close class="btn btn-icon -mr-2 -mt-1 text-ink-2" aria-label="Cerrar" (click)="closed.emit()">
         <app-icon name="x" [size]="20" />
       </button>
     </div>

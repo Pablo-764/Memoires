@@ -10,9 +10,14 @@ describe('Backdrop', () => {
     await fixture.whenStable()
   })
 
-  it('dibuja el muro de palabras', () => {
+  it('dibuja el asanoha y las dos luces, oculto para lectores de pantalla', () => {
     const el: HTMLElement = fixture.nativeElement
-    expect(el.querySelectorAll('.kt-row').length).toBeGreaterThan(5)
+    expect(el.querySelector('.asanoha')).toBeTruthy()
+    expect(el.querySelectorAll('.light').length).toBe(2)
     expect(el.getAttribute('aria-hidden')).toBe('true')
+  })
+
+  it('sin sesión deja la tinta de la marca (sin data-intent)', () => {
+    expect(document.documentElement.dataset['intent']).toBeUndefined()
   })
 })

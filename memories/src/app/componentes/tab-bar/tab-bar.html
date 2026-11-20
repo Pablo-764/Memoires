@@ -1,12 +1,10 @@
-<nav class="vt-dock tabbar fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-30 grid grid-cols-4 p-1.5 md:hidden" aria-label="Principal">
+<nav
+  class="vt-dock tabbar fixed inset-x-0 bottom-0 z-30 grid grid-cols-4 border-t border-line bg-paper/92 px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-1.5 backdrop-blur-md md:hidden"
+  aria-label="Principal"
+>
   @for (n of items(); track n.to; let i = $index) {
-    <a
-      [routerLink]="n.to"
-      [attr.aria-current]="active() === i ? 'page' : null"
-      class="tabbar-link relative flex flex-col items-center gap-0.5 py-2 text-[11px] font-semibold"
-      [class.is-on]="active() === i"
-    >
-      <app-icon [name]="n.icon" [size]="20" />
+    <a [routerLink]="n.to" [attr.aria-current]="active() === i ? 'page' : null" class="tab-link" [class.is-on]="active() === i">
+      <span class="tab-icon"><app-icon [name]="n.icon" [size]="20" /></span>
       <span>{{ n.label }}</span>
     </a>
   }

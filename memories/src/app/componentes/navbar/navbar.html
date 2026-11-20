@@ -1,11 +1,9 @@
-<header class="vt-head sticky top-0 z-30 flex items-center justify-between border-b-[1.5px] border-line-strong bg-mist px-4 py-2.5 md:hidden">
-  <a routerLink="/app/descubre" aria-label="Inicio de mémoires"><app-logo class="scale-90 origin-left" /></a>
-  <div class="flex items-center">
-    <a routerLink="/app/suscripcion" class="btn min-h-9 px-3 text-sm text-hobby" [attr.aria-label]="'Plan ' + tierInfo().name">
-      {{ tierInfo().name }}
-    </a>
-    <button appThemeIcon aria-label="Cambiar tema" class="text-ink-soft"></button>
-    <a routerLink="/app/ajustes" class="btn size-10 min-h-0 p-0 text-ink-soft" aria-label="Ajustes">
+<header class="vt-head sticky top-0 z-30 flex items-center justify-between border-b border-line bg-paper/92 px-4 py-2 backdrop-blur-md md:hidden">
+  <a routerLink="/app/descubre" aria-label="Inicio de mémoires"><app-logo size="sm" /></a>
+  <div class="flex items-center gap-1">
+    <a routerLink="/app/suscripcion" class="btn btn-sm text-ink-2" [attr.aria-label]="'Plan ' + tierInfo().name">{{ tierInfo().name }}</a>
+    <button appThemeIcon class="text-ink-2"></button>
+    <a routerLink="/app/ajustes" class="btn btn-icon text-ink-2" aria-label="Ajustes">
       <app-icon name="settings" [size]="19" />
     </a>
   </div>

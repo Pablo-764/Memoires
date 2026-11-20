@@ -22,9 +22,9 @@
 .logo-dot {
   position: absolute;
   left: 50%;
-  top: -0.3em;
-  width: 0.22em;
-  height: 0.22em;
+  top: -0.34em;
+  width: 0.26em;
+  height: 0.26em;
   translate: -20% 0;
   border-radius: 50%;
   background: var(--color-tint, #4a50c8);
