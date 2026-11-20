@@ -2,7 +2,7 @@
   <a routerLink="/app/descubre" aria-label="Inicio de mémoires"><app-logo size="sm" /></a>
   <div class="flex items-center gap-1">
     <a routerLink="/app/suscripcion" class="btn btn-sm text-ink-2" [attr.aria-label]="'Plan ' + tierInfo().name">{{ tierInfo().name }}</a>
-    <button appThemeIcon class="text-ink-2"></button>
+    <button appThemeIcon aria-label="Cambiar tema" class="text-ink-2"></button>
     <a routerLink="/app/ajustes" class="btn btn-icon text-ink-2" aria-label="Ajustes">
       <app-icon name="settings" [size]="19" />
     </a>

@@ -75,6 +75,4 @@ export class ThemeService {
     }, () => undefined)
   }
 
-  /** Se conserva por compatibilidad: ya no hay nada que preparar. */
-  prepare() {}
 }

@@ -84,6 +84,8 @@ El detalle de licencias está en [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.
 | tslib | 0BSD |
 | Plus Jakarta Sans (vía Fontsource) | SIL OFL 1.1 (fuente) y MIT (paquete) |
 | qrcode-generator (Kazuhiko Arase), QR del perfil | MIT |
+| GSAP 3 y ScrollTrigger (GreenSock), solo en la portada | Licencia estándar sin costo de GSAP (gsap.com/standard-license) |
+| Lenis (darkroom.engineering), desplazamiento suave en la portada | MIT |
 | Vitest y jsdom (pruebas) | MIT |
 | ESLint, angular-eslint y typescript-eslint | MIT |
 | Prettier | MIT |

@@ -27,6 +27,8 @@ mémoires usa o se inspira en el trabajo de otras personas. Este archivo dice qu
 | tslib | 0BSD |
 | Fontsource (paquete de Plus Jakarta Sans) | MIT |
 | qrcode-generator (Kazuhiko Arase), QR del perfil | MIT |
+| GSAP 3 y ScrollTrigger (GreenSock), solo en la portada | Licencia estándar sin costo de GSAP (gsap.com/standard-license) |
+| Lenis (darkroom.engineering), desplazamiento suave en la portada | MIT |
 | Vitest y jsdom (pruebas) | MIT |
 | ESLint, angular-eslint y typescript-eslint | MIT |
 | Prettier | MIT |

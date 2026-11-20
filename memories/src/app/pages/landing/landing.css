@@ -2,6 +2,10 @@
   display: block;
 }
 
+:host(.hero-pending) :is(.hero-logo .logo-l, .hero-logo .logo-dot, [data-hero-in]) {
+  opacity: 0;
+}
+
 .hero-logo {
   display: flex;
   margin-left: -0.04em;
