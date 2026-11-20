@@ -8,7 +8,7 @@ import { Icon } from '../icon/icon'
   styleUrl: './theme-icon-button.css',
   templateUrl: './theme-icon-button.html',
   host: {
-    class: 'btn size-10 min-h-0 p-0',
+    class: 'btn btn-icon',
     '[attr.aria-label]': "theme.mode() === 'dark' ? 'Activar modo claro' : 'Activar modo nocturno'",
     '(pointerenter)': 'theme.prepare()',
     '(focus)': 'theme.prepare()',
