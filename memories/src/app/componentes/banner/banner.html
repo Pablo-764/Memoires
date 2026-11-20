@@ -1,247 +1,31 @@
-@for (k of [custom() ?? info().key]; track k) {
-  <div class="bn fade-in" [attr.data-scene]="scene()" [style.background]="custom() ? null : info().css">
-    @switch (scene()) {
-      @case ('photo') {
-        <img [src]="custom()" alt="" class="bn-photo bn-far" draggable="false" />
-      }
-      @case ('mesh') {
-        <div class="bn-layer bn-far">
-          @for (i of [0, 1, 2]; track i) {
-            <span class="bn-blob" [class]="'bn-blob-' + i" [style.--c]="color(i)"></span>
-          }
-        </div>
-      }
-      @case ('aurora') {
-        <div class="bn-layer bn-far">
-          @for (i of [0, 1, 2]; track i) {
-            <span class="bn-ribbon" [class]="'bn-ribbon-' + i" [style.--c]="color(i)"></span>
-          }
-        </div>
-        <span class="bn-stars bn-stars-a bn-near"></span>
-      }
-      @case ('stars') {
-        <span class="bn-glow bn-far" [style.--c]="color(0)"></span>
-        <span class="bn-stars bn-stars-a bn-far"></span>
-        <span class="bn-stars bn-stars-b bn-near"></span>
-        <span class="bn-shoot"></span>
-      }
-      @case ('galaxy') {
-        <span class="bn-spin bn-far" [style.background]="info().css"></span>
-        <span class="bn-stars bn-stars-a bn-near"></span>
-        <span class="bn-stars bn-stars-b bn-near"></span>
-        <span class="bn-shoot"></span>
-      }
-      @case ('sun') {
-        <span class="bn-rays bn-far" [style.--c]="color(0)"></span>
-        <span class="bn-sun bn-near" [style.--c]="color(0)" [style.--c2]="color(1)"></span>
-      }
-      @case ('flow') {
-        <span class="bn-flow bn-far" [style.background]="info().css"></span>
-        <span class="bn-sweep"></span>
-      }
-      @case ('waves') {
-        @for (i of [0, 1, 2]; track i) {
-          <span class="bn-wave" [class]="'bn-wave-' + i" [style.--c]="color(i)"></span>
+<div class="bn fade-in" [attr.data-overlay]="overlay()" [style.background]="custom() ? null : info().css">
+  @switch (overlay()) {
+    @case ('photo') {
+      <img [src]="custom()" alt="" class="bn-photo" draggable="false" />
+    }
+    @case ('stars') {
+      <span class="bn-stars" [style.--c]="color(0)"></span>
+      <span class="bn-stars bn-stars-b" [style.--c]="color(1)"></span>
+    }
+    @case ('blobs') {
+      <span class="bn-blob bn-blob-a" [style.--c]="color(0)"></span>
+      <span class="bn-blob bn-blob-b" [style.--c]="color(1)"></span>
+    }
+    @case ('asanoha') {
+      <span class="bn-asanoha" [style.--c]="color(0)"></span>
+    }
+    @case ('lines') {
+      <span class="bn-lines" [style.--c]="color(0)"></span>
+    }
+    @case ('threads') {
+      <svg class="bn-threads" viewBox="0 0 100 100" preserveAspectRatio="none" [style.--c]="color(0)">
+        @for (l of links; track $index) {
+          <line [attr.x1]="l.a[0]" [attr.y1]="l.a[1]" [attr.x2]="l.b[0]" [attr.y2]="l.b[1]" />
         }
-      }
-      @case ('rain') {
-        <div class="bn-layer bn-rain-tilt bn-far"><span class="bn-rain"></span></div>
-        <div class="bn-layer bn-rain-tilt bn-near"><span class="bn-rain bn-rain-b"></span></div>
-        <span class="bn-flash"></span>
-      }
-      @case ('rings') {
-        @for (i of [0, 1, 2, 3]; track i) {
-          <span class="bn-ring" [style.--c]="color(i)" [style.--i]="i"></span>
-        }
-      }
-      @case ('pattern') {
-        <span class="bn-pattern bn-far" [style.background]="info().css"></span>
-      }
-      @case ('city') {
-        <span class="bn-glow bn-far" [style.--c]="color(1)"></span>
-        <span class="bn-skyline bn-skyline-back bn-far" [style.--c]="color(2)"></span>
-        <span class="bn-skyline bn-skyline-front bn-near" [style.--c]="color(0)"></span>
-        <div class="bn-layer bn-rain-tilt bn-near"><span class="bn-rain"></span></div>
-      }
-      @case ('hyper') {
-        <span class="bn-warp bn-far" [style.--c]="color(0)"></span>
-        <span class="bn-warp bn-warp-b bn-near" [style.--c]="color(1)"></span>
-        <span class="bn-core"></span>
-      }
-      @case ('code') {
-        @for (col of codeColumns; track $index) {
-          <span class="bn-code" [style.left.%]="col.left" [style.animation-duration.s]="col.speed" [style.animation-delay.s]="col.delay" [style.color]="color(0)">{{ col.text }}</span>
-        }
-        <span class="bn-scan"></span>
-      }
-      @case ('planet') {
-        <span class="bn-stars bn-stars-a bn-far"></span>
-        <span class="bn-planet bn-near" [style.--c]="color(0)" [style.--c2]="color(1)"></span>
-        <span class="bn-planet-ring bn-near" [style.--c]="color(2)"></span>
-        <span class="bn-shoot"></span>
-      }
-      @case ('portal') {
-        <span class="bn-vortex bn-far" [style.--c]="color(0)" [style.--c2]="color(1)"></span>
-        <span class="bn-vortex bn-vortex-b bn-near" [style.--c]="color(2)" [style.--c2]="color(1)"></span>
-        <span class="bn-hole"></span>
-      }
-      @case ('synth') {
-        <span class="bn-synth-sun bn-far" [style.--c]="color(0)" [style.--c2]="color(1)"></span>
-        <div class="bn-floor"><span class="bn-grid" [style.--c]="color(2)"></span></div>
-      }
-      @case ('crt') {
-        <span class="bn-bars bn-far"></span>
-        <span class="bn-static"></span>
-        <span class="bn-lines"></span>
-        <span class="bn-roll"></span>
-      }
-      @case ('spotlight') {
-        @for (i of [0, 1, 2]; track i) {
-          <span class="bn-beam" [class]="'bn-beam-' + i" [style.--c]="color(i)"></span>
-        }
-        <span class="bn-stage"></span>
-      }
-      @case ('noir') {
-        <span class="bn-blinds bn-far"></span>
-        <div class="bn-layer bn-rain-tilt bn-near"><span class="bn-rain"></span></div>
-        <span class="bn-vignette"></span>
-      }
-      @case ('film') {
-        <span class="bn-flicker"></span>
-        <span class="bn-scratch"></span>
-        <span class="bn-scratch bn-scratch-b"></span>
-        <span class="bn-vignette"></span>
-      }
-      @case ('comic') {
-        <span class="bn-burst bn-far" [style.--c]="color(2)"></span>
-        <span class="bn-halftone" [style.--c]="color(0)"></span>
-        <span class="bn-pop bn-near" [style.--c]="color(1)" [style.--ink]="color(0)">{{ popWord() }}</span>
-      }
-      @case ('fog') {
-        <span class="bn-moon bn-far" [style.--c]="color(0)"></span>
-        <span class="bn-hills bn-near"></span>
-        <span class="bn-mist"></span>
-        <span class="bn-mist bn-mist-b"></span>
-      }
-      @case ('castle') {
-        <span class="bn-sun bn-far" [style.--c]="color(0)" [style.--c2]="color(0)"></span>
-        <span class="bn-castle bn-near" [style.--c]="color(1)"></span>
-        <span class="bn-embers" [style.--c]="color(0)"></span>
-      }
-      @case ('lava') {
-        <span class="cx-cracks bn-far" [style.--c]="color(0)" [style.--c2]="color(1)"></span>
-        <span class="cx-cracks cx-cracks-b bn-near" [style.--c]="color(1)" [style.--c2]="color(2)"></span>
-        <span class="cx-heat" [style.--c]="color(0)"></span>
-        <span class="bn-embers" [style.--c]="color(2)"></span>
-      }
-      @case ('glitch') {
-        <span class="cx-neon bn-far" [style.--c]="color(0)" [style.--c2]="color(1)"></span>
-        @for (i of [0, 1, 2, 3]; track i) {
-          <span class="cx-slice" [style.--i]="i" [style.background]="info().css" [style.--c]="color(i % 2)"></span>
-        }
-        <span class="cx-blocks" [style.--c]="color(2)"></span>
-        <span class="bn-scan"></span>
-      }
-      @case ('runes') {
-        <span class="cx-sigil bn-far" [style.--c]="color(0)"></span>
-        <span class="cx-ring bn-near" [style.--c]="color(0)">
-          @for (g of runeOuter; track $index) {
-            <span class="cx-glyph" [style.--i]="$index" [style.--n]="runeOuter.length">{{ g }}</span>
-          }
-        </span>
-        <span class="cx-ring cx-ring-b bn-far" [style.--c]="color(1)">
-          @for (g of runeInner; track $index) {
-            <span class="cx-glyph" [style.--i]="$index" [style.--n]="runeInner.length">{{ g }}</span>
-          }
-        </span>
-        <span class="bn-embers" [style.--c]="color(1)"></span>
-      }
-      @case ('blackhole') {
-        <span class="bn-stars bn-stars-a bn-far"></span>
-        <span class="cx-disk bn-near" [style.--c]="color(0)" [style.--c2]="color(1)"></span>
-        <span class="cx-hole" [style.--c]="color(2)"></span>
-        <span class="cx-disk cx-disk-front bn-near" [style.--c]="color(0)" [style.--c2]="color(1)"></span>
-      }
-      @case ('sumi') {
-        <span class="cx-sun bn-far" [style.--c]="color(0)"></span>
-        <span class="cx-mount cx-mount-back bn-far" [style.--c]="color(1)"></span>
-        <span class="cx-mount bn-near" [style.--c]="color(1)"></span>
-        <span class="cx-branch bn-near" [style.--c]="color(1)" [style.--c2]="color(2)"></span>
-        @for (i of petals; track i) {
-          <span class="cx-petal" [style.--i]="i" [style.--c]="color(2)"></span>
-        }
-      }
-      @case ('crystal') {
-        @for (i of shards; track i) {
-          <span class="cx-shard" [class.bn-near]="i % 2 === 0" [class.bn-far]="i % 2 === 1" [style.--i]="i" [style.--c]="color(0)" [style.--c2]="color(1)"></span>
-        }
-        <span class="bn-stars bn-stars-b"></span>
-      }
-      @case ('lightning') {
-        <span class="cx-clouds bn-far"></span>
-        <span class="cx-bolt" [style.--c]="color(0)"></span>
-        <span class="cx-bolt cx-bolt-b" [style.--c]="color(0)"></span>
-        <span class="bn-flash"></span>
-        <div class="bn-layer bn-rain-tilt bn-near"><span class="bn-rain"></span></div>
-      }
-      @case ('caustics') {
-        <span class="cx-caustic bn-far" [style.--c]="color(0)"></span>
-        <span class="cx-caustic cx-caustic-b bn-near" [style.--c]="color(0)"></span>
-        <span class="bn-rays-diag" [style.--c]="color(0)"></span>
-        <span class="cx-kelp" [style.--c]="color(2)"></span>
-        <span class="cx-kelp cx-kelp-b" [style.--c]="color(2)"></span>
-        @for (i of bubbles; track i) {
-          <span class="cx-bubble" [style.--i]="i" [style.--c]="color(1)"></span>
-        }
-      }
-      @case ('royal') {
-        <span class="cx-damask bn-far" [style.--c]="color(0)"></span>
-        <span class="cx-filigree" [style.--c]="color(0)"></span>
-        <span class="bn-sweep"></span>
-        <span class="bn-stars bn-stars-b cx-gold" [style.--c]="color(1)"></span>
-      }
-      @case ('pixel') {
-        <span class="cx-pix-stars"></span>
-        <span class="cx-pix-sun bn-far" [style.--c]="color(0)"></span>
-        <span class="cx-pix-mount bn-far" [style.--c]="color(1)"></span>
-        <span class="cx-pix-cloud" [style.--c]="color(0)"></span>
-        <span class="cx-pix-ground bn-near" [style.--c]="color(2)" [style.--c2]="color(0)"></span>
-      }
-      @case ('hexgrid') {
-        <span class="cx-hex bn-far" [style.--c]="color(0)"></span>
-        <span class="cx-hex cx-hex-lit" [style.--c]="color(1)"></span>
-        <span class="bn-scan"></span>
-      }
-      @case ('frost') {
-        <span class="cx-frost bn-far" [style.--c]="color(0)"></span>
-        <span class="cx-frost cx-frost-b bn-near" [style.--c]="color(0)"></span>
-        <span class="bn-stars bn-stars-a cx-snow"></span>
-        <span class="bn-stars bn-stars-b cx-snow cx-snow-b"></span>
-        <span class="bn-sweep"></span>
-      }
-      @case ('garden') {
-        <ng-container [ngTemplateOutlet]="gardenTpl" [ngTemplateOutletContext]="{ $implicit: false }" />
-      }
-      @case ('garden-grow') {
-        <ng-container [ngTemplateOutlet]="gardenTpl" [ngTemplateOutletContext]="{ $implicit: true }" />
-      }
-      @case ('anime') {
-        <span class="bn-rays-diag bn-far" [style.--c]="color(1)"></span>
-        <span class="bn-cloud bn-cloud-a bn-far" [style.--c]="color(0)"></span>
-        <span class="bn-cloud bn-cloud-b bn-near" [style.--c]="color(0)"></span>
+      </svg>
+      @for (p of stars; track $index) {
+        <span class="bn-node" [style.left.%]="p[0]" [style.top.%]="p[1]" [style.--c]="color($index)" [style.--i]="$index"></span>
       }
     }
-    @if (scene() !== 'static') {
-      <span class="bn-grain"></span>
-      <span class="bn-sheen"></span>
-    }
-  </div>
-}
-
-<ng-template #gardenTpl let-grow>
-  <div class="gd" [class.gd-grow]="grow" [style.--ascii-ink]="color(0)" [style.--ascii-accent]="color(1)" [style.--ascii-detail]="color(2)">
-    @for (g of garden; track $index) {
-      <app-ascii class="gd-piece" [piece]="g.piece" [style.left.%]="g.x" [style.bottom.%]="g.y" [style.--gd-s]="g.s" [style.--i]="$index" [decorative]="true" />
-    }
-  </div>
-</ng-template>
+  }
+</div>

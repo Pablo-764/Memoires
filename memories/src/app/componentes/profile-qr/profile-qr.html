@@ -1,0 +1,11 @@
+<svg [attr.viewBox]="view()" class="qr" role="img" [attr.aria-label]="label()" shape-rendering="geometricPrecision">
+  <rect [attr.x]="-2" [attr.y]="-2" [attr.width]="size() + 4" [attr.height]="size() + 4" rx="3" class="qr-bg" />
+  @for (e of eyes(); track $index) {
+    <rect [attr.x]="e.x + 0.5" [attr.y]="e.y + 0.5" width="6" height="6" rx="1.4" class="qr-eye-ring" />
+    <rect [attr.x]="e.x + 2" [attr.y]="e.y + 2" width="3" height="3" rx="0.5" class="qr-eye-core" />
+  }
+  @for (d of dots(); track $index) {
+    <circle [attr.cx]="d.x" [attr.cy]="d.y" r="0.46" class="qr-dot" />
+  }
+  <circle [attr.cx]="center()" [attr.cy]="center()" [attr.r]="size() * 0.075" class="qr-me" />
+</svg>

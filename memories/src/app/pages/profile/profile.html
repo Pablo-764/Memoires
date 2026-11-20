@@ -1,47 +1,58 @@
 <div class="grid items-start gap-8 lg:grid-cols-[360px_1fr]">
-  <div class="profile-preview card overflow-hidden lg:sticky lg:top-10">
-    <div class="relative h-44">
-      <app-banner [decoration]="draft().decoration" [custom]="draft().customBanner" />
-      <app-effect [effect]="draft().effect" [count]="12" [name]="draft().name || 'mémoires'" />
-      <label class="glass-icon absolute right-3 top-3 cursor-pointer" aria-label="Subir fondo propio">
-        <app-icon name="image-plus" [size]="18" />
-        <input type="file" accept="image/*" class="sr-only" (change)="upload($event, 'customBanner')" />
-      </label>
-    </div>
-    <div class="relative px-5 pb-5">
-      <label class="avatar-upload -mt-14 mb-3 inline-block cursor-pointer" aria-label="Cambiar foto de perfil">
-        <app-avatar [name]="draft().name || 'Tú'" [hue]="260" [size]="104" [frame]="draft().frame" [photo]="draft().photo" class="ring-[5px] ring-surface" />
-        <span class="avatar-upload-hint"><app-icon name="camera" [size]="22" /></span>
-        <input type="file" accept="image/*" class="sr-only" (change)="upload($event, 'photo')" />
-      </label>
-      <h2 class="text-[2.2rem] leading-none" [style.color]="name().color" [class.italic]="name().italic" [attr.data-name-fx]="name().fx ?? null">{{ draft().name || 'Tu nombre' }}, {{ draft().age }}</h2>
-      <p class="mt-1 text-sm text-ink-mute">{{ draft().city }}</p>
-      <div class="mt-3 flex flex-wrap gap-1.5">
-        @for (i of draft().intents; track i) {
-          <app-intent-badge [intent]="i" />
+  <div class="flex flex-col gap-4 lg:sticky lg:top-10">
+    <!-- Tarjeta compacta: así te ven los demás. Al ampliarla crece a la vista completa (dis-034) -->
+    <div class="profile-preview card overflow-hidden" [style.view-transition-name]="expanded() ? null : 'profile-card'">
+      <div class="relative h-36">
+        <app-banner [decoration]="draft().decoration" [custom]="draft().customBanner" />
+        <app-effect [effect]="draft().effect" [count]="10" [name]="draft().name || 'mémoires'" />
+        <label class="glass-icon absolute right-3 top-3 cursor-pointer" aria-label="Subir fondo propio">
+          <app-icon name="image-plus" [size]="18" />
+          <input type="file" accept="image/*" class="sr-only" (change)="upload($event, 'customBanner')" />
+        </label>
+      </div>
+      <div class="relative px-5 pb-5">
+        <label class="avatar-upload -mt-12 mb-3 inline-block cursor-pointer" aria-label="Cambiar foto de perfil">
+          <app-avatar [name]="draft().name || 'Tú'" [hue]="260" [size]="96" [frame]="draft().frame" [photo]="draft().photo" class="ring-4 ring-paper-2" />
+          <span class="avatar-upload-hint"><app-icon name="camera" [size]="22" /></span>
+          <input type="file" accept="image/*" class="sr-only" (change)="upload($event, 'photo')" />
+        </label>
+        <h2 class="font-display text-[2.25rem]" [style.color]="name().color" [attr.data-name-fx]="name().fx ?? null">{{ draft().name || 'Tu nombre' }}, {{ draft().age }}</h2>
+        <p class="mt-1 text-sm text-ink-2">{{ draft().city }}</p>
+        <div class="mt-3 flex flex-wrap gap-1.5">
+          @for (i of draft().intents; track i) {
+            <app-intent-badge [intent]="i" />
+          }
+        </div>
+        <p class="mt-3 line-clamp-3 whitespace-pre-line text-sm text-ink-2">{{ draft().bio || 'Escribe algo sobre ti.' }}</p>
+        <div class="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm">
+          <button class="btn btn-ghost btn-sm" (click)="toggleExpanded(true)"><app-icon name="user" [size]="16" /> Ver como me ven</button>
+          @if (draft().photo) {
+            <button class="link-soft text-xs" (click)="patch({ photo: undefined })">Quitar foto</button>
+          }
+          @if (draft().customBanner) {
+            <button class="link-soft text-xs" (click)="patch({ customBanner: undefined })">Quitar fondo propio</button>
+          }
+        </div>
+        @if (uploadError()) {
+          <p class="error-in mt-2 text-sm font-medium text-danger" role="alert">{{ uploadError() }}</p>
         }
       </div>
-      <p class="mt-3 whitespace-pre-line text-sm text-ink-soft">{{ draft().bio || 'Escribe algo sobre ti.' }}</p>
-      <p class="mt-3 text-sm text-ink-mute">{{ draft().interests.join(', ') }}</p>
-      <div class="mt-4 flex flex-wrap gap-x-3 gap-y-2 text-xs">
-        <a routerLink="/app/persona/me" class="link-soft font-semibold text-hobby">Ver mi perfil completo</a>
-        @if (draft().photo) {
-          <button class="link-soft text-ink-mute" (click)="patch({ photo: undefined })">Quitar foto</button>
-        }
-        @if (draft().customBanner) {
-          <button class="link-soft text-ink-mute" (click)="patch({ customBanner: undefined })">Quitar fondo propio</button>
-        }
-      </div>
-      @if (uploadError()) {
-        <p class="error-in mt-2 text-sm font-medium text-danger" role="alert">{{ uploadError() }}</p>
-      }
     </div>
+
+    <!-- QR para compartir el perfil (dis-094, dis-081) -->
+    <section class="card flex items-center gap-4 p-4" aria-labelledby="qr-titulo">
+      <app-profile-qr class="w-28 shrink-0" [url]="shareUrl()" label="Código QR para abrir tu perfil" />
+      <div class="min-w-0">
+        <h2 id="qr-titulo" class="font-bold">Comparte tu perfil</h2>
+        <p class="mt-1 text-sm text-ink-2">Quien lo escanee abre tu perfil. Solo ve lo que ya es público.</p>
+        <button class="btn btn-ghost btn-sm mt-3" (click)="copyLink()">Copiar enlace</button>
+      </div>
+    </section>
   </div>
 
   <div class="min-w-0">
     <div class="shape-bar" [appPillGroup]="tab()" role="tablist">
-      <span class="group-echo" aria-hidden="true"></span>
-      <span class="group-pill shape-marker" aria-hidden="true"></span>
+      <span class="group-pill" aria-hidden="true"></span>
       @for (t of tabs; track t.key; let n = $index) {
         <button type="button" role="tab" [attr.data-shape]="tabLook[n].shape" [attr.data-tone]="tabLook[n].tone" class="intent-tab" [class.is-on]="tab() === t.key" [attr.aria-selected]="tab() === t.key" (click)="tab.set(t.key)">
           {{ t.label }}
@@ -60,7 +71,7 @@
               <div>
                 <label class="label" for="pb">Descripción</label>
                 <textarea id="pb" class="field min-h-32" maxlength="280" placeholder="Cuenta quién eres y qué te gusta hacer…" [ngModel]="draft().bio" (ngModelChange)="patch({ bio: $event })"></textarea>
-                <p class="mt-1 text-right text-xs tabular-nums text-ink-mute">{{ draft().bio.length }}/280</p>
+                <p class="mt-1 text-right text-xs tabular-nums text-ink-3">{{ draft().bio.length }}/280</p>
               </div>
               <div class="grid gap-4 sm:grid-cols-2">
                 <div>
@@ -115,7 +126,7 @@
                 <p class="label">Preguntas de tu perfil</p>
                 <div class="flex flex-col gap-3">
                   @for (p of draft().prompts; track $index; let i = $index) {
-                    <div class="rounded-[20px] p-3 shadow-[inset_0_0_0_1.5px_var(--color-line)]">
+                    <div class="rounded-(--radius-card) p-3 shadow-[inset_0_0_0_1px_var(--color-line)]">
                       <select class="field min-h-10 py-2 text-sm" [attr.aria-label]="'Pregunta ' + (i + 1)" [ngModel]="p.q" (ngModelChange)="setPrompt(i, { q: $event })">
                         @for (o of promptOptions; track o) {
                           <option [value]="o">{{ o }}</option>
@@ -150,7 +161,7 @@
                     </button>
                   }
                   @if (draft().gallery.length < 6) {
-                    <label class="grid aspect-square cursor-pointer place-items-center rounded-2xl text-ink-mute shadow-[inset_0_0_0_1.5px_var(--color-line-strong)]" aria-label="Agregar foto">
+                    <label class="grid aspect-square cursor-pointer place-items-center rounded-2xl text-ink-3 shadow-[inset_0_0_0_1.5px_var(--color-line-strong)]" aria-label="Agregar foto">
                       <app-icon name="image-plus" [size]="22" />
                       <input type="file" accept="image/*" class="sr-only" (change)="addMoment($event)" />
                     </label>
@@ -175,12 +186,12 @@
             </div>
           }
           @case ('themes') {
-            <p class="max-w-[52ch] text-sm text-ink-mute">
+            <p class="max-w-[52ch] text-sm text-ink-3">
               Cada tema combina fondo, marco, efecto y estilo de nombre. Están inspirados en géneros y estéticas del cine, las series y la ciencia
               ficción, no en obras concretas. Después puedes cambiar cualquier pieza por separado.
             </p>
             @for (g of themeGroups; track g.group) {
-              <h3 class="mb-3 mt-7 text-2xl">{{ g.group }}</h3>
+              <h3 class="mb-3 mt-7 text-lg font-bold">{{ g.group }}</h3>
               <div class="theme-grid stagger">
                 @for (t of g.items; track t.key) {
                   @let nm = nameOf(t.name);
@@ -199,8 +210,8 @@
                       }
                     </span>
                     <span class="theme-body">
-                      <span class="font-display block text-[1.35rem] leading-tight" [style.color]="nm.color" [class.italic]="nm.italic" [attr.data-name-fx]="nm.fx ?? null">{{ t.label }}</span>
-                      <span class="mt-1 block text-xs text-ink-mute">{{ t.idea }}</span>
+                      <span class="block font-bold leading-tight" [style.color]="nm.color" [class.italic]="nm.italic" [attr.data-name-fx]="nm.fx ?? null">{{ t.label }}</span>
+                      <span class="mt-1 block text-xs text-ink-3">{{ t.idea }}</span>
                     </span>
                   </button>
                 }
@@ -210,11 +221,11 @@
           @case ('banners') {
             <label class="upload-tile">
               <app-icon name="image-plus" [size]="22" />
-              <span><span class="block font-semibold">Sube el fondo que quieras</span><span class="block text-sm text-ink-mute">Cualquier imagen de tu dispositivo</span></span>
+              <span><span class="block font-semibold">Sube el fondo que quieras</span><span class="block text-sm text-ink-3">Cualquier imagen de tu dispositivo</span></span>
               <input type="file" accept="image/*" class="sr-only" (change)="upload($event, 'customBanner')" />
             </label>
             @for (g of bannerGroups; track g.group) {
-              <h3 class="mb-3 mt-7 text-2xl">{{ g.group }}</h3>
+              <h3 class="mb-3 mt-7 text-lg font-bold">{{ g.group }}</h3>
               <div class="decor-grid stagger">
                 @for (b of g.items; track b.key) {
                   <button type="button" class="decor-tile" [attr.aria-pressed]="!draft().customBanner && draft().decoration === b.key" (click)="patch({ decoration: b.key, customBanner: undefined })">
@@ -232,11 +243,11 @@
           }
           @case ('frames') {
             @for (g of frameGroups; track g.group) {
-            <h3 class="mb-3 mt-7 text-2xl first:mt-0">{{ g.group }}</h3>
+            <h3 class="mb-3 mt-7 text-lg font-bold first:mt-0">{{ g.group }}</h3>
             <div class="decor-grid stagger">
               @for (f of g.items; track f.key) {
                 <button type="button" class="decor-tile" [attr.aria-pressed]="draft().frame === f.key" (click)="patch({ frame: f.key })">
-                  <span class="decor-swatch frame-swatch grid place-items-center bg-raised">
+                  <span class="decor-swatch frame-swatch grid place-items-center bg-paper-3">
                     <app-avatar [name]="draft().name || 'Tú'" [hue]="260" [size]="46" [frame]="f.key" [photo]="draft().photo" />
                     @if (!usable(f)) {
                       <span class="decor-lock"><app-icon name="lock" [size]="14" /></span>
@@ -250,7 +261,7 @@
           }
           @case ('effects') {
             @for (g of effectGroups; track g.group) {
-            <h3 class="mb-3 mt-7 text-2xl first:mt-0">{{ g.group }}</h3>
+            <h3 class="mb-3 mt-7 text-lg font-bold first:mt-0">{{ g.group }}</h3>
             <div class="decor-grid stagger">
               @for (e of g.items; track e.key) {
                 <button type="button" class="decor-tile" [attr.aria-pressed]="draft().effect === e.key" (click)="patch({ effect: e.key })">
@@ -270,8 +281,8 @@
             <div class="grid gap-2 sm:grid-cols-2">
               @for (n of nameStyles; track n.key) {
                 <button type="button" class="name-tile" [attr.aria-pressed]="draft().nameStyle === n.key" (click)="patch({ nameStyle: n.key })">
-                  <span class="font-display text-[1.7rem]" [style.color]="n.color" [class.italic]="n.italic" [attr.data-name-fx]="n.fx ?? null">{{ draft().name || 'Tu nombre' }}</span>
-                  <span class="flex items-center gap-1.5 text-xs text-ink-mute">
+                  <span class="font-display text-[1.75rem]" [style.color]="n.color" [attr.data-name-fx]="n.fx ?? null">{{ draft().name || 'Tu nombre' }}</span>
+                  <span class="flex items-center gap-1.5 text-xs text-ink-3">
                     {{ n.label }}
                     @if (!usable(n)) {
                       <app-icon name="lock" [size]="13" />
@@ -288,7 +299,7 @@
     @if (dirty()) {
       <div animate.leave="bar-out" class="rise-in sticky bottom-24 z-20 mt-6 flex flex-wrap items-center justify-end gap-3 md:bottom-6">
         @if (lockedTier(); as t) {
-          <a routerLink="/app/suscripcion" class="mr-auto rounded-full bg-surface px-4 py-2 text-sm font-semibold text-hobby shadow-(--shadow-lift)">Estás probando un estilo de {{ t === 'grand' ? 'Grand' : 'Lucidité' }}. Ver planes</a>
+          <a routerLink="/app/suscripcion" class="mr-auto rounded-full bg-lila-wash px-4 py-2 text-sm font-semibold text-lila">Estás probando un estilo de {{ t === 'grand' ? 'Grand' : 'Lucidité' }}. Ver planes</a>
         }
         <button class="btn btn-soft min-h-12" (click)="discard()">Descartar</button>
         <button #saveBtn class="btn btn-primary min-h-12 px-8 shadow-(--shadow-float)" [disabled]="draft().intents.length === 0 || !!lockedTier()" (click)="save()">Guardar cambios</button>
@@ -296,3 +307,52 @@
     }
   </div>
 </div>
+
+@if (expanded()) {
+  <div class="fixed inset-0 z-50 grid place-items-center overflow-y-auto bg-ink/50 p-4 sm:p-8" role="presentation" (click)="toggleExpanded(false)">
+    <article
+      class="relative w-full max-w-2xl overflow-hidden rounded-(--radius-sheet) bg-paper shadow-(--shadow-float)"
+      style="view-transition-name: profile-card"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Así te ven los demás"
+      tabindex="-1"
+      (click)="$event.stopPropagation()"
+      (keydown.escape)="toggleExpanded(false)"
+    >
+      <div class="relative h-52">
+        <app-banner [decoration]="draft().decoration" [custom]="draft().customBanner" />
+        <app-effect [effect]="draft().effect" [count]="16" [name]="draft().name || 'mémoires'" />
+        <button class="glass-icon absolute right-3 top-3" aria-label="Cerrar vista ampliada" (click)="toggleExpanded(false)"><app-icon name="x" [size]="18" /></button>
+      </div>
+      <div class="px-6 pb-8">
+        <app-avatar class="-mt-16 inline-block ring-[6px] ring-paper" [name]="draft().name || 'Tú'" [hue]="260" [size]="128" [frame]="draft().frame" [photo]="draft().photo" />
+        <h2 class="font-display mt-3 text-[clamp(2.5rem,7vw,3.75rem)]" [style.color]="name().color" [attr.data-name-fx]="name().fx ?? null">{{ draft().name || 'Tu nombre' }}, {{ draft().age }}</h2>
+        <p class="mt-1 text-ink-2">{{ draft().city }}</p>
+        <div class="mt-3 flex flex-wrap gap-1.5">
+          @for (i of draft().intents; track i) {
+            <app-intent-badge [intent]="i" size="md" />
+          }
+        </div>
+        <p class="mt-5 max-w-[60ch] whitespace-pre-line text-lg">{{ draft().bio || 'Escribe algo sobre ti.' }}</p>
+        @if (answered().length) {
+          <div class="mt-6 grid gap-3 sm:grid-cols-2">
+            @for (p of answered(); track p.q) {
+              <div class="card p-4">
+                <p class="text-sm font-semibold text-ink-2">{{ p.q }}</p>
+                <p class="mt-1 text-lg font-bold leading-snug">{{ p.a }}</p>
+              </div>
+            }
+          </div>
+        }
+        <h3 class="mt-6 text-sm font-bold uppercase tracking-wide text-ink-2">Intereses</h3>
+        <ul class="mt-2 flex flex-wrap gap-1.5">
+          @for (t of draft().interests; track t) {
+            <li class="chip">{{ t }}</li>
+          }
+        </ul>
+        <a routerLink="/app/persona/me" class="link-soft mt-6 inline-block text-sm font-semibold">Abrir mi perfil completo</a>
+      </div>
+    </article>
+  </div>
+}

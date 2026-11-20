@@ -26,6 +26,7 @@ mémoires usa o se inspira en el trabajo de otras personas. Este archivo dice qu
 | RxJS | Apache-2.0 |
 | tslib | 0BSD |
 | Fontsource (paquete de Plus Jakarta Sans) | MIT |
+| qrcode-generator (Kazuhiko Arase), QR del perfil | MIT |
 | Vitest y jsdom (pruebas) | MIT |
 | ESLint, angular-eslint y typescript-eslint | MIT |
 | Prettier | MIT |

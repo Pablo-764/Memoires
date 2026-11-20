@@ -5,107 +5,15 @@
     {{ initial() }}
   }
 </span>
-@if (textAlbum.on() && frameInfo().key !== 'none') {
-  <!-- Modo álbum de texto: el marco se dibuja con caracteres alrededor del aro -->
-  <span class="at-ring" [style.--t.px]="thickness()">
-    @for (a of ring12; track a; let k = $index) {
-      <span class="ao-slot" [style.--a]="a + 'deg'"><span class="at-char" [style.color]="k % 2 ? accent2() : accent()">{{ k % 2 ? '+' : '*' }}</span></span>
-    }
-  </span>
-} @else if (frameInfo().key !== 'none') {
-  @let fx = frameInfo().fx;
-  @if (fx === 'glow') {
+@if (ring() !== 'none') {
+  @if (ring() === 'glow') {
     <span class="af-glow" [style.background]="frameInfo().bg" [style.--t.px]="thickness()"></span>
   }
-  @if (fx === 'ripple') {
-    <span class="af-ripple" [style.--c]="accent()" [style.--t.px]="thickness()"></span>
-    <span class="af-ripple af-ripple-b" [style.--c]="accent()" [style.--t.px]="thickness()"></span>
+  <span class="avatar-frame" [class.af-dash]="ring() === 'dash'" [style.background]="frameInfo().bg" [style.--t.px]="thickness()"></span>
+  @if (ring() === 'double') {
+    <span class="af-double" [style.border-color]="accent()" [style.--t.px]="thickness()"></span>
   }
-  <span
-    class="avatar-frame"
-    [class]="(frameInfo().anim ?? '') + (fx === 'dash' ? ' af-dash' : '')"
-    [style.background]="frameInfo().bg"
-    [style.--t.px]="thickness()"
-  ></span>
-  @switch (fx) {
-    @case ('shimmer') {
-      <span class="avatar-frame af-shimmer" [style.--t.px]="thickness()"></span>
-    }
-    @case ('double') {
-      <span class="af-double" [style.background]="accent()" [style.--t.px]="thickness()"></span>
-    }
-    @case ('orbit') {
-      <span class="af-orbit" [style.--t.px]="thickness()" [style.color]="accent()"><span class="af-moon"></span></span>
-    }
-    @case ('atom') {
-      <span class="af-orbit" [style.--t.px]="thickness()" [style.color]="accent()"><span class="af-moon"></span></span>
-      <span class="af-orbit af-orbit-b" [style.--t.px]="thickness()" [style.color]="accent()"><span class="af-moon"></span></span>
-    }
-    @case ('flames') {
-      @for (a of ring10; track $index) {
-        <span class="ao-slot" [style.--a]="a + 'deg'" [style.--t.px]="thickness()">
-          <span class="ao-flame" [style.--i]="$index" [style.--c]="accent()" [style.--c2]="accent2()"></span>
-        </span>
-      }
-    }
-    @case ('wings') {
-      <span class="ao-wing ao-wing-l" [style.--c]="accent()" [style.--c2]="accent2()" [style.--t.px]="thickness()"></span>
-      <span class="ao-wing ao-wing-r" [style.--c]="accent()" [style.--c2]="accent2()" [style.--t.px]="thickness()"></span>
-    }
-    @case ('horns') {
-      <span class="ao-horn ao-horn-l" [style.--c]="accent()" [style.--c2]="accent2()"></span>
-      <span class="ao-horn ao-horn-r" [style.--c]="accent()" [style.--c2]="accent2()"></span>
-    }
-    @case ('angel') {
-      <span class="ao-halo" [style.--c]="accent()" [style.--t.px]="thickness()"></span>
-    }
-    @case ('runes') {
-      <span class="ao-runes" [style.--t.px]="thickness()" [style.color]="accent()">
-        @for (g of glyphs; track $index) {
-          <span class="ao-slot" [style.--a]="$index * 30 + 'deg'"><span class="ao-glyph">{{ g }}</span></span>
-        }
-      </span>
-    }
-    @case ('crystals') {
-      @for (a of ring8; track $index) {
-        <span class="ao-slot" [style.--a]="a + 'deg'" [style.--t.px]="thickness()">
-          <span class="ao-shard" [style.--i]="$index" [style.--c]="accent()" [style.--c2]="accent2()"></span>
-        </span>
-      }
-    }
-    @case ('electric') {
-      <span class="ao-volt" [style.background]="accent()" [style.--c]="accent()" [style.--t.px]="thickness()"></span>
-      <span class="ao-volt ao-volt-b" [style.background]="accent()" [style.--c]="accent()" [style.--t.px]="thickness()"></span>
-    }
-    @case ('vines') {
-      @for (a of ring10; track $index) {
-        <span class="ao-slot" [style.--a]="a + 'deg'" [style.--t.px]="thickness()">
-          <span class="ao-leaf" [style.--i]="$index" [style.--c]="accent()" [style.--c2]="accent2()"></span>
-        </span>
-      }
-    }
-    @case ('gems') {
-      @for (a of ring6; track $index) {
-        <span class="ao-slot" [style.--a]="a + 'deg'" [style.--t.px]="thickness()">
-          <span class="ao-gem" [style.--i]="$index" [style.--c]="$index % 2 ? accent2() : accent()"></span>
-        </span>
-      }
-    }
-    @case ('glitch') {
-      <span class="avatar-frame ao-ghost" [style.background]="accent()" [style.--t.px]="thickness()"></span>
-      <span class="avatar-frame ao-ghost ao-ghost-b" [style.background]="accent2()" [style.--t.px]="thickness()"></span>
-    }
-    @case ('ears') {
-      <span class="ao-ear ao-ear-l" [style.--c]="accent()" [style.--c2]="accent2()"></span>
-      <span class="ao-ear ao-ear-r" [style.--c]="accent()" [style.--c2]="accent2()"></span>
-    }
-    @case ('void') {
-      <span class="ao-void" [style.--c]="accent()" [style.--c2]="accent2()" [style.--t.px]="thickness()"></span>
-    }
-    @case ('sparkle') {
-      @for (i of sparks; track i) {
-        <span class="af-spark" [style.--i]="i" [style.background]="accent()" [style.--t.px]="thickness()"></span>
-      }
-    }
+  @if (ring() === 'orbit') {
+    <span class="af-orbit" [style.--t.px]="thickness()" [style.color]="accent()"><span class="af-moon"></span></span>
   }
 }

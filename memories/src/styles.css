@@ -49,6 +49,10 @@
   --color-lila: #7a3cb8;
   --color-lila-wash: #efe6f8;
 
+  /* El QR se imprime siempre oscuro sobre claro para que se pueda leer */
+  --color-qr-paper: #fbfaf7;
+  --color-qr-ink: #1a1814;
+
   --radius-field: 12px;
   --radius-card: 20px;
   --radius-sheet: 28px;
@@ -179,7 +183,10 @@
     font-feature-settings: "ss01";
     transition: background-color var(--dur-2) ease, color var(--dur-2) ease;
   }
-  :where(h1, h2, h3, h4) {
+  h1,
+  h2,
+  h3,
+  h4 {
     font-weight: 700;
     line-height: 1.15;
     letter-spacing: -0.015em;
@@ -669,4 +676,30 @@ html.theme-switching::view-transition-new(root) {
   .reveal-armed { opacity: 1; transform: none; }
   ::view-transition-old(page),
   ::view-transition-new(page) { animation: fade-out 120ms ease both reverse; }
+}
+
+/* ── Estilos de nombre (decoración de pago) ──────────────────────────── */
+[data-name-fx="neon"],
+[data-name-fx="hologram"],
+[data-name-fx="terminal"],
+[data-name-fx="rune"],
+[data-name-fx="fire"],
+[data-name-fx="ice"] {
+  text-shadow: 0 0 0.3em color-mix(in oklab, currentColor 55%, transparent);
+}
+[data-name-fx="chrome"],
+[data-name-fx="marquee"],
+[data-name-fx="drama"],
+[data-name-fx="glitch"],
+[data-name-fx="pixel"] {
+  background: linear-gradient(180deg, currentColor 45%, color-mix(in oklab, currentColor 45%, var(--color-ink)));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+[data-name-fx="noir"],
+[data-name-fx="film"],
+[data-name-fx="comic"],
+[data-name-fx="spooky"] {
+  text-shadow: 0.06em 0.06em 0 color-mix(in oklab, currentColor 25%, transparent);
 }

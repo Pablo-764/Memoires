@@ -1,9 +1,6 @@
-import { Component, computed, inject, input } from '@angular/core'
-import { TextAlbum } from '../../servicios/text-album'
+import { Component, computed, input } from '@angular/core'
 import { effectOf } from '../../modelos/decor'
 import { Icon } from '../icon/icon'
-import { Inflado } from '../inflado/inflado'
-import type { Intent } from '../../modelos/intents'
 
 const noise = (n: number) => {
   const v = Math.sin(n * 91.17) * 43758.5453
@@ -31,7 +28,7 @@ const TIMING: Record<string, [number, number]> = {
  */
 @Component({
   selector: 'app-effect',
-  imports: [Icon, Inflado],
+  imports: [Icon],
   styleUrl: './effect.css',
   templateUrl: './effect.html',
   host: { class: 'pointer-events-none absolute inset-0 block overflow-hidden', 'aria-hidden': 'true', '[class.is-preview]': 'preview()' },
@@ -43,21 +40,15 @@ export class Effect {
   readonly preview = input(false)
   // Nombre que cubre los efectos inflados
   readonly name = input('mémoires')
-  protected readonly inflado = computed(() => {
-    const { key, colors, dir } = this.info()
-    if (dir !== 'inflado') return null
-    const shape: Intent = key.endsWith('corazon') ? 'romance' : key.endsWith('taza') ? 'friend' : key.endsWith('boleto') ? 'plan' : 'hobby'
-    return { shape, colors: { body0: colors[0], body1: colors[1], rim: colors[2], text: colors[3] } }
-  })
   protected readonly glyphs = '01{}<>/=+*#;'
-  protected readonly textAlbum = inject(TextAlbum)
-  protected readonly textGlyphs = '*+.o*~'
 
   protected readonly info = computed(() => effectOf(this.effect()))
+  protected readonly dirClass = computed(() => 'fx-' + (this.info().dir === 'inflado' ? 'float' : this.info().dir))
   protected readonly particles = computed(() => {
     const { key, colors, dir } = this.info()
-    if (key === 'none' || dir === 'inflado') return []
-    const [base, spread] = TIMING[dir] ?? [5, 5]
+    if (key === 'none') return []
+    // Los efectos inflados de antes flotan como el resto
+    const [base, spread] = TIMING[dir === 'inflado' ? 'float' : dir] ?? [5, 5]
     const total = this.count()
     return Array.from({ length: total }, (_, i) => {
       const duration = base + noise(i + 120) * spread

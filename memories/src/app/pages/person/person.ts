@@ -1,5 +1,5 @@
 import { Location } from '@angular/common'
-import { Component, computed, inject, input, signal } from '@angular/core'
+import { Component, DestroyRef, computed, effect, inject, input, signal } from '@angular/core'
 import { Router, RouterLink } from '@angular/router'
 import { AppStore } from '../../servicios/app-store'
 import { Celebrate } from '../../servicios/celebrate'
@@ -15,10 +15,11 @@ import { Icon } from '../../componentes/icon/icon'
 import { IntentBadge } from '../../componentes/intent-badge/intent-badge'
 import { BlockDialog } from '../../componentes/block-dialog/block-dialog'
 import { ReportDialog } from '../../componentes/report-dialog/report-dialog'
+import { Seal } from '../../componentes/seal/seal'
 
 @Component({
   selector: 'app-person',
-  imports: [RouterLink, Avatar, Banner, Effect, Icon, IntentBadge, BlockDialog, ReportDialog],
+  imports: [RouterLink, Avatar, Banner, Effect, Icon, IntentBadge, BlockDialog, ReportDialog, Seal],
   styleUrl: './person.css',
   templateUrl: './person.html',
 })
@@ -33,6 +34,15 @@ export class Person {
   protected readonly reportOpen = signal(false)
   protected readonly blockOpen = signal(false)
   protected readonly isMe = computed(() => this.id() === 'me')
+
+  constructor() {
+    // La página toma la tinta de la intención que comparten
+    effect(() => {
+      const v = this.view()
+      this.store.backdropTone.set(v ? (v.intents.find((i: Intent) => this.store.me().intents.includes(i)) ?? v.intents[0] ?? null) : null)
+    })
+    inject(DestroyRef).onDestroy(() => this.store.backdropTone.set(null))
+  }
 
   protected readonly view = computed(() => {
     if (this.isMe()) {
