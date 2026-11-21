@@ -189,3 +189,6 @@
 @media (min-width: 768px) {
   .prices { padding: 8rem 2.5rem; }
 }
+
+/* Lo que queda bajo el pliegue no se calcula hasta acercarse */
+.safety, .prices, app-footer { content-visibility: auto; contain-intrinsic-size: auto 900px; }

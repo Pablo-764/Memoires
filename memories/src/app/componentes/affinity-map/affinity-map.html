@@ -50,7 +50,7 @@
           class="arc-btn"
           [attr.role]="a.enabled ? 'button' : null"
           [attr.tabindex]="a.enabled ? 0 : null"
-          [attr.aria-label]="'Ver solo ' + intents[a.intent].label.toLowerCase()"
+          [attr.aria-label]="a.enabled ? 'Ver solo ' + intents[a.intent].label.toLowerCase() : null"
           [attr.aria-pressed]="a.enabled ? filter() === a.intent : null"
           (click)="a.enabled && filterChange.emit(filter() === a.intent ? 'any' : a.intent)"
           (keydown)="a.enabled && key($event, () => filterChange.emit(filter() === a.intent ? 'any' : a.intent))"
@@ -61,7 +61,7 @@
         <text [attr.x]="a.lx" [attr.y]="a.ly" class="arc-label" aria-hidden="true">{{ intents[a.intent].short }}</text>
       </g>
     }
-    <g class="me" role="button" tabindex="0" aria-label="Ver todas las intenciones" [attr.aria-pressed]="filter() === 'any'" (click)="filterChange.emit('any')" (keydown)="key($event, () => filterChange.emit('any'))">
+    <g class="me" role="button" tabindex="0" aria-label="tú: ver todas las intenciones" [attr.aria-pressed]="filter() === 'any'" (click)="filterChange.emit('any')" (keydown)="key($event, () => filterChange.emit('any'))">
       <circle [attr.cx]="cx()" [attr.cy]="cy()" r="30" class="me-dot" />
       <text [attr.x]="cx()" [attr.y]="cy() + 5" class="me-label" aria-hidden="true">tú</text>
     </g>
