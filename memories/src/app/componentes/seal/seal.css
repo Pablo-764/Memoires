@@ -38,3 +38,4 @@
 
 /* Verificado: el sello azul */
 :host([data-kind='verified']) { color: var(--plan-ink); }
+:host([data-kind='id']) { color: var(--color-gold); }

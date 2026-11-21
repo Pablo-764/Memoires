@@ -21,7 +21,7 @@ import { RouterLink } from '@angular/router'
         <li>Los perfiles impulsados se marcan “Impulsado” y nunca son más de 1 de cada 10 sugerencias.</li>
         <li>La seguridad nunca se cobra.</li>
         <li>Lo que más te hace visible es gratis: verificarte y completar tu perfil. El plan de pago no reemplaza eso.</li>
-        <li>Lo que más ayuda a conectar también es gratis: fotos claras, tres preguntas respondidas y comentar algo concreto.</li>
+        <li>Lo que más ayuda a conectar también es gratis: fotos claras, tres preguntas respondidas y comentar algo concreto. <a routerLink="/app/perfil" class="link-soft font-semibold">Guía de perfil</a></li>
       </ul>
       <a routerLink="/terminos-suscripcion" class="btn btn-ghost btn-sm mt-2">Términos de la suscripción</a>
     </section>

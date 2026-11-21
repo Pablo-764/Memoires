@@ -116,7 +116,9 @@ export class Discover {
   protected readonly hilo = computed(() => {
     const excluded = new Set([...this.store.blocked(), ...this.store.suspended(), ...this.store.connections()])
     const todas = rankSuggestions(this.store.me(), PEOPLE, excluded, { ...this.store.filters(), strict: {} })
-    const id = this.hiloId() ?? todas.find((s) => !this.store.decisions()[s.person.id])?.person.id
+    // Solo entran perfiles con 80 % o más de perfil completo
+    const candidatas = todas.filter((s) => (s.person.completo ?? 0) >= 80)
+    const id = this.hiloId() ?? candidatas.find((s) => !this.store.decisions()[s.person.id])?.person.id
     const s = todas.find((x) => x.person.id === id)
     if (!s) return null
     return { s, atado: !!this.store.decisions()[s.person.id] }

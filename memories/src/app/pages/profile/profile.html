@@ -50,6 +50,16 @@
       <div class="min-w-0">
         <h1 id="perfil-titulo" class="text-2xl font-extrabold">Tu perfil</h1>
         <p class="text-sm text-ink-2">{{ visibilidad() }}</p>
+        <details class="guia">
+          <summary>Guía de perfil</summary>
+          <p class="mt-2 font-semibold">Lo que más te hace visible es gratis: verificarte y completar tu perfil. El plan de pago no reemplaza eso.</p>
+          <ul>
+            <li>Una foto donde se vea tu cara y otra haciendo algo que te gusta.</li>
+            <li>Tres preguntas respondidas con algo concreto, no «pregúntame».</li>
+            <li>Cinco intereses o más: son los hilos que te unen con otras personas.</li>
+            <li>Con 80 % o más apareces a más personas y puedes estar en «Tu hilo del día» de otros.</li>
+          </ul>
+        </details>
         @if (falta().length) {
           <ul class="faltan">
             @for (f of falta().slice(0, 3); track f.key) {
@@ -354,7 +364,14 @@
                   <p class="text-sm text-ink-2">Sin verificar no apareces a nadie ni puedes conectar. Es gratis siempre.</p>
                   <button type="button" class="btn btn-primary btn-sm mt-2" (click)="verifyOpen.set(true)">Verifícate para conectar</button>
                 }
-                <p class="mt-1 text-xs text-ink-2">Identificación oficial: opcional, da un sello dorado. No es requisito.</p>
+                @if (store.me().idVerified) {
+                  <p class="mt-2 flex items-center gap-2 text-sm"><app-seal kind="id" label="Identificación confirmada" /></p>
+                } @else {
+                  <p class="mt-1 text-xs text-ink-2">Identificación oficial: opcional, da un sello dorado. No es requisito.</p>
+                  @if (store.verified()) {
+                    <button type="button" class="btn btn-ghost btn-sm mt-1" (click)="idOpen.set(true)">Agregar identificación</button>
+                  }
+                }
               </div></li>
               <li><app-seal kind="private" size="md" /><div><p class="font-bold">Ubicación</p><p class="text-sm text-ink-2">Solo mostramos {{ draft().city }}. Nunca coordenadas.</p></div></li>
               <li><app-seal kind="block" size="md" /><div><p class="font-bold">Personas bloqueadas: {{ store.blocked().length }}</p><p class="text-sm text-ink-2">Dejan de verte y no pueden escribirte.</p></div></li>
@@ -448,6 +465,9 @@
 
 @if (verifyOpen()) {
   <app-verify-sheet (closed)="verifyOpen.set(false)" />
+}
+@if (idOpen()) {
+  <app-verify-sheet nivel="id" (closed)="idOpen.set(false)" />
 }
 @if (testOpen()) {
   <app-test-sheet (closed)="testOpen.set(false)" (done)="patch({ personality: $event }); testOpen.set(false)" />

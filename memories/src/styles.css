@@ -50,6 +50,9 @@
   --color-lila-wash: #efe6f8;
 
   /* El QR se imprime siempre oscuro sobre claro para que se pueda leer */
+  /* Sello dorado (identificación oficial, opcional) */
+  --color-gold: #8a6410;
+
   --color-qr-paper: #fbfaf7;
   --color-qr-ink: #1a1814;
 
@@ -111,6 +114,7 @@
 
 .dark {
   color-scheme: dark;
+  --color-gold: #e2b85a;
   --color-paper: #16140f;
   --color-paper-2: #211e19;
   --color-paper-3: #2c2923;

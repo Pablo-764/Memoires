@@ -442,3 +442,7 @@
 .eje-barra { position: relative; height: 2px; background: var(--color-line); }
 .eje-punto { position: absolute; top: 50%; width: 10px; height: 10px; border-radius: 50%; background: var(--tint); translate: -50% -50%; }
 .is-verified app-seal { color: var(--plan-ink); }
+
+.guia { margin-top: 0.375rem; font-size: 0.875rem; }
+.guia summary { cursor: pointer; font-weight: 700; color: var(--tint-ink); width: max-content; }
+.guia ul { margin-top: 0.375rem; padding-left: 1.1rem; list-style: disc; color: var(--color-ink-2); display: grid; gap: 0.25rem; }

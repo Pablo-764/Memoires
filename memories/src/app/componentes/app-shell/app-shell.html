@@ -10,6 +10,9 @@
   </main>
 
   <app-dock [items]="nav()" [active]="activeIndex()" />
+  @if (mando.verificarAbierto()) {
+    <app-verify-sheet (closed)="mando.verificarAbierto.set(false)" />
+  }
   @if (mando.paletaAbierta()) {
     <app-command-palette />
   }

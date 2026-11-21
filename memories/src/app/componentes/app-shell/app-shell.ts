@@ -13,10 +13,11 @@ import { CommandBar } from '../command-bar/command-bar'
 import { CommandPalette } from '../command-palette/command-palette'
 import { Dock } from '../dock/dock'
 import { Mando } from '../../servicios/mando'
+import { VerifySheet } from '../verify-sheet/verify-sheet'
 
 @Component({
   selector: 'app-shell',
-  imports: [RouterOutlet, Avatar, Modal, CommandBar, CommandPalette, Dock],
+  imports: [RouterOutlet, Avatar, Modal, CommandBar, CommandPalette, Dock, VerifySheet],
   styleUrl: './app-shell.css',
   templateUrl: './app-shell.html',
 })

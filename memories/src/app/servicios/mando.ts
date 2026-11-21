@@ -13,6 +13,8 @@ export interface AccionPrincipal {
 @Injectable({ providedIn: 'root' })
 export class Mando {
   readonly paletaAbierta = signal(false)
+  /** Hoja de verificación abierta desde el aviso fijo de la barra de mando o del dock. */
+  readonly verificarAbierto = signal(false)
   readonly accion = signal<AccionPrincipal | null>(null)
 
   abrirPaleta() {

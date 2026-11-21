@@ -1,6 +1,12 @@
 import type { Person } from '../datos/mock'
 import type { Intent } from '../modelos/intents'
 import { usesGender, usesGroups, type IntentPrefs } from '../modelos/plan-formats'
+import { pesoVisibilidad } from './completitud'
+
+/** Lo que suma el impulso de pago al puntaje (aparte del peso de completitud). */
+export const IMPULSO = 12
+/** Tope de perfiles impulsados: no más de 1 de cada 10 sugerencias. */
+export const TOPE_IMPULSO = 10
 
 export interface Filters {
   intent: Intent | 'any'
@@ -42,6 +48,10 @@ export interface Suggestion {
   score: number
   /** Filtros no innegociables que no cumple: ordena después de quien sí cumple. */
   fallas?: number
+  /** Peso por perfil completo (0.6, 1 o 1.25), igual pague o no. */
+  peso?: number
+  /** Impulso de pago aplicado (lleva la marca "Impulsado"). */
+  impulsado?: boolean
 }
 
 /**
@@ -49,7 +59,10 @@ export interface Suggestion {
  * 1. Filtros duros: bloqueados, suspendidos, ya decididos, otra ciudad, sin intención en común.
  * 2. Filtros del usuario (según su plan): los innegociables excluyen; los demás solo ordenan
  *    (quien no cumple va después de quien sí). Las preferencias de cada intención excluyen.
- * 3. Orden por puntaje: intereses en común (10 c/u), intenciones en común (5 c/u), perfil verificado (2).
+ * 3. Orden por puntaje: intereses en común (10 c/u), intenciones en común (5 c/u), perfil verificado (2),
+ *    multiplicado por el peso de perfil completo (0.6 / 1 / 1.25; igual para quien paga y quien no).
+ *    El impulso de pago suma aparte, se marca y no pasa de 1 de cada 10 sugerencias.
+ * Sin verificar no se aparece a nadie.
  * El mismo input siempre produce el mismo orden.
  */
 function fitsPrefs(person: Person, intent: Intent, me: Me, sharedCount: number) {
@@ -78,6 +91,7 @@ export function rankSuggestions(
   for (const person of people) {
     if (excluded.has(person.id)) continue
     if (person.city !== me.city) continue
+    if (!person.verified) continue
 
     const sharedIntents = person.intents.filter((i) => myIntents.has(i))
     if (sharedIntents.length === 0) continue
@@ -98,11 +112,25 @@ export function rankSuggestions(
     if (validIntents.length === 0) continue
     if (filters.intent !== 'any' && !validIntents.includes(filters.intent)) continue
 
-    const score = sharedInterests.length * 10 + validIntents.length * 5 + (person.verified ? 2 : 0)
-    out.push({ person, sharedIntents: validIntents, sharedInterests, score, fallas: fallas.length })
+    const base = sharedInterests.length * 10 + validIntents.length * 5 + (person.verified ? 2 : 0)
+    const peso = pesoVisibilidad(person.completo ?? 60)
+    const score = Math.round(base * peso * 100) / 100
+    out.push({ person, sharedIntents: validIntents, sharedInterests, score, fallas: fallas.length, peso, impulsado: !!person.impulsado })
   }
 
-  return out.sort((a, b) => (a.fallas ?? 0) - (b.fallas ?? 0) || b.score - a.score || a.person.id.localeCompare(b.person.id))
+  const orden = (a: Suggestion, b: Suggestion) => a.person.id.localeCompare(b.person.id)
+  const conImpulso = (s: Suggestion) => s.score + (s.impulsado ? IMPULSO : 0)
+  const sorted = out.sort((a, b) => (a.fallas ?? 0) - (b.fallas ?? 0) || conImpulso(b) - conImpulso(a) || orden(a, b))
+
+  // Tope: en cada tramo de 10 sugerencias solo un perfil conserva el impulso
+  const usados = new Set<number>()
+  for (const s of sorted) {
+    if (!s.impulsado) continue
+    const tramo = Math.floor(sorted.indexOf(s) / TOPE_IMPULSO)
+    if (usados.has(tramo)) s.impulsado = false
+    else usados.add(tramo)
+  }
+  return sorted.sort((a, b) => (a.fallas ?? 0) - (b.fallas ?? 0) || conImpulso(b) - conImpulso(a) || orden(a, b))
 }
 
 export function countWords(text: string) {

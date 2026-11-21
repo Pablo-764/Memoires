@@ -23,6 +23,12 @@ export interface Person {
   nameStyle?: string
   groupSizes?: PlanSize[]
   gender?: Gender
+  /** Perfil completo de 0 a 100 (fotos, prompts, intereses, test, preferencias, disponibilidad). */
+  completo?: number
+  /** Impulso de pago activo: suma vistas aparte y lleva la marca "Impulsado". */
+  impulsado?: boolean
+  /** Plan que paga (no cambia el peso de completitud). */
+  tier?: 'free' | 'grand' | 'lucidite'
 }
 
 const BASE_PEOPLE: Person[] = [
@@ -37,7 +43,18 @@ const BASE_PEOPLE: Person[] = [
   { id: 'p9', name: 'Camila', age: 31, city: 'Ciudad de México', bio: 'Teatro, idiomas y largas caminatas por Coyoacán.', intents: ['friend'], interests: ['Teatro', 'Idiomas', 'Café'], hue: 10, likesYou: true, verified: true, languages: ['Español', 'Inglés'], availability: 'Fines de semana', decoration: 'rosa-polar', frame: 'plata', effect: 'plumas', nameStyle: 'none', groupSizes: ['small'], gender: 'woman' },
 ]
 
-export const PEOPLE: Person[] = [...BASE_PEOPLE, ...BOTS]
+// Demostración: perfil completo fijo por persona y dos perfiles impulsados (pagan Grand)
+const IMPULSADOS = new Set(['p6', 'b05'])
+function completoDe(id: string) {
+  const n = [...id].reduce((t, c) => t * 31 + c.charCodeAt(0), 7)
+  return 35 + (Math.abs(n) % 61)
+}
+
+export const PEOPLE: Person[] = [...BASE_PEOPLE, ...BOTS].map((p) => ({
+  completo: completoDe(p.id),
+  ...(IMPULSADOS.has(p.id) ? { impulsado: true, tier: 'grand' as const } : {}),
+  ...p,
+}))
 
 export interface Plan {
   id: string
