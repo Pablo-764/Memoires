@@ -17,3 +17,6 @@ globalThis.IntersectionObserver ??= ObserverStub as unknown as typeof Intersecti
 globalThis.ResizeObserver ??= ObserverStub as unknown as typeof ResizeObserver
 Element.prototype.scrollIntoView ??= noop
 window.scrollTo = noop as typeof window.scrollTo
+Element.prototype.animate ??= function () {
+  return { finished: Promise.resolve(), cancel: noop, finish: noop, play: noop, pause: noop, addEventListener: noop, removeEventListener: noop } as unknown as Animation
+}

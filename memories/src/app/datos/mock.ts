@@ -92,13 +92,22 @@ export interface Message {
   at: number
   // Mensaje estructurado "Proponer plan" (fecha, lugar y tipo)
   plan?: PlanPropuesto
+  // Imagen: llega difuminada y se ve con un toque
+  image?: string
 }
+
+const ATARDECER =
+  'data:image/svg+xml,' +
+  encodeURIComponent(
+    "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 220'><defs><linearGradient id='c' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#3b3a7a'/><stop offset='.55' stop-color='#e07a5f'/><stop offset='1' stop-color='#f2cc8f'/></linearGradient></defs><rect width='320' height='220' fill='url(#c)'/><circle cx='160' cy='150' r='34' fill='#fbe3a1'/><path d='M0 170 Q 60 140 120 165 T 240 160 T 320 150 V220 H0z' fill='#2c2a4a'/></svg>",
+  )
 
 const BASE_MESSAGES: Record<string, Message[]> = {
   p3: [
     { id: 'a1', from: 'p3', text: '¡Hola! Me encantaron tus fotos. ¿Vamos a ver el atardecer el sábado?', at: Date.now() - 1000 * 60 * 30 },
     { id: 'a2', from: 'me', text: 'Me encantaría, Arleth. Llevo flores.', at: Date.now() - 1000 * 60 * 25 },
     { id: 'a3', from: 'p3', text: 'Trato hecho: yo llevo el café y tú las flores.', at: Date.now() - 1000 * 60 * 20 },
+    { id: 'a4', from: 'p3', text: 'Así se veía ayer desde el cerro.', at: Date.now() - 1000 * 60 * 18, image: ATARDECER },
   ],
   p2: [
     { id: 'm1', from: 'p2', text: '¡Hola! Vi que también te gustan los juegos de mesa. ¿Has jugado Catan?', at: Date.now() - 1000 * 60 * 60 * 5 },

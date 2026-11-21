@@ -9,16 +9,6 @@ export const PROMPTS_POR_INTENCION: Record<Intent | 'general', string[]> = {
   general: ['Lo último que me hizo reír', 'Mi domingo perfecto'],
 }
 
-// "Primeros pasos" (Bumble): preguntas de apertura que otros contestan con un toque
-export const APERTURAS = [
-  '¿Café o té para un primer plan?',
-  '¿Cuál es tu lugar favorito de la ciudad?',
-  '¿Qué fue lo último que te hizo reír?',
-  '¿Qué plan harías este fin de semana?',
-  '¿Qué serie recomiendas sin dudar?',
-  '¿Qué pasatiempo quieres aprender?',
-]
-
 export const REGLAS = [
   { key: 'respeto', texto: 'Trato a todas las personas con respeto, aunque no me interesen.' },
   { key: 'fotos', texto: 'Mis fotos son recientes y soy yo.' },

@@ -66,6 +66,19 @@
                       }
                     }
                   </article>
+                } @else if (m.image) {
+                  <figure class="img-msg bubble-in" [class.is-me]="m.from === 'me'">
+                    <div class="img-wrap" [class.is-blur]="!vistas().has(m.id)">
+                      <img [src]="m.image" [alt]="vistas().has(m.id) ? 'Imagen enviada por ' + (m.from === 'me' ? 'ti' : p.name) : ''" />
+                      @if (!vistas().has(m.id)) {
+                        <button type="button" class="img-ver" (click)="verImagen(m.id)">
+                          <app-icon name="eye" [size]="16" /> Ver imagen
+                        </button>
+                      }
+                    </div>
+                    @if (m.text) { <figcaption>{{ m.text }}</figcaption> }
+                    @if (!vistas().has(m.id)) { <p class="img-nota">Las imágenes llegan difuminadas: tú decides si verlas.</p> }
+                  </figure>
                 } @else {
                   <p class="bubble bubble-in" [class]="m.from === 'me' ? 'bubble-me' : 'bubble-them'" [class.opacity-35]="query().trim() && !isHit(m.text)">@for (part of parts(m.text); track $index) {@if (part.hit) {<mark class="msg-hit">{{ part.text }}</mark>} @else {{{ part.text }}}}</p>
                 }
@@ -90,6 +103,28 @@
                 <span>{{ i.title }} <span class="text-ink-2">· {{ i.when }}</span></span>
               </button>
             }
+          </div>
+        }
+
+        @if (verAperturas() && store.verified()) {
+          <div class="aperturas" role="group" [attr.aria-label]="'Primeros pasos de ' + p.name">
+            <p class="aperturas-t">Primeros pasos de {{ p.name }} · toca una para responder</p>
+            <div class="flex gap-1.5 overflow-x-auto pb-1">
+              @for (a of aperturas(); track a) {
+                <button type="button" class="apertura" (click)="responder(a)">{{ a }}</button>
+              }
+            </div>
+          </div>
+        }
+
+        @if (delicadas().length) {
+          <div class="cuidado" role="alertdialog" aria-labelledby="cuidado-t" aria-describedby="cuidado-d">
+            <p id="cuidado-t" class="font-bold">¿Seguro que quieres enviar esto?</p>
+            <p id="cuidado-d" class="text-sm text-ink-2">«{{ delicadas().join('», «') }}» puede lastimar. Nadie más lo ve; tú decides.</p>
+            <div class="mt-2 flex gap-2">
+              <button type="button" class="btn btn-soft btn-sm" (click)="delicadas.set([])">Editar</button>
+              <button type="button" class="btn btn-ghost btn-sm" (click)="submit(true)">Enviar igual</button>
+            </div>
           </div>
         }
 
