@@ -129,7 +129,7 @@ Escala (razón ~1.25, base 16): `xs 12 · sm 14 · base 16 · lg 18 · xl 22 · 
 | Avatar | Inicial sobre `paper-3` o foto; aro opcional (decoración) |
 | Aviso (toast) | Abajo al centro, con ícono por tono, 3.2 s |
 
-## 8. Pantallas (antes y después en `docs/evolucion/forma-antes-despues/`)
+## 8. Pantallas (antes y después en `docs/evolucion/antes-despues/`)
 
 - **Portada**: constelación viva; capítulos con escena fija; seguridad con sello grande; precios en escala; pie con QR.
 - **Registro (13 pantallas)**: una pregunta por pantalla; la primera intención tiñe todo; borrador guardado sin contraseña; solo mayores de 18.

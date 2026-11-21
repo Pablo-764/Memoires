@@ -84,6 +84,7 @@ El detalle de licencias está en [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.
 | tslib | 0BSD |
 | Plus Jakarta Sans (vía Fontsource) | SIL OFL 1.1 (fuente) y MIT (paquete) |
 | qrcode-generator (Kazuhiko Arase), QR del perfil | MIT |
+| Íconos de Lucide (trazos SVG copiados en `componentes/icon/icons.ts`) | ISC |
 | Vitest y jsdom (pruebas) | MIT |
 | ESLint, angular-eslint y typescript-eslint | MIT |
 | Prettier | MIT |
