@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common'
-import { ApplicationRef, Component, computed, inject, signal } from '@angular/core'
+import { ApplicationRef, Component, DestroyRef, computed, inject, signal } from '@angular/core'
 import { RouterLink } from '@angular/router'
 import { AppStore } from '../../servicios/app-store'
 import { Celebrate } from '../../servicios/celebrate'
@@ -17,6 +17,8 @@ import { PlanMosaic, type MosaicItem } from '../../componentes/plan-mosaic/plan-
 import { ChoiceChip } from '../../componentes/choice-chip/choice-chip'
 import { highlight, matches } from '../../utilidades/text-search'
 import { zonaDe } from '../../modelos/zonas'
+import { diaDe, minutosDe, proximosDias } from '../../utilidades/semana'
+import { Mando } from '../../servicios/mando'
 
 // Fotos para los planes que no traen la suya
 
@@ -88,7 +90,38 @@ export class Plans {
   })
   protected readonly suggestOpen = computed(() => this.focused() && this.suggestions().length > 0)
 
+  // Franja de calendario: los próximos siete días con sus planes; elegir un día filtra la agenda
+  protected readonly dias = proximosDias()
+  protected readonly Math = Math
+  protected readonly dia = signal<number | null>(null)
+  protected readonly planesDelDia = (d: number) => this.filtrados().filter((p) => diaDe(p.when) === d).length
+  protected readonly elegido = signal<string | null>(null)
+  protected readonly detalle = computed(() => this.visible().find((p) => p.id === this.elegido()) ?? this.visible()[0])
+
   protected readonly visible = computed(() => {
+    const d = this.dia()
+    const list = d === null ? this.filtrados() : this.filtrados().filter((p) => diaDe(p.when) === d)
+    return [...list].sort((a, b) => (diaDe(a.when) ?? 9) - (diaDe(b.when) ?? 9) || minutosDe(a.when) - minutosDe(b.when))
+  })
+
+  constructor() {
+    // En celular, el botón central del dock crea un plan
+    const quitar = inject(Mando).declarar({ label: 'Crear plan', run: () => this.creating.set(true) })
+    inject(DestroyRef).onDestroy(quitar)
+  }
+
+  protected hora(when: string) {
+    return when.match(/\d{1,2}:\d{2}/)?.[0] ?? ''
+  }
+
+  protected setDia(d: number | null) {
+    runListTransition(this.appRef, () => {
+      this.dia.set(this.dia() === d ? null : d)
+      this.elegido.set(null)
+    })
+  }
+
+  private readonly filtrados = computed(() => {
     const q = this.query().trim()
     return this.store.plans().filter((p) => {
       const z = zonaDe(p.place)
