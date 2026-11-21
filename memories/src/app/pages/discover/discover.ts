@@ -4,7 +4,8 @@ import { Router, RouterLink } from '@angular/router'
 import { AppStore } from '../../servicios/app-store'
 import { Celebrate } from '../../servicios/celebrate'
 import { Mando } from '../../servicios/mando'
-import { PEOPLE } from '../../datos/mock'
+import { PEOPLE, PERSON_DETAILS } from '../../datos/mock'
+import { LikeSheet, type LikeEnvio } from '../../componentes/like-sheet/like-sheet'
 import { INTENTS, INTENT_ICON, type Intent } from '../../modelos/intents'
 import { EMPTY_PREFS, GENDERS, GENDER_ORDER, PLAN_PEOPLE, PLAN_PEOPLE_ORDER, PLAN_SIZES, SIZE_ORDER, usesGender, usesGroups, type Gender, type IntentPrefs, type PlanSize } from '../../modelos/plan-formats'
 import { rankSuggestions, type Suggestion } from '../../utilidades/matching'
@@ -22,6 +23,22 @@ import { ReportDialog } from '../../componentes/report-dialog/report-dialog'
 import { BlockDialog } from '../../componentes/block-dialog/block-dialog'
 
 const MODE_KEY = 'memoires-descubre-modo'
+const HILO_KEY = 'memoires-hilo-del-dia'
+
+function hoy() {
+  const d = new Date()
+  return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`
+}
+
+/** Tu hilo del día: una sola persona elegida por afinidad, la misma todo el día. */
+function hiloGuardado(): { day: string; id: string } | null {
+  try {
+    const h = JSON.parse(localStorage.getItem(HILO_KEY) ?? 'null')
+    return h?.day === hoy() ? h : null
+  } catch {
+    return null
+  }
+}
 function readMode(): 'mapa' | 'mazo' {
   try {
     return localStorage.getItem(MODE_KEY) === 'mazo' ? 'mazo' : 'mapa'
@@ -32,7 +49,7 @@ function readMode(): 'mapa' | 'mazo' {
 
 @Component({
   selector: 'app-discover',
-  imports: [AffinityMap, Avatar, Seal, IntentBadge, ReportDialog, BlockDialog, RouterLink, ChoiceChip, Modal, Icon, SwipeCard, FiltersPanel, VerifySheet],
+  imports: [AffinityMap, Avatar, Seal, IntentBadge, ReportDialog, BlockDialog, RouterLink, ChoiceChip, Modal, Icon, SwipeCard, FiltersPanel, VerifySheet, LikeSheet],
   styleUrl: './discover.css',
   templateUrl: './discover.html',
   host: { '(document:keydown)': 'onKey($event)' },
@@ -67,6 +84,8 @@ export class Discover {
   protected readonly verifyOpen = signal(false)
   protected readonly reportOpen = signal(false)
   protected readonly blockOpen = signal(false)
+  /** Hoja de "me interesa" a algo concreto (pregunta o foto), o hilo dorado. */
+  protected readonly likeOn = signal<{ about: string; quote: string; golden: boolean } | null>(null)
 
   private readonly cards = viewChildren(SwipeCard)
 
@@ -87,6 +106,55 @@ export class Discover {
   protected readonly intentOf = (s: Suggestion) => this.intentFor(s)
   protected readonly intentLabel = (i: Intent) => INTENTS[i].label.toLowerCase()
 
+  protected readonly detalles = computed(() => {
+    const c = this.current()
+    return c ? PERSON_DETAILS[c.person.id] : undefined
+  })
+
+  // Tu hilo del día: la persona de más afinidad (sin filtros), fija hasta mañana
+  private readonly hiloId = signal<string | null>(hiloGuardado()?.id ?? null)
+  protected readonly hilo = computed(() => {
+    const excluded = new Set([...this.store.blocked(), ...this.store.suspended(), ...this.store.connections()])
+    const todas = rankSuggestions(this.store.me(), PEOPLE, excluded, { ...this.store.filters(), strict: {} })
+    const id = this.hiloId() ?? todas.find((s) => !this.store.decisions()[s.person.id])?.person.id
+    const s = todas.find((x) => x.person.id === id)
+    if (!s) return null
+    return { s, atado: !!this.store.decisions()[s.person.id] }
+  })
+  protected readonly razonHilo = computed(() => {
+    const h = this.hilo()
+    if (!h) return ''
+    const n = h.s.sharedInterests.length
+    const intereses = n ? `Comparten ${n} ${n === 1 ? 'interés' : 'intereses'} (${h.s.sharedInterests.slice(0, 2).join(', ')})` : 'Comparten ciudad'
+    return `${intereses} y los dos buscan ${h.s.sharedIntents.map(this.intentLabel).join(' y ')}.`
+  })
+
+  protected verHilo() {
+    const h = this.hilo()
+    if (!h) return
+    this.focusId.set(h.s.person.id)
+    if (this.mode() !== 'mapa') this.setMode('mapa')
+  }
+
+  protected abrirLike(about: string, quote = '', golden = false) {
+    if (!this.store.verified()) return void this.verifyOpen.set(true)
+    this.likeOn.set({ about, quote, golden })
+  }
+
+  protected enviarLike(e: LikeEnvio) {
+    const c = this.current()
+    const on = this.likeOn()
+    if (!c || !on) return
+    this.likeOn.set(null)
+    const r = this.store.likeWith(c.person.id, on.about, e.comment, e.golden)
+    if (r === 'unverified') return void this.verifyOpen.set(true)
+    if (r === 'limit') return void this.limitOpen.set(true)
+    if (r === 'no-golden') return void this.store.toast('Ya usaste tus hilos dorados de esta semana', 'danger')
+    if (r === 'match') this.celebrate.play(this.intentFor(c), { giant: true }).then(() => this.store.announceMatch(c.person.id))
+    else this.store.toast(e.golden ? 'Hilo dorado enviado. Aparecerás primero.' : 'Le avisaremos si también le interesa conocerte')
+    this.focusId.set(null)
+  }
+
   protected readonly planText = computed(() => {
     const s = this.current()
     if (!s) return ''
@@ -99,6 +167,17 @@ export class Discover {
   })
 
   constructor() {
+    // El hilo del día se fija la primera vez que se calcula y dura hasta mañana
+    effect(() => {
+      const h = this.hilo()
+      if (!h || this.hiloId()) return
+      this.hiloId.set(h.s.person.id)
+      try {
+        localStorage.setItem(HILO_KEY, JSON.stringify({ day: hoy(), id: h.s.person.id }))
+      } catch {
+        /* sin almacenamiento: dura esta visita */
+      }
+    })
     effect(() => {
       const c = this.current()
       this.store.backdropTone.set(this.store.filters().intent !== 'any' ? (this.store.filters().intent as Intent) : c ? this.intentFor(c) : null)

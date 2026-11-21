@@ -2,7 +2,7 @@ import { Component, computed, inject, output } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { Router } from '@angular/router'
 import { AppStore } from '../../servicios/app-store'
-import { type Filters } from '../../utilidades/matching'
+import { type Filters, type FiltroAfinable } from '../../utilidades/matching'
 import { FILTER_LABELS, TIERS, type FilterKey } from '../../modelos/plans'
 import { Icon } from '../icon/icon'
 import { PillGroup } from '../../directivas/pill-group'
@@ -24,6 +24,14 @@ export class FiltersPanel {
   protected readonly sharedOptions = [0, 1, 2, 3]
   protected readonly availability = ['any', 'Entre semana', 'Fines de semana'] as const
   protected readonly languages = ['any', 'Inglés', 'Francés', 'Japonés']
+
+  protected strict(k: FiltroAfinable) {
+    return !!this.filters().strict?.[k]
+  }
+
+  protected setStrict(k: FiltroAfinable, v: boolean) {
+    this.set({ strict: { ...this.filters().strict, [k]: v } })
+  }
 
   protected set(f: Partial<Filters>) {
     this.store.setFilters(f)
@@ -55,6 +63,6 @@ export class FiltersPanel {
   }
 
   protected reset() {
-    this.set({ ageMin: 18, ageMax: 60, minShared: 0, availability: 'any', language: 'any', verifiedOnly: false })
+    this.set({ ageMin: 18, ageMax: 60, minShared: 0, availability: 'any', language: 'any', verifiedOnly: false, strict: {} })
   }
 }
