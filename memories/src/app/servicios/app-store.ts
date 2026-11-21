@@ -45,6 +45,27 @@ export interface Toast {
   tone?: 'ok' | 'info' | 'danger'
 }
 
+/** Privacidad y avisos: cada interruptor explica su efecto en Ajustes. */
+export interface Ajustes {
+  quienVe: 'todos' | 'intereses' | 'nadie' // nadie = perfil en pausa
+  mostrarEdad: boolean
+  mostrarZona: boolean
+  leido: boolean // avisos de leído en el chat
+  avisosConexion: boolean
+  avisosPlanes: boolean
+  resumenSemanal: boolean
+}
+
+export const AJUSTES_BASE: Ajustes = {
+  quienVe: 'todos',
+  mostrarEdad: true,
+  mostrarZona: true,
+  leido: true,
+  avisosConexion: true,
+  avisosPlanes: true,
+  resumenSemanal: false,
+}
+
 interface State {
   loggedIn: boolean
   onboarded: boolean
@@ -68,6 +89,7 @@ interface State {
   filters: Filters
   minutesToday: number
   limitMinutes: number
+  ajustes?: Ajustes
   snoozedUntilMinute: number
   // Ya se agregó a Arleth como conexión en esta sesión guardada
   arleth?: boolean
@@ -491,6 +513,12 @@ export class AppStore {
 
   snooze(minutes: number) {
     this.patch((s) => ({ snoozedUntilMinute: s.minutesToday + minutes }))
+  }
+
+  readonly ajustes = computed(() => ({ ...AJUSTES_BASE, ...this.state().ajustes }))
+
+  setAjustes(a: Partial<Ajustes>) {
+    this.patch((s) => ({ ajustes: { ...AJUSTES_BASE, ...s.ajustes, ...a } }))
   }
 
   setLimitMinutes(limitMinutes: number) {

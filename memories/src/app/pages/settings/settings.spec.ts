@@ -21,3 +21,17 @@ describe('Settings', () => {
     expect(component).toBeTruthy()
   })
 })
+
+describe('Ajustes: cada opción explica su efecto', () => {
+  it('pausar el perfil cambia el texto de quién puede verte', async () => {
+    localStorage.clear()
+    await TestBed.configureTestingModule({ imports: [Settings], providers: [provideRouter([])] }).compileComponents()
+    const fixture = TestBed.createComponent(Settings)
+    await fixture.whenStable()
+    const el = fixture.nativeElement as HTMLElement
+    expect(el.textContent).toContain('Quién puede verte: personas verificadas')
+    ;(el.querySelector('input[value="nadie"]') as HTMLInputElement).click()
+    await fixture.whenStable()
+    expect(el.textContent).toContain('Tu perfil está en pausa')
+  })
+})

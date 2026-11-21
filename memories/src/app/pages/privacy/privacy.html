@@ -1,20 +1,56 @@
-<div class="mx-auto max-w-2xl px-4 py-5 sm:px-6">
-  <div class="flex items-center justify-between">
-    <a routerLink="/"><app-logo /></a>
+<div class="aviso">
+  <div class="aviso-top">
+    <a routerLink="/" aria-label="mémoires, inicio"><app-logo /></a>
     <button class="btn btn-ghost btn-sm" (click)="back()">Volver</button>
   </div>
-  <app-seal class="mt-10" kind="private" size="lg" />
-  <h1 class="font-display mt-4 text-[clamp(2.75rem,8vw,4rem)]">Aviso de privacidad</h1>
-  <div class="stagger mt-6 flex flex-col gap-4 text-ink-2">
-    <p>mémoires es responsable del tratamiento de tus datos personales conforme a la Ley Federal de Protección de Datos Personales en Posesión de los Particulares.</p>
-    <h2 class="mt-4 text-xl text-ink">Qué datos usamos</h2>
-    <p>Nombre, correo, fecha de nacimiento, género (opcional), ciudad, intereses, intenciones, fotografía y los mensajes que envías.</p>
-    <h2 class="mt-4 text-xl text-ink">Para qué los usamos</h2>
-    <p>Para crear tu cuenta, sugerirte personas compatibles, permitir la comunicación entre conexiones y mantener la seguridad de la comunidad.</p>
-    <h2 class="mt-4 text-xl text-ink">Datos sensibles</h2>
-    <p>La intención romántica y la orientación sexual se consideran datos sensibles. Solo los usamos con tu consentimiento expreso.</p>
-    <h2 class="mt-4 text-xl text-ink">Tus derechos</h2>
-    <p>Puedes acceder, rectificar, cancelar u oponerte al uso de tus datos, y eliminar tu cuenta desde Ajustes en cualquier momento.</p>
-    <p class="mt-6 text-sm text-ink-3">Documento de demostración para el proyecto integrador.</p>
+
+  <header class="aviso-cab">
+    <app-seal kind="private" size="lg" />
+    <h1 class="font-display mt-4 text-[clamp(2.75rem,8vw,4rem)] leading-[1.02]">Aviso de privacidad</h1>
+    <p class="mt-3 max-w-[52ch] text-ink-2">mémoires es responsable del tratamiento de tus datos personales conforme a la Ley Federal de Protección de Datos Personales en Posesión de los Particulares.</p>
+  </header>
+
+  <!-- En corto: lo esencial antes del detalle -->
+  <section class="corto" aria-labelledby="corto-t">
+    <h2 id="corto-t" class="corto-t">En corto</h2>
+    <ul>
+      <li><strong>Nunca vendemos tus datos</strong> ni los usamos para anuncios.</li>
+      <li><strong>Nadie ve tu ubicación exacta</strong>: solo tu ciudad y, si quieres, tu zona.</li>
+      <li><strong>Tu selfie de verificación</strong> se usa para comparar la pose y se borra.</li>
+      <li><strong>Tú decides</strong>: puedes pausar tu perfil o borrar tu cuenta cuando quieras.</li>
+    </ul>
+  </section>
+
+  <div class="bloques">
+    <section class="bloque">
+      <app-seal kind="safe" size="md" />
+      <div>
+        <h2>Qué datos usamos</h2>
+        <p>Nombre, correo o teléfono, fecha de nacimiento, pronombres y género (opcionales), ciudad y zona aproximada, intereses, intenciones, fotografías, respuestas del test (opcional) y los mensajes que envías.</p>
+      </div>
+    </section>
+    <section class="bloque">
+      <app-seal kind="verified" size="md" />
+      <div>
+        <h2>Para qué los usamos</h2>
+        <p>Para crear tu cuenta, verificar que eres tú, sugerirte personas afines, permitir la comunicación entre conexiones y mantener la seguridad de la comunidad.</p>
+      </div>
+    </section>
+    <section class="bloque">
+      <app-seal kind="private" size="md" />
+      <div>
+        <h2>Datos sensibles</h2>
+        <p>La intención romántica y la orientación sexual se consideran datos sensibles. Solo los usamos con tu consentimiento expreso y nunca se muestran fuera de tu perfil.</p>
+      </div>
+    </section>
+    <section class="bloque">
+      <app-seal kind="block" size="md" />
+      <div>
+        <h2>Tus derechos</h2>
+        <p>Puedes acceder, rectificar, cancelar u oponerte al uso de tus datos, y eliminar tu cuenta desde Ajustes en cualquier momento.</p>
+      </div>
+    </section>
   </div>
+
+  <p class="mt-10 text-sm text-ink-2">Documento de demostración para el proyecto integrador.</p>
 </div>

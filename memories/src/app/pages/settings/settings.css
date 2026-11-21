@@ -1,12 +1,28 @@
-.settings-row {
-  display: grid;
-  gap: 0.75rem 2rem;
-  padding: 1.75rem 0;
-  border-top: 1px solid var(--color-line);
+.ajustes { display: grid; gap: 1.5rem; }
+@media (min-width: 1024px) {
+  .ajustes { grid-template-columns: 12rem minmax(0, 46rem); column-gap: 3.5rem; }
+  .ajustes-cab { grid-column: 1 / -1; }
+  .ajustes-indice { position: sticky; top: 7rem; align-self: start; display: flex; flex-direction: column; }
 }
 
-.settings-row > h2 { font-size: 1.125rem; font-weight: 700; }
+.ajustes-indice { display: flex; gap: 0.25rem; overflow-x: auto; }
+.ajustes-indice a { padding: 0.5rem 0.75rem; border-radius: 999px; font-size: 0.875rem; font-weight: 600; color: var(--color-ink-2); white-space: nowrap; transition: background 160ms ease, color 160ms ease; }
+.ajustes-indice a:hover { background: var(--color-paper-2); color: var(--color-ink); }
 
-@media (min-width: 768px) {
-  .settings-row { grid-template-columns: 13rem 1fr; }
-}
+.ajustes-bloques { display: grid; gap: 1rem; }
+.bloque { padding: 1.5rem 1.25rem; border-radius: var(--radius-card); background: var(--color-paper); box-shadow: inset 0 0 0 1px var(--color-line); scroll-margin-top: 7rem; }
+@media (min-width: 768px) { .bloque { padding: 1.75rem; } }
+.bloque-cab { display: flex; gap: 0.875rem; align-items: flex-start; margin-bottom: 1.25rem; }
+.bloque-cab h2 { font-size: 1.25rem; font-weight: 800; }
+.bloque-icono { display: grid; place-items: center; width: 2.25rem; height: 2.25rem; flex: none; border-radius: 50%; color: var(--tint-ink); background: var(--wash); }
+.efecto { margin-top: 0.25rem; color: var(--color-ink-2); font-size: 0.9375rem; text-wrap: pretty; }
+
+.opciones { display: grid; gap: 0.5rem; }
+.opcion { display: flex; gap: 0.75rem; align-items: flex-start; padding: 0.875rem 1rem; border-radius: 14px; cursor: pointer; box-shadow: inset 0 0 0 1px var(--color-line); transition: background 160ms ease, box-shadow 160ms ease; }
+.opcion.is-on { background: var(--wash); box-shadow: inset 0 0 0 2px var(--tint); }
+.opcion input { width: 1.125rem; height: 1.125rem; margin-top: 0.125rem; accent-color: var(--tint); flex: none; }
+.nota { margin-top: 0.75rem; padding: 0.625rem 0.875rem; border-radius: 12px; background: var(--color-paper-2); font-size: 0.875rem; }
+
+.interruptores { display: grid; }
+.interruptores li { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.875rem 0; }
+.interruptores li + li { box-shadow: 0 -1px 0 var(--color-line); }

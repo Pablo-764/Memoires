@@ -1,0 +1,38 @@
+:host { display: block; }
+
+.perdido {
+  position: relative;
+  display: grid;
+  min-height: 100dvh;
+  place-items: center;
+  align-content: center;
+  gap: 1rem;
+  padding: 4.5rem 1.25rem 2rem;
+  text-align: center;
+}
+.perdido-logo { position: absolute; top: 1.25rem; left: 1.25rem; }
+@media (min-width: 1024px) {
+  .perdido { grid-template-columns: 1fr 1fr; text-align: left; padding-inline: max(2rem, calc(50vw - 36rem)); }
+  .perdido-logo { left: max(2rem, calc(50vw - 36rem)); }
+}
+
+.escena { width: min(100%, 28rem); height: auto; overflow: visible; }
+.hilo-ok { stroke: var(--tint); stroke-width: 1.2; opacity: 0.45; }
+.vecino { fill: var(--tint); opacity: 0.8; }
+.hilo-roto { fill: none; stroke: var(--tint); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 1; animation: trazar 1.4s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.hilo-roto.fin { opacity: 0.4; stroke-dasharray: 0.04 0.04; animation: none; }
+.chispa line { stroke: var(--color-danger); stroke-width: 2; stroke-linecap: round; animation: chispa 2.4s ease-in-out 1.2s infinite; }
+.lejana { fill: none; stroke: var(--tint); stroke-width: 2; animation: alejar 6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.tu { fill: var(--color-ink); }
+.tu-t { fill: var(--color-paper); font-weight: 800; font-size: 13px; }
+
+.cifra { font-size: clamp(4.5rem, 18vw, 8rem); line-height: 0.9; color: var(--tint-ink); }
+.perdido-texto { max-width: 28rem; }
+
+@keyframes trazar { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes chispa { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
+@keyframes alejar { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(6px, -5px); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .hilo-roto, .chispa line, .lejana { animation: none; }
+}
