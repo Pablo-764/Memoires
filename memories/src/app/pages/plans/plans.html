@@ -25,9 +25,10 @@
     <span class="text-lg font-extrabold">Todo</span>
   </button>
   @for (d of dias; track d.key) {
-    <button type="button" class="strip-day" [class.is-today]="d.hoy" [attr.aria-pressed]="dia() === d.key" [attr.aria-label]="d.corto + ' ' + d.numero + ', ' + planesDelDia(d.key) + ' planes'" (click)="setDia(d.key)">
-      <span class="font-mono text-xs">{{ d.hoy ? 'hoy' : d.corto }}</span>
+    <button type="button" class="strip-day" [class.is-today]="d.hoy" [attr.aria-pressed]="dia() === d.key" (click)="setDia(d.key)">
+      <span class="font-mono text-xs">{{ (d.hoy ? 'hoy' : d.corto) + ' ' }}</span>
       <span class="font-display text-3xl tabular-nums">{{ d.numero }}</span>
+      <span class="sr-only">, {{ planesDelDia(d.key) }} {{ planesDelDia(d.key) === 1 ? 'plan' : 'planes' }}</span>
       <span class="strip-dots" aria-hidden="true">
         @for (k of [].constructor(Math.min(planesDelDia(d.key), 4)); track $index) {
           <span></span>
