@@ -5,11 +5,9 @@ import { AppStore } from '../../servicios/app-store'
 import { personById } from '../../datos/mock'
 import { countWords } from '../../utilidades/matching'
 import { highlight, matches } from '../../utilidades/text-search'
-import { TIERS } from '../../modelos/plans'
 import { Celebrate } from '../../servicios/celebrate'
 import { Avatar } from '../../componentes/avatar/avatar'
 import { Icon } from '../../componentes/icon/icon'
-import { Meter } from '../../componentes/meter/meter'
 import { Modal } from '../../componentes/modal/modal'
 import { BlockDialog } from '../../componentes/block-dialog/block-dialog'
 import { ReportDialog } from '../../componentes/report-dialog/report-dialog'
@@ -20,7 +18,7 @@ import { INTENTS, type Intent } from '../../modelos/intents'
 
 @Component({
   selector: 'app-chat',
-  imports: [Seal, ChoiceChip, FormsModule, RouterLink, Avatar, Icon, Meter, Modal, BlockDialog, ReportDialog],
+  imports: [Seal, ChoiceChip, FormsModule, RouterLink, Avatar, Icon, Modal, BlockDialog, ReportDialog],
   styleUrl: './chat.css',
   templateUrl: './chat.html',
 })
@@ -37,9 +35,6 @@ export class Chat {
     return p && this.store.connections().includes(this.id()) ? p : undefined
   })
   protected readonly thread = computed(() => this.store.messages()[this.id()] ?? [])
-  protected readonly tierInfo = computed(() => TIERS[this.store.tier()])
-  protected readonly total = computed(() => this.tierInfo().weeklyWords)
-  protected readonly totalText = computed(() => (Number.isFinite(this.total()) ? this.total().toLocaleString('es-MX') : 'ilimitadas'))
 
   protected readonly searching = signal(false)
   protected readonly query = signal('')
@@ -49,7 +44,6 @@ export class Chat {
   protected readonly words = computed(() => countWords(this.text()))
   protected readonly reportOpen = signal(false)
   protected readonly blockOpen = signal(false)
-  protected readonly limitOpen = signal(false)
 
   // Intención y lo que comparten: dan el color y las sugerencias de plan
   protected readonly intent = computed<Intent>(() => {
@@ -147,11 +141,9 @@ export class Chat {
   protected submit() {
     const body = this.text().trim()
     if (!body) return
-    if (this.store.sendMessage(this.id(), body) === 'limit') this.limitOpen.set(true)
-    else {
-      this.text.set('')
-      this.celebrate.play('send', { at: this.sendBtn()?.nativeElement })
-    }
+    this.store.sendMessage(this.id(), body)
+    this.text.set('')
+    this.celebrate.play('send', { at: this.sendBtn()?.nativeElement })
   }
 
   protected onKeydown(e: KeyboardEvent) {

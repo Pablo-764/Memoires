@@ -94,8 +94,7 @@
         }
 
         <div class="chat-compose">
-          <app-meter [used]="store.wordsUsed()" [total]="total()" label="Palabras de esta semana" />
-          <form class="mt-3 flex items-end gap-2" (ngSubmit)="submit()">
+          <form class="flex items-end gap-2" (ngSubmit)="submit()">
             <button type="button" class="btn btn-soft btn-icon shrink-0" aria-label="Proponer un plan" (click)="openPropose()"><app-icon name="calendar-plus" [size]="19" /></button>
             <label for="msg" class="sr-only">Mensaje</label>
             <textarea #msgBox id="msg" name="msg" rows="1" class="msg-box field flex-1 resize-none" [placeholder]="'Escribe a ' + p.name + '…'" [(ngModel)]="text" (keydown)="onKeydown($event)"></textarea>
@@ -169,17 +168,6 @@
     }
     @if (blockOpen()) {
       <app-block-dialog [personId]="id()" [name]="p.name" (closed)="blockOpen.set(false)" (done)="router.navigateByUrl('/app/conexiones')" />
-    }
-    @if (limitOpen()) {
-      <app-modal title="Llegaste a tu límite de palabras" (closed)="limitOpen.set(false)">
-        <p class="text-ink-2">Tu plan {{ tierInfo().name }} incluye {{ totalText() }} palabras por semana. Se renuevan el lunes.</p>
-        <div class="mt-6 flex flex-col gap-3">
-          <button class="btn btn-primary" (click)="limitOpen.set(false); router.navigateByUrl('/app/suscripcion')">
-            {{ store.tier() === 'free' ? 'Triplicar con Grand' : 'Ilimitado con Lucidité' }}
-          </button>
-          <button class="btn btn-ghost self-center" (click)="limitOpen.set(false)">Entendido</button>
-        </div>
-      </app-modal>
     }
   </div>
 } @else {

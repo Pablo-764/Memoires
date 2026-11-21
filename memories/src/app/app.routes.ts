@@ -9,6 +9,7 @@ export const routes: Routes = [
   { path: 'descanso', loadComponent: () => import('./pages/rest/rest').then((m) => m.Rest) },
   { path: 'privacidad', loadComponent: () => import('./pages/privacy/privacy').then((m) => m.Privacy) },
   { path: 'admin', loadComponent: () => import('./pages/admin/admin').then((m) => m.Admin) },
+  { path: 'terminos-suscripcion', loadComponent: () => import('./pages/terms/terms').then((m) => m.Terms) },
   {
     path: 'app',
     canActivate: [requireUser],

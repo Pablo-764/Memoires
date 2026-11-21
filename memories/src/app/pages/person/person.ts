@@ -118,7 +118,7 @@ export class Person {
     const intent = person.intents.find((i) => this.store.me().intents.includes(i)) ?? person.intents[0]
     const result = this.store.decide(person.id, 'like')
     if (result === 'limit') {
-      this.store.toast(`Usaste los ${TIERS[this.store.tier()].weeklyMatches} matches de esta semana`, 'danger')
+      this.store.toast(`Usaste tus ${TIERS[this.store.tier()].likesPerDay} “me interesa” de hoy`, 'danger')
       return
     }
     if (result === 'match') {

@@ -150,14 +150,16 @@
 }
 
 @if (limitOpen()) {
-  <app-modal title="Usaste tus matches de la semana" (closed)="limitOpen.set(false)">
+  <app-modal title="Usaste tus “me interesa” de hoy" (closed)="limitOpen.set(false)">
     <p class="text-ink-2">
-      Tu plan {{ limits().name }} incluye {{ limits().weeklyMatches }} matches por semana. Se renuevan el lunes, o puedes
-      {{ store.tier() === 'free' ? 'pasarte a Grand para tener el triple.' : 'pasarte a Lucidité para tenerlos ilimitados.' }}
+      Tu plan {{ limits().name }} incluye {{ limits().likesPerDay }} “me interesa” al día y se renuevan mañana. El tope existe para que cada
+      perfil reciba atención. Mientras tanto, tus conexiones siguen abiertas para conversar.
     </p>
     <div class="mt-6 flex flex-col gap-3">
-      <button class="btn btn-primary" (click)="goToSubscription()">{{ store.tier() === 'free' ? 'Ver Grand' : 'Ver Lucidité' }}</button>
-      <button class="btn btn-ghost self-center" (click)="limitOpen.set(false)">Esperar al lunes</button>
+      <button class="btn btn-primary" (click)="limitOpen.set(false)">Entendido</button>
+      @if (store.tier() !== 'lucidite') {
+        <button class="btn btn-ghost self-center" (click)="goToSubscription()">Ver qué incluyen los planes</button>
+      }
     </div>
   </app-modal>
 }
