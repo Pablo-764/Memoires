@@ -27,6 +27,7 @@ mémoires usa o se inspira en el trabajo de otras personas. Este archivo dice qu
 | tslib | 0BSD |
 | Fontsource (paquete de Plus Jakarta Sans) | MIT |
 | qrcode-generator (Kazuhiko Arase), QR del perfil | MIT |
+| Íconos de Lucide (trazos SVG copiados en `componentes/icon/icons.ts`) | ISC |
 | Vitest y jsdom (pruebas) | MIT |
 | ESLint, angular-eslint y typescript-eslint | MIT |
 | Prettier | MIT |

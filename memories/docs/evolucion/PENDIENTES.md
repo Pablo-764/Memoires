@@ -80,7 +80,7 @@ Si el trabajo se interrumpe, se retoma desde el primer `[ ]` de esta lista.
 - [ ] Lighthouse 95 o más en todas las rutas (ver E9)
 
 ### F8
-- [ ] Capturas de las 16 pantallas, antes y después, en `docs/evolucion/antes-despues/`
+- [x] Capturas de las 16 pantallas, antes y después, en `docs/evolucion/antes-despues/` (las de E9 en `antes-despues/E9/`)
 - [x] DESIGN.md de la fase FORMA
 - [x] Descripción del PR para el equipo
 
@@ -149,4 +149,4 @@ Si el trabajo se interrumpe, se retoma desde el primer `[ ]` de esta lista.
 
 ## README y avisos
 - [x] "Herramientas y créditos" con RemiH06
-- [ ] Revisar que siga correcto tras los cambios (sin GSAP ni Lenis; íconos y fuentes)
+- [x] Revisar que siga correcto tras los cambios: sin GSAP ni Lenis y con los íconos de Lucide (ISC)
