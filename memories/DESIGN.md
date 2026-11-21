@@ -78,7 +78,8 @@ Escala (razón ~1.25, base 16): `xs 12 · sm 14 · base 16 · lg 18 · xl 22 · 
 
 - Espaciado en múltiplos de 4 px (Tailwind por defecto). Huecos de sección: 48 / 64 / 96.
 - Radios: `sm 12`, `md 20`, `lg 28`, `pill`. Controles en píldora; tarjetas en `md`; hojas y modales en `lg`.
-- Profundidad plana, como impreso: borde de 1 px `line`. Solo lo que flota (modal, aviso, menú) lleva sombra: `0 24px 60px` de tinta al 16 %.
+- Sin cajas por defecto (FORMA): las tarjetas no llevan borde; se separan con una línea de tinta arriba (`inset 0 3px 0 tint`) y una sombra corta. Solo lo que flota (barra de mando, hojas, avisos, ficha) lleva sombra.
+- Retícula editorial de 12 columnas en escritorio (`.grid-editorial`); el contenido de página vive en `.canvas`.
 - Alto mínimo de lo que se toca: 44 px.
 
 ## 5. Fondo
@@ -98,40 +99,54 @@ Escala (razón ~1.25, base 16): `xs 12 · sm 14 · base 16 · lg 18 · xl 22 · 
 - `:active` de botones a `scale(.97)`; hover solo con `(hover: hover) and (pointer: fine)`.
 - Navegación entre páginas con View Transitions (deslizar y desvanecer, menos de 400 ms; dis-101).
 - `prefers-reduced-motion`: todo pasa a desvanecido de 150 ms o a nada; el grafo aparece ya armado.
-- GSAP y Lenis solo en el navegador y solo en la landing (desplazamiento suave y el florecer del logotipo).
+- Sin bibliotecas de animación: todo con CSS, View Transitions y `requestAnimationFrame` (GSAP y Lenis salieron en F7).
 
 ### Momentos firma
 
 | Página | Momento |
 |---|---|
-| Landing | La palabra MÉMOIRES florece letra por letra y el acento de la `É` cae como un punto que tira hilos hacia las cuatro intenciones (dis-084) |
-| Descubre | El grafo radial se arma: tú al centro, tus intereses se abren en anillo y las personas llegan por sus hilos |
-| Conectar | Dos hilos se anudan sobre la tarjeta y la tarjeta vuela a Conexiones; el contador rebota (dis-071, dis-059) |
-| Planes | El álbum en mosaico se acomoda como fotos que caen sobre una mesa |
+| Portada | Constelación viva a pantalla completa: "tú" sigue al cursor y se arrastra un hilo hasta una nebulosa para empezar el registro con esa intención |
+| Registro | La barra de progreso es un hilo; al terminar se anuda. Detrás, una estrella por pantalla completada |
+| Descubre | Mapa de afinidad: "Me interesa" anuda el hilo y el nodo orbita cerca; "Ahora no" lo aleja. Modo Mazo en abanico |
+| Conexiones | Cintas con medidor de hilo que engrosa con la conversación; arrastrar entre etapas |
+| Chat | "Escribiendo" es un hilo que se mueve; las propuestas de plan son tarjetas con estado |
 | Cambio de tema | Círculo que se abre desde el botón (View Transition) |
 
 ## 7. Componentes
 
 | Componente | Notas |
 |---|---|
-| Botón | `primary` (relleno de la intención), `secondary` (borde `line-strong`), `ghost`, `danger`. Píldora, 44 px, ícono opcional a la izquierda |
-| Tarjeta | `paper-2`, borde `line`, radio `md`, padding 20/24 |
-| Chip | Píldora de 32 px. `intent` lleva un punto del color de su intención; `selected` usa `wash` y borde `tint` |
-| Campo | Etiqueta arriba, ayuda abajo, error con ícono. Borde `line-strong`, foco con anillo de 2 px `tint` |
-| Modal / hoja | Hoja inferior en móvil, centrado en escritorio. Radio `lg`, sombra, foco atrapado, Esc cierra |
-| Navegación | Escritorio: riel izquierdo de 248 px (logotipo, 4 secciones, tu plan, tema y tú). Móvil: barra superior con logotipo y barra de pestañas inferior de 4 secciones |
+| Botón | `primary` de 48 px que se hunde al presionar y desliza su ícono; `ghost` es texto con subrayado que crece; `soft`, `danger`, `sm`, `icon` |
+| Tarjeta | Sin borde: línea de tinta arriba y sombra corta |
+| Chip | Sin caja: texto en mono con un punto; `is-on` usa `wash` |
+| Campo | Línea inferior que crece al enfocar; etiqueta flotante (`.float`); el área de texto va rellena |
+| Modal / hoja | Hoja inferior en celular (se arrastra para cerrar) y panel lateral derecho en escritorio. Foco atrapado, Esc cierra |
+| Navegación | Escritorio: barra de mando flotante arriba (monograma, 4 destinos con píldora deslizante, Ctrl+K, avisos, avatar con menú) que se esconde al bajar. Celular: dock con "Conectar" elevado al centro, que toma la acción principal de cada página |
+| Paleta de comandos | Ctrl+K: personas, intereses, conversaciones, ajustes y cambiar tema |
+| Hojas de acción | Verificación (selfie con pose al azar), "Me interesa" con comentario e hilo dorado, test de personalidad |
 | Sello | Escudo con borde dentado (como timbre). Variantes: verificado, reportar, bloquear. Siempre visible en la tarjeta de una persona |
 | Insignia de intención | Punto + nombre, color fijo de su intención |
 | Avatar | Inicial sobre `paper-3` o foto; aro opcional (decoración) |
 | Aviso (toast) | Abajo al centro, con ícono por tono, 3.2 s |
 
-## 8. Pantallas (wireframes en `docs/evolucion/wireframes.png`)
+## 8. Pantallas (antes y después en `docs/evolucion/forma-antes-despues/`)
 
-- **Landing**: héroe con el logotipo grande y una sola frase; las cuatro intenciones como cuatro columnas de tinta plana (retícula editorial de mirai); seguridad; planes de precio; pie.
-- **Descubre**: pestañas de intención arriba; en escritorio, grafo radial a la izquierda y la tarjeta de la persona elegida a la derecha; en móvil, la tarjeta primero y el grafo como alternativa ("Ver como constelación"). Siempre hay una lista equivalente para teclado y lector de pantalla.
-- **Perfil**: tarjeta compacta que se expande (dis-034) a la vista completa; QR del perfil para compartir.
-- **Chat**: cabecera con la persona, el sello y "reportar / bloquear" a un toque; mensajes; caja que crece.
-- **Planes**: filtros encadenados (zona, luego colonia) y buscador; mosaico de planes cumplidos.
+- **Portada**: constelación viva; capítulos con escena fija; seguridad con sello grande; precios en escala; pie con QR.
+- **Registro (13 pantallas)**: una pregunta por pantalla; la primera intención tiñe todo; borrador guardado sin contraseña; solo mayores de 18.
+- **Descubre**: mapa de afinidad a pantalla completa con dial de intenciones; ficha flotante con "En sus palabras" (me interesa por respuesta) e hilo dorado; "Tu hilo del día"; Afinar con filtros innegociables.
+- **Conexiones**: tablero por etapas (Nueva, Hablando, Plan acordado, Plan cumplido) o lista.
+- **Chat**: imágenes difuminadas, aviso antes de enviar algo hiriente, primeros pasos de un toque, "Proponer plan" estructurado.
+- **Perfil**: editor en vivo en 7 pasos con vista previa; anillo de perfil completo con lo que suma cada pieza.
+- **Planes**: franja de calendario, agenda y mosaico.
+- **Suscripción**: "Qué compras y qué no" antes de pagar; nunca promete matches.
+- **Ajustes**: bloques con el efecto de cada opción ("Quién puede verte: …").
+- **Moderación**: cola por prioridad con atajos D, A y S.
+- **Descanso y 404**: ilustraciones propias con la constelación.
+
+## 8b. Reglas de producto que el diseño respeta
+
+- Verificarse es obligatorio para conectar y siempre gratis; sin verificar se explora pero no se aparece.
+- Perfil completo (0 a 100) pesa en el orden igual para quien paga y para quien no: menos de 50 % → 0.6; 50 a 79 % → 1; 80 % o más → 1.25.
 
 ## 9. Créditos
 
