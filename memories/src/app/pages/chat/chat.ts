@@ -1,3 +1,4 @@
+import { VerifySheet } from '../../componentes/verify-sheet/verify-sheet'
 import { Component, DestroyRef, ElementRef, afterRenderEffect, computed, effect, inject, input, signal, untracked, viewChild } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { Router, RouterLink } from '@angular/router'
@@ -18,7 +19,7 @@ import { INTENTS, type Intent } from '../../modelos/intents'
 
 @Component({
   selector: 'app-chat',
-  imports: [Seal, ChoiceChip, FormsModule, RouterLink, Avatar, Icon, Modal, BlockDialog, ReportDialog],
+  imports: [Seal, ChoiceChip, FormsModule, RouterLink, Avatar, Icon, Modal, BlockDialog, ReportDialog, VerifySheet],
   styleUrl: './chat.css',
   templateUrl: './chat.html',
 })
@@ -26,6 +27,7 @@ export class Chat {
   readonly id = input('')
 
   protected readonly store = inject(AppStore)
+  protected readonly verifyOpen = signal(false)
   protected readonly router = inject(Router)
   private readonly celebrate = inject(Celebrate)
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement
@@ -78,6 +80,10 @@ export class Chat {
   protected sendProposal() {
     const d = this.draft()
     if (!d.title.trim() || !d.place.trim()) return
+    if (!this.store.verified()) {
+      this.proposing.set(false)
+      return void this.verifyOpen.set(true)
+    }
     this.store.proposePlan(this.id(), { ...d, title: d.title.trim(), place: d.place.trim() })
     this.proposing.set(false)
     this.store.toast('Plan propuesto', 'ok')
@@ -141,7 +147,7 @@ export class Chat {
   protected submit() {
     const body = this.text().trim()
     if (!body) return
-    this.store.sendMessage(this.id(), body)
+    if (this.store.sendMessage(this.id(), body) === 'unverified') return void this.verifyOpen.set(true)
     this.text.set('')
     this.celebrate.play('send', { at: this.sendBtn()?.nativeElement })
   }

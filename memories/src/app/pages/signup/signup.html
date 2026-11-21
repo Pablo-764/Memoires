@@ -1,0 +1,301 @@
+<div class="signup" [attr.data-intent]="tinta() ?? 'brand'">
+  <!-- Constelación que se arma de fondo: una estrella por pantalla completada -->
+  <svg class="cielo" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    @for (s of estrellas; track $index) {
+      @if ($index < paso()) {
+        @if ($index > 0) {
+          <line class="cielo-hilo" [attr.x1]="estrellas[$index - 1].x" [attr.y1]="estrellas[$index - 1].y" [attr.x2]="s.x" [attr.y2]="s.y" />
+        }
+        <circle class="cielo-estrella" [attr.cx]="s.x" [attr.cy]="s.y" [attr.r]="$index === paso() - 1 ? 4 : 2.5" />
+      }
+    }
+  </svg>
+
+  <header class="tope">
+    <a routerLink="/" aria-label="mémoires, inicio"><app-logo /></a>
+    <button type="button" class="btn btn-ghost btn-sm" (click)="salir()">Guardar y salir</button>
+  </header>
+
+  <!-- Barra de progreso hecha de hilo; al final se anuda -->
+  <div class="progreso" role="progressbar" aria-label="Avance de tu cuenta" aria-valuemin="1" [attr.aria-valuemax]="total" [attr.aria-valuenow]="paso()" [attr.aria-valuetext]="'Paso ' + paso() + ' de ' + total">
+    <svg viewBox="0 0 300 12" preserveAspectRatio="none" aria-hidden="true">
+      <path class="hilo-fondo" d="M2 6 C 40 2, 70 10, 110 6 S 190 2, 230 6 S 280 10, 298 6" />
+      <path class="hilo" pathLength="1" [style.stroke-dashoffset]="1 - paso() / total" d="M2 6 C 40 2, 70 10, 110 6 S 190 2, 230 6 S 280 10, 298 6" />
+    </svg>
+    @if (anudando()) {
+      <svg class="nudo" viewBox="0 0 40 40" aria-hidden="true"><path pathLength="1" d="M4 22 C 12 22, 14 8, 22 10 S 28 30, 18 28 S 16 14, 36 18" /></svg>
+    }
+    <span class="paso-num">{{ paso() }} de {{ total }}</span>
+  </div>
+
+  <main class="contenido" aria-live="polite">
+    <form class="pantalla" (ngSubmit)="siguiente()" [attr.aria-labelledby]="'paso-' + paso()">
+      @switch (paso()) {
+        @case (1) {
+          <p class="eyebrow">Tu cuenta</p>
+          <h1 [id]="'paso-' + paso()" class="titulo">¿Con qué entras?</h1>
+          <p class="ayuda">Correo o teléfono. Solo lo usamos para que entres; nadie más lo ve.</p>
+          <div class="float mt-8">
+            <input id="contacto" class="field" name="contacto" placeholder=" " autocomplete="username" [ngModel]="b().contacto" (ngModelChange)="set({ contacto: $event })" required />
+            <label for="contacto">Correo o teléfono</label>
+          </div>
+          <div class="float mt-6">
+            <input id="password" class="field" name="password" type="password" placeholder=" " autocomplete="new-password" minlength="8" [ngModel]="password()" (ngModelChange)="password.set($event)" required />
+            <label for="password">Contraseña (8 caracteres o más)</label>
+          </div>
+          <p class="text-sm text-ink-2 mt-3">La contraseña no se guarda en el borrador: si sales, te la volveremos a pedir.</p>
+        }
+        @case (2) {
+          <p class="eyebrow">Sobre ti</p>
+          <h1 [id]="'paso-' + paso()" class="titulo">¿Cómo te llamas y cuándo naciste?</h1>
+          <div class="float mt-8">
+            <input id="nombre" class="field" name="nombre" placeholder=" " autocomplete="given-name" [ngModel]="b().nombre" (ngModelChange)="set({ nombre: $event })" required />
+            <label for="nombre">Tu nombre</label>
+          </div>
+          <div class="mt-6">
+            <label for="nacimiento" class="text-sm font-semibold">Fecha de nacimiento</label>
+            <input id="nacimiento" class="field mt-1" type="date" name="nacimiento" autocomplete="bday" [ngModel]="b().nacimiento" (ngModelChange)="set({ nacimiento: $event })" required />
+          </div>
+          @if (b().nacimiento && edad() > 0) {
+            <p class="edad" [class.no]="edad() < 18">
+              <span class="edad-num">{{ edad() }}</span> años
+              @if (edad() >= 18) { <span class="text-ink-2"> · así lo verán los demás</span> }
+            </p>
+          }
+        }
+        @case (3) {
+          <p class="eyebrow">Lo que buscas</p>
+          <h1 [id]="'paso-' + paso()" class="titulo">¿Qué te trae a mémoires?</h1>
+          <p class="ayuda">Elige una o varias. La primera pinta todo lo que sigue.</p>
+          <div class="nebulosas" role="group" aria-label="Intenciones">
+            @for (i of order; track i) {
+              <button type="button" class="nebulosa" [attr.data-intent]="i" [attr.aria-pressed]="b().intenciones.includes(i)" (click)="toggle('intenciones', i)">
+                <span class="nebulosa-nube" aria-hidden="true"></span>
+                <span class="nebulosa-nombre">{{ intents[i].label }}</span>
+                <span class="nebulosa-desc">{{ intents[i].description }}</span>
+                @if (b().intenciones[0] === i) { <span class="nebulosa-primera">Primera</span> }
+              </button>
+            }
+          </div>
+        }
+        @case (4) {
+          <p class="eyebrow">Opcional</p>
+          <h1 [id]="'paso-' + paso()" class="titulo">¿Cómo te nombran y a quién quieres ver?</h1>
+          <fieldset class="mt-8">
+            <legend class="text-sm font-semibold">Pronombres</legend>
+            <div class="flex flex-wrap gap-2 mt-2">
+              @for (p of pronombres; track p) {
+                <button appChip [selected]="b().pronombres === p" (click)="set({ pronombres: b().pronombres === p ? '' : p })">{{ p }}</button>
+              }
+            </div>
+          </fieldset>
+          <fieldset class="mt-6">
+            <legend class="text-sm font-semibold">Género</legend>
+            <div class="flex flex-wrap gap-2 mt-2">
+              @for (g of genderOrder; track g) {
+                <button appChip [selected]="b().genero === g" (click)="set({ genero: g })">{{ genders[g].label }}</button>
+              }
+              <button appChip [selected]="b().genero === 'unsaid'" (click)="set({ genero: 'unsaid' })">Prefiero no decir</button>
+            </div>
+          </fieldset>
+          @for (i of b().intenciones; track i) {
+            <fieldset class="mt-6 ver-a" [attr.data-intent]="i">
+              <legend class="text-sm font-semibold">En {{ intents[i].label.toLowerCase() }}, quiero ver a</legend>
+              <div class="flex flex-wrap gap-2 mt-2">
+                @for (g of genderOrder; track g) {
+                  <button appChip [selected]="(b().verA[i] ?? []).includes(g)" (click)="toggleVerA(i, g)">{{ genders[g].seek }}</button>
+                }
+              </div>
+              <p class="text-xs text-ink-2 mt-1">Sin elegir, ves a todas las personas.</p>
+            </fieldset>
+          }
+        }
+        @case (5) {
+          <p class="eyebrow">Tu zona</p>
+          <h1 [id]="'paso-' + paso()" class="titulo">¿Por dónde te mueves?</h1>
+          <p class="ayuda">Elegimos una zona, no un punto. Nadie ve tu ubicación exacta.</p>
+          <label for="ciudad" class="text-sm font-semibold mt-6 block">Ciudad</label>
+          <select id="ciudad" name="ciudad" class="field mt-1" [ngModel]="b().ciudad" (ngModelChange)="set({ ciudad: $event, zona: '' })">
+            @for (c of cities; track c) { <option [value]="c">{{ c }}</option> }
+          </select>
+          <svg class="mapa" viewBox="0 0 400 300" role="group" aria-label="Zonas de la ciudad">
+            <path class="mapa-calle" d="M20 160 H380 M200 20 V290 M60 60 L340 260 M60 260 L340 60" />
+            @for (z of zonas; track z.key) {
+              <g class="zona" [class.on]="b().zona === z.key" role="button" tabindex="0" [attr.aria-pressed]="b().zona === z.key" [attr.aria-label]="z.key" (click)="set({ zona: z.key })" (keydown.enter)="set({ zona: z.key })" (keydown.space)="$event.preventDefault(); set({ zona: z.key })">
+                <circle [attr.cx]="z.x" [attr.cy]="z.y" r="42" />
+                <text [attr.x]="z.x" [attr.y]="z.y + 5" text-anchor="middle">{{ z.key }}</text>
+              </g>
+            }
+          </svg>
+          @if (b().zona) { <p class="text-sm mt-2">Te mostraremos como «{{ b().ciudad }}, {{ b().zona }}».</p> }
+        }
+        @case (6) {
+          <p class="eyebrow">Lo que te gusta</p>
+          <h1 [id]="'paso-' + paso()" class="titulo">Elige 5 intereses o más</h1>
+          <p class="ayuda">Son los hilos que te unen con otras personas. Llevas <strong>{{ b().intereses.length }}</strong>.</p>
+          <app-interest-picker class="mt-6" [selected]="b().intereses" (toggled)="toggle('intereses', $event)" />
+        }
+        @case (7) {
+          <p class="eyebrow">Tu voz</p>
+          <h1 [id]="'paso-' + paso()" class="titulo">Responde 3 preguntas</h1>
+          <p class="ayuda">Se ven en tu tarjeta. Los demás pueden decir «me interesa» a una respuesta concreta.</p>
+          <div class="preguntas" role="group" aria-label="Preguntas para elegir">
+            @for (q of catalogo(); track q) {
+              <button appChip [selected]="elegida(q)" (click)="togglePrompt(q)">{{ q }}</button>
+            }
+          </div>
+          @for (p of b().prompts; track p.q) {
+            <div class="respuesta mt-5">
+              <label [for]="'r-' + $index" class="font-semibold">{{ p.q }}</label>
+              <textarea [id]="'r-' + $index" class="field mt-1" rows="2" maxlength="140" [name]="'r' + $index" [ngModel]="p.a" (ngModelChange)="answer(p.q, $event)"></textarea>
+            </div>
+          }
+          <p class="text-sm text-ink-2 mt-3">{{ b().prompts.length }} de 3 elegidas.</p>
+        }
+        @case (8) {
+          <p class="eyebrow">Tus fotos</p>
+          <h1 [id]="'paso-' + paso()" class="titulo">Sube de 2 a 6 fotos</h1>
+          <ul class="consejos">
+            <li>Tu cara se ve clara en la primera.</li>
+            <li>Una haciendo algo que te gusta.</li>
+            <li>Sin lentes oscuros ni filtros fuertes.</li>
+          </ul>
+          <ol class="fotos" aria-label="Orden de tus fotos">
+            @for (f of b().fotos; track f; let i = $index) {
+              <li class="foto" draggable="true" (dragstart)="arrastrando = i" (dragover)="$event.preventDefault()" (drop)="moverFoto(arrastrando, i)">
+                <img [src]="f" [alt]="'Foto ' + (i + 1)" />
+                @if (i === 0) { <span class="foto-principal">Principal</span> }
+                <div class="foto-acciones">
+                  <button type="button" class="btn btn-icon btn-sm" [attr.aria-label]="'Mover foto ' + (i + 1) + ' antes'" [disabled]="i === 0" (click)="moverFoto(i, i - 1)"><app-icon name="arrow-left" [size]="14" /></button>
+                  <button type="button" class="btn btn-icon btn-sm" [attr.aria-label]="'Quitar foto ' + (i + 1)" (click)="quitarFoto(i)"><app-icon name="x" [size]="14" /></button>
+                  <button type="button" class="btn btn-icon btn-sm" [attr.aria-label]="'Mover foto ' + (i + 1) + ' después'" [disabled]="i === b().fotos.length - 1" (click)="moverFoto(i, i + 1)"><app-icon name="arrow-right" [size]="14" /></button>
+                </div>
+              </li>
+            }
+            @if (b().fotos.length < 6) {
+              <li class="foto foto-vacia">
+                <label class="foto-subir">
+                  <app-icon name="plus" [size]="20" />
+                  <span>Agregar</span>
+                  <input type="file" accept="image/*" class="sr-only" (change)="addFoto($event)" />
+                </label>
+              </li>
+            }
+          </ol>
+          <p class="text-sm text-ink-2 mt-2">Las recortamos en cuadrado y centradas. Arrastra para cambiar el orden.</p>
+          @if (!b().fotos.length) {
+            <button type="button" class="btn btn-soft btn-sm mt-3" (click)="fotosEjemplo()">Usar fotos de ejemplo (demostración)</button>
+          }
+          @if (error()) { <p class="text-sm text-danger mt-2" role="alert">{{ error() }}</p> }
+        }
+        @case (9) {
+          <p class="eyebrow">Opcional · {{ pregunta() + 1 }} de {{ afirmaciones.length }}</p>
+          <h1 [id]="'paso-' + paso()" class="titulo">{{ afirmaciones[pregunta()].texto }}</h1>
+          <p class="ayuda">Un test corto de cuatro ejes para afinar tus sugerencias. Se puede saltar.</p>
+          <div class="escala mt-8">
+            <input id="escala" type="range" min="-2" max="2" step="1" name="escala" [ngModel]="b().respuestas[pregunta()]" (ngModelChange)="setRespuesta(pregunta(), +$event)" [attr.aria-valuetext]="escala[b().respuestas[pregunta()] + 2]" aria-label="Qué tanto te describe" />
+            <div class="escala-marcas" aria-hidden="true"><span>Nada</span><span>Neutral</span><span>Mucho</span></div>
+            <p class="escala-valor">{{ escala[b().respuestas[pregunta()] + 2] }}</p>
+          </div>
+          <div class="ejes mt-6" aria-label="Tus ejes hasta ahora">
+            @for (e of ejes; track e.izq; let k = $index) {
+              <div class="eje">
+                <span>{{ e.izq }}</span>
+                <span class="eje-barra"><span class="eje-punto" [style.left.%]="50 + ejesTest()[k] * 50"></span></span>
+                <span>{{ e.der }}</span>
+              </div>
+            }
+          </div>
+        }
+        @case (10) {
+          <p class="eyebrow">Verificación</p>
+          <h1 [id]="'paso-' + paso()" class="titulo">Una selfie con una pose al azar</h1>
+          <p class="ayuda">Es obligatoria para conectar y siempre gratis. Puedes hacerla después, pero sin ella no apareces a nadie.</p>
+          @if (b().verificado) {
+            <div class="verificado" role="status">
+              <app-seal kind="verified" size="lg" />
+              <div><p class="text-xl font-extrabold">Perfil verificado</p><p class="text-ink-2">Tu sello azul se verá en tu tarjeta.</p></div>
+            </div>
+          } @else if (revisando()) {
+            <div class="verificado" role="status"><span class="spinner" aria-hidden="true"></span><p class="font-semibold">Revisando tu pose…</p></div>
+          } @else {
+            <div class="pose">
+              <span class="font-mono text-xs uppercase tracking-wider text-ink-2">Tu pose</span>
+              <p class="mt-1 text-xl font-extrabold">{{ pose }}</p>
+            </div>
+            <p class="text-sm text-ink-2">Demostración: no se usa la cámara; el botón simula la revisión.</p>
+            <button type="button" class="btn btn-primary mt-4" (click)="verificar()">Tomar selfie</button>
+          }
+        }
+        @case (11) {
+          <p class="eyebrow">Primeros pasos</p>
+          <h1 [id]="'paso-' + paso()" class="titulo">Elige 3 preguntas para romper el hielo</h1>
+          <p class="ayuda">Quien conecte contigo podrá contestarlas con un toque. Así nadie empieza con «hola».</p>
+          <div class="aperturas" role="group" aria-label="Preguntas de apertura">
+            @for (a of aperturasOpc; track a) {
+              <button appChip [selected]="b().aperturas.includes(a)" (click)="toggle('aperturas', a, 3)">{{ a }}</button>
+            }
+          </div>
+          <p class="text-sm text-ink-2 mt-3">{{ b().aperturas.length }} de 3 elegidas.</p>
+        }
+        @case (12) {
+          <p class="eyebrow">Reglas de la casa</p>
+          <h1 [id]="'paso-' + paso()" class="titulo">Cuatro acuerdos</h1>
+          <p class="ayuda">Si alguien los rompe, se reporta con un toque y lo revisamos.</p>
+          <div class="reglas">
+            @for (r of reglasOpc; track r.key) {
+              <label class="regla">
+                <input type="checkbox" [name]="r.key" [checked]="b().reglas.includes(r.key)" (change)="toggle('reglas', r.key)" />
+                <span>{{ r.texto }}</span>
+              </label>
+            }
+          </div>
+        }
+        @case (13) {
+          <p class="eyebrow">Así te verán</p>
+          <h1 [id]="'paso-' + paso()" class="titulo">Tu tarjeta está lista</h1>
+          <article class="vista card">
+            <div class="vista-foto">
+              @if (b().fotos[0]) { <img [src]="b().fotos[0]" alt="Tu foto principal" /> }
+            </div>
+            <div class="vista-cuerpo">
+              <p class="vista-nombre">
+                {{ b().nombre }}, {{ edad() }}
+                @if (b().verificado) { <app-seal kind="verified" label="Verificado" /> }
+              </p>
+              <p class="text-sm text-ink-2">{{ b().ciudad }}{{ b().zona ? ', ' + b().zona : '' }}{{ b().pronombres ? ' · ' + b().pronombres : '' }}</p>
+              <div class="flex flex-wrap gap-1.5 mt-3">
+                @for (i of b().intenciones; track i) { <app-intent-badge [intent]="i" /> }
+              </div>
+              @if (b().prompts[0]; as p) {
+                <p class="vista-prompt"><span>{{ p.q }}</span>{{ p.a }}</p>
+              }
+              <p class="text-sm mt-3">{{ b().intereses.slice(0, 5).join(' · ') }}</p>
+            </div>
+          </article>
+          @if (!b().verificado) {
+            <p class="text-sm mt-4">Aún no te verificas: podrás explorar, pero no aparecerás a nadie hasta hacerlo.</p>
+          }
+        }
+      }
+
+      @if (mensajePaso()) { <p class="aviso" role="alert">{{ mensajePaso() }}</p> }
+
+      <div class="acciones">
+        @if (paso() > 1) {
+          <button type="button" class="btn btn-ghost" (click)="atras()">Atrás</button>
+        }
+        <span class="flex-1"></span>
+        @if (paso() === 9) {
+          <button type="button" class="btn btn-ghost" (click)="siguiente(true)">Saltar el test</button>
+        } @else if (paso() === 10 && !b().verificado) {
+          <button type="button" class="btn btn-ghost" (click)="siguiente(true)">Más tarde</button>
+        }
+        <button type="submit" class="btn btn-primary" [disabled]="!valido() || anudando()">
+          {{ paso() === total ? 'Listo' : 'Continuar' }}
+          <app-icon [name]="paso() === total ? 'check' : 'arrow-right'" [size]="18" />
+        </button>
+      </div>
+    </form>
+  </main>
+</div>

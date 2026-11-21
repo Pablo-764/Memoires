@@ -35,3 +35,6 @@
 /* Reportar y bloquear son acciones de riesgo: su tinta es la de peligro */
 :host([data-kind='report']),
 :host([data-kind='block']) { color: var(--color-danger); }
+
+/* Verificado: el sello azul */
+:host([data-kind='verified']) { color: var(--plan-ink); }

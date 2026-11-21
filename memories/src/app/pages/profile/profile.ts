@@ -1,3 +1,7 @@
+import { completitud, cuantoSube, piezas, textoVisibilidad } from '../../utilidades/completitud'
+import { VerifySheet } from '../../componentes/verify-sheet/verify-sheet'
+import { TestSheet } from '../../componentes/test-sheet/test-sheet'
+import { EJES } from '../../modelos/personalidad'
 import { ApplicationRef, Component, computed, inject, signal, viewChild, ElementRef } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { Router, RouterLink } from '@angular/router'
@@ -25,7 +29,7 @@ export type Paso = 'sobre' | 'intereses' | 'busca' | 'momentos' | 'estilo' | 'se
 
 @Component({
   selector: 'app-profile',
-  imports: [FormsModule, RouterLink, Avatar, Banner, ChoiceChip, Effect, Icon, IntentBadge, IntentPrefsEditor, InterestPicker, PillGroup, ProfileQr, TagField, Seal],
+  imports: [FormsModule, RouterLink, Avatar, Banner, ChoiceChip, Effect, Icon, IntentBadge, IntentPrefsEditor, InterestPicker, PillGroup, ProfileQr, TagField, Seal, VerifySheet, TestSheet],
   styleUrl: './profile.css',
   templateUrl: './profile.html',
 })
@@ -76,22 +80,23 @@ export class Profile {
     scrollTo({ top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' })
   }
 
-  // Anillo de perfil completo: qué cuenta y qué falta
-  protected readonly checklist = computed(() => {
-    const d = this.draft()
-    return [
-      { ok: !!d.photo, label: 'una foto', paso: 'sobre' as Paso },
-      { ok: d.bio.trim().length >= 20, label: 'una descripción', paso: 'sobre' as Paso },
-      { ok: d.prompts.filter((p) => p.a.trim()).length >= 2, label: 'dos preguntas', paso: 'sobre' as Paso },
-      { ok: !!(d.occupation || d.education), label: 'trabajo o estudios', paso: 'sobre' as Paso },
-      { ok: d.interests.length >= 5, label: '5 intereses', paso: 'intereses' as Paso },
-      { ok: d.intents.length > 0, label: 'qué buscas', paso: 'busca' as Paso },
-      { ok: d.gallery.length > 0, label: 'un momento', paso: 'momentos' as Paso },
-      { ok: !!(d.favorites.music || d.favorites.movie || d.favorites.food), label: 'un favorito', paso: 'sobre' as Paso },
-    ]
-  })
-  protected readonly completo = computed(() => Math.round((this.checklist().filter((c) => c.ok).length / this.checklist().length) * 100))
-  protected readonly falta = computed(() => this.checklist().filter((c) => !c.ok))
+  // Anillo de perfil completo con los pesos de visibilidad (igual para quien paga y quien no)
+  protected readonly completo = computed(() => completitud(this.draft()))
+  protected readonly falta = computed(() =>
+    piezas(this.draft())
+      .filter((x) => x.hecho < x.puntos)
+      .map((x) => ({ ...x, sube: cuantoSube(x) }))
+      .sort((a, b) => b.sube - a.sube),
+  )
+  protected readonly visibilidad = computed(() => textoVisibilidad(this.completo()))
+  protected readonly ejes = EJES
+  protected readonly verifyOpen = signal(false)
+  protected readonly testOpen = signal(false)
+
+  protected irAPieza(f: { key: string; paso: Paso }) {
+    this.paso.set(f.paso)
+    if (f.key === 'test') this.testOpen.set(true)
+  }
 
   // Preguntas: carrusel de tarjetas; cada tarjeta cambia de pregunta sin select
   protected readonly cambiando = signal<number | null>(null)

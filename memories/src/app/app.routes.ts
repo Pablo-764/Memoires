@@ -4,8 +4,8 @@ import { requireUser } from './guards/auth-guard'
 export const routes: Routes = [
   { path: '', pathMatch: 'full', loadComponent: () => import('./pages/landing/landing').then((m) => m.Landing) },
   { path: 'entrar', loadComponent: () => import('./pages/login/login').then((m) => m.Login) },
-  { path: 'registro', loadComponent: () => import('./pages/register/register').then((m) => m.Register) },
-  { path: 'bienvenida', loadComponent: () => import('./pages/onboarding/onboarding').then((m) => m.Onboarding) },
+  { path: 'registro', loadComponent: () => import('./pages/signup/signup').then((m) => m.Signup) },
+  { path: 'bienvenida', loadComponent: () => import('./pages/signup/signup').then((m) => m.Signup) },
   { path: 'descanso', loadComponent: () => import('./pages/rest/rest').then((m) => m.Rest) },
   { path: 'privacidad', loadComponent: () => import('./pages/privacy/privacy').then((m) => m.Privacy) },
   { path: 'admin', loadComponent: () => import('./pages/admin/admin').then((m) => m.Admin) },

@@ -94,12 +94,19 @@
         }
 
         <div class="chat-compose">
+          @if (!store.verified()) {
+            <div class="sin-verificar" role="status">
+              <p class="text-sm">Verifícate para escribir. Es gratis y toma un minuto.</p>
+              <button type="button" class="btn btn-primary btn-sm" (click)="verifyOpen.set(true)">Verifícate para conectar</button>
+            </div>
+          } @else {
           <form class="flex items-end gap-2" (ngSubmit)="submit()">
             <button type="button" class="btn btn-soft btn-icon shrink-0" aria-label="Proponer un plan" (click)="openPropose()"><app-icon name="calendar-plus" [size]="19" /></button>
             <label for="msg" class="sr-only">Mensaje</label>
             <textarea #msgBox id="msg" name="msg" rows="1" class="msg-box field flex-1 resize-none" [placeholder]="'Escribe a ' + p.name + '…'" [(ngModel)]="text" (keydown)="onKeydown($event)"></textarea>
             <button #sendBtn class="btn btn-primary btn-icon size-12 shrink-0" [disabled]="!text().trim()" aria-label="Enviar mensaje"><app-icon name="send" [size]="19" /></button>
           </form>
+          }
           @if (words() > 0) {
             <p class="mt-1.5 font-mono text-xs text-ink-2">{{ words() }} {{ words() === 1 ? 'palabra' : 'palabras' }}</p>
           }
@@ -176,4 +183,8 @@
     <p class="mt-2 text-ink-2">Solo puedes escribir a personas con las que hay interés mutuo.</p>
     <a routerLink="/app/conexiones" class="btn btn-primary mt-6">Ver mis conexiones</a>
   </div>
+}
+
+@if (verifyOpen()) {
+  <app-verify-sheet (closed)="verifyOpen.set(false)" />
 }

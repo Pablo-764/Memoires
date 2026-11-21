@@ -1,4 +1,5 @@
 import { Location } from '@angular/common'
+import { VerifySheet } from '../../componentes/verify-sheet/verify-sheet'
 import { Component, DestroyRef, computed, effect, inject, input, signal } from '@angular/core'
 import { Router, RouterLink } from '@angular/router'
 import { AppStore } from '../../servicios/app-store'
@@ -19,7 +20,7 @@ import { Seal } from '../../componentes/seal/seal'
 
 @Component({
   selector: 'app-person',
-  imports: [RouterLink, Avatar, Banner, Effect, Icon, IntentBadge, BlockDialog, ReportDialog, Seal],
+  imports: [RouterLink, Avatar, Banner, Effect, Icon, IntentBadge, BlockDialog, ReportDialog, Seal, VerifySheet],
   styleUrl: './person.css',
   templateUrl: './person.html',
 })
@@ -27,6 +28,7 @@ export class Person {
   readonly id = input('')
 
   protected readonly store = inject(AppStore)
+  protected readonly verifyOpen = signal(false)
   private readonly router = inject(Router)
   private readonly location = inject(Location)
   private readonly celebrate = inject(Celebrate)
@@ -117,6 +119,7 @@ export class Person {
     const target = event.currentTarget as Element
     const intent = person.intents.find((i) => this.store.me().intents.includes(i)) ?? person.intents[0]
     const result = this.store.decide(person.id, 'like')
+    if (result === 'unverified') return void this.verifyOpen.set(true)
     if (result === 'limit') {
       this.store.toast(`Usaste tus ${TIERS[this.store.tier()].likesPerDay} “me interesa” de hoy`, 'danger')
       return

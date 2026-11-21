@@ -49,15 +49,13 @@
       </div>
       <div class="min-w-0">
         <h1 id="perfil-titulo" class="text-2xl font-extrabold">Tu perfil</h1>
+        <p class="text-sm text-ink-2">{{ visibilidad() }}</p>
         @if (falta().length) {
-          <p class="text-sm text-ink-2">
-            Falta:
-            @for (f of falta().slice(0, 3); track f.label; let last = $last) {
-              <button class="falta" (click)="paso.set(f.paso)">{{ f.label }}</button>{{ last ? '' : ', ' }}
+          <ul class="faltan">
+            @for (f of falta().slice(0, 3); track f.key) {
+              <li><button class="falta" (click)="irAPieza(f)"><span class="falta-mas">+{{ f.sube }} %</span> {{ f.label }}</button></li>
             }
-          </p>
-        } @else {
-          <p class="text-sm text-tint-ink">Completo. Así se ve todo lo que compartes.</p>
+          </ul>
         }
       </div>
     </div>
@@ -98,6 +96,19 @@
               <textarea id="pb" class="field min-h-28" maxlength="280" placeholder="Cuenta quién eres y qué te gusta hacer…" [ngModel]="draft().bio" (ngModelChange)="patch({ bio: $event })"></textarea>
               <p class="mt-1 text-right font-mono text-xs tabular-nums text-ink-2">{{ draft().bio.length }}/280</p>
             </div>
+
+            <h2 class="step-h">Tu forma de ser</h2>
+            @if (draft().personality; as e) {
+              <div class="ejes">
+                @for (x of ejes; track x.izq; let k = $index) {
+                  <div class="eje"><span>{{ x.izq }}</span><span class="eje-barra"><span class="eje-punto" [style.left.%]="50 + e[k] * 50"></span></span><span class="text-right">{{ x.der }}</span></div>
+                }
+              </div>
+              <button type="button" class="btn btn-ghost btn-sm mt-2" (click)="testOpen.set(true)">Repetir el test</button>
+            } @else {
+              <p class="text-sm text-ink-2">Un test opcional de 12 afirmaciones. Afina tus sugerencias y suma 10 puntos a tu perfil.</p>
+              <button type="button" class="btn btn-soft btn-sm mt-2" (click)="testOpen.set(true)">Hacer el test</button>
+            }
 
             <!-- Preguntas como tarjetas de prompt en carrusel -->
             <h2 class="step-h">Tus preguntas</h2>
@@ -336,7 +347,15 @@
           }
           @case ('seguridad') {
             <ul class="safe-list">
-              <li><app-seal kind="verified" size="md" /><div><p class="font-bold">Verificación</p><p class="text-sm text-ink-2">Tu perfil aún no está verificado. Las cuentas verificadas muestran el sello en Descubre.</p></div></li>
+              <li class="is-verified"><app-seal kind="verified" size="md" /><div><p class="font-bold">Verificación</p>
+                @if (store.verified()) {
+                  <p class="text-sm text-ink-2">Perfil verificado con selfie. Tu sello azul se ve en Descubre y en tu perfil.</p>
+                } @else {
+                  <p class="text-sm text-ink-2">Sin verificar no apareces a nadie ni puedes conectar. Es gratis siempre.</p>
+                  <button type="button" class="btn btn-primary btn-sm mt-2" (click)="verifyOpen.set(true)">Verifícate para conectar</button>
+                }
+                <p class="mt-1 text-xs text-ink-2">Identificación oficial: opcional, da un sello dorado. No es requisito.</p>
+              </div></li>
               <li><app-seal kind="private" size="md" /><div><p class="font-bold">Ubicación</p><p class="text-sm text-ink-2">Solo mostramos {{ draft().city }}. Nunca coordenadas.</p></div></li>
               <li><app-seal kind="block" size="md" /><div><p class="font-bold">Personas bloqueadas: {{ store.blocked().length }}</p><p class="text-sm text-ink-2">Dejan de verte y no pueden escribirte.</p></div></li>
               <li><app-seal kind="safe" size="md" /><div><p class="font-bold">Chat solo con interés mutuo</p><p class="text-sm text-ink-2">Nadie te escribe si tú no mostraste interés.</p></div></li>
@@ -425,4 +444,11 @@
       </div>
     </article>
   </div>
+}
+
+@if (verifyOpen()) {
+  <app-verify-sheet (closed)="verifyOpen.set(false)" />
+}
+@if (testOpen()) {
+  <app-test-sheet (closed)="testOpen.set(false)" (done)="patch({ personality: $event }); testOpen.set(false)" />
 }

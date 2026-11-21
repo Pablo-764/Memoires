@@ -30,6 +30,13 @@ export interface Profile {
   gallery: string[]
   gender: Gender | 'unsaid'
   intentPrefs: Partial<Record<Intent, IntentPrefs>>
+  // Registro de 13 pasos
+  pronouns?: string
+  zone?: string
+  verified?: boolean // selfie con pose aleatoria (sello azul); obligatoria para conectar
+  personality?: [number, number, number, number] // 4 ejes de -1 a 1 (test opcional)
+  openers?: string[] // "Primeros pasos": 3 preguntas de apertura
+  rulesAccepted?: boolean
 }
 
 export interface Toast {
@@ -77,7 +84,7 @@ function weekKey(d = new Date()) {
   return dayKey(monday)
 }
 
-const EMPTY_ME: Profile = {
+export const EMPTY_ME: Profile = {
   name: '',
   email: '',
   age: 18,
@@ -105,6 +112,7 @@ const EMPTY_ME: Profile = {
 }
 
 export const DEMO_ME: Profile = {
+  verified: true,
   name: 'Ana',
   email: 'ana@correo.mx',
   age: 24,
@@ -158,7 +166,8 @@ const INITIAL: State = {
 // Las cuentas anteriores guardaban estas preferencias solo para planes
 function migrate(me: Profile & { planSizes?: IntentPrefs['sizes']; planPeople?: IntentPrefs['people'] }): Profile {
   const { planSizes, planPeople, ...rest } = me
-  const merged = { ...EMPTY_ME, ...rest }
+  // La cuenta de demostración ya estaba verificada antes de que verificar fuera obligatorio
+  const merged = { ...EMPTY_ME, ...rest, verified: rest.verified ?? rest.email === DEMO_ME.email }
   if (planSizes?.length || (planPeople && planPeople !== 'any')) {
     merged.intentPrefs = { ...merged.intentPrefs, plan: { sizes: planSizes ?? [], people: planPeople ?? 'any', genders: [] } }
   }
@@ -197,6 +206,7 @@ export class AppStore {
   readonly loggedIn = computed(() => this.state().loggedIn)
   readonly onboarded = computed(() => this.state().onboarded)
   readonly me = computed(() => this.state().me)
+  readonly verified = computed(() => !!this.state().me.verified)
   readonly tier = computed(() => this.state().tier)
   // Los contadores solo valen para el día (o la semana) en que se guardaron
   readonly likesToday = computed(() => (this.state().likesDay === dayKey() ? this.state().likesToday : 0))
@@ -265,10 +275,6 @@ export class AppStore {
     this.state.update((s) => ({ ...s, ...(typeof p === 'function' ? p(s) : p) }))
   }
 
-  register(p: Pick<Profile, 'name' | 'email' | 'age'>) {
-    this.patch({ loggedIn: true, onboarded: false, me: { ...EMPTY_ME, ...p } })
-  }
-
   login(email: string) {
     this.patch((s) => ({
       loggedIn: true,
@@ -281,16 +287,13 @@ export class AppStore {
     this.patch({ loggedIn: false })
   }
 
-  completeOnboarding(p: Pick<Profile, 'city' | 'bio' | 'intents' | 'interests' | 'gender' | 'intentPrefs'>) {
-    this.patch((s) => ({ onboarded: true, me: { ...s.me, ...p } }))
-  }
-
   updateProfile(p: Partial<Profile>) {
     this.patch((s) => ({ me: { ...s.me, ...p } }))
   }
 
-  decide(id: string, d: 'like' | 'pass'): 'match' | 'liked' | 'passed' | 'limit' {
+  decide(id: string, d: 'like' | 'pass'): 'match' | 'liked' | 'passed' | 'limit' | 'unverified' {
     const s = this.state()
+    if (d === 'like' && !s.me.verified) return 'unverified'
     if (d === 'pass') {
       this.patch({ decisions: { ...s.decisions, [id]: 'pass' } })
       return 'passed'
@@ -311,10 +314,10 @@ export class AppStore {
    * como en Hinge: si el interés es mutuo, el comentario llega como primer mensaje.
    * Con golden, es un hilo dorado: comentario obligatorio y aparece primero (no obliga a responder).
    */
-  likeWith(id: string, about: string, comment: string, golden = false): 'match' | 'liked' | 'passed' | 'limit' | 'no-golden' {
+  likeWith(id: string, about: string, comment: string, golden = false): 'match' | 'liked' | 'passed' | 'limit' | 'no-golden' | 'unverified' {
     if (golden && this.goldenLeft() <= 0) return 'no-golden'
     const r = this.decide(id, 'like')
-    if (r === 'limit') return r
+    if (r === 'limit' || r === 'unverified') return r
     const text = comment.trim() ? `Sobre ${about}: ${comment.trim()}` : ''
     this.patch((s) => ({
       ...(golden ? { goldenUsed: this.goldenUsed() + 1, goldenWeek: weekKey(), golden: [...new Set([...(s.golden ?? []), id])] } : {}),
@@ -332,8 +335,9 @@ export class AppStore {
   }
 
   // Hablar con tus conexiones no tiene límite: no se cobra por conversar
-  sendMessage(id: string, text: string): 'sent' {
+  sendMessage(id: string, text: string): 'sent' | 'unverified' {
     const s = this.state()
+    if (!s.me.verified) return 'unverified'
     const msg: Message = { id: crypto.randomUUID(), from: 'me', text, at: Date.now() }
     this.patch({ messages: { ...s.messages, [id]: [...(s.messages[id] ?? []), msg] } })
     // Respuesta simulada para la demostración
@@ -384,7 +388,19 @@ export class AppStore {
     })
   }
 
-  toggleJoin(planId: string) {
+  /** Verificación con selfie de pose aleatoria (simulada en la demo): gratis siempre. */
+  verify() {
+    this.patch((s) => ({ me: { ...s.me, verified: true } }))
+  }
+
+  /** Registro de 13 pasos terminado: cuenta creada y perfil listo. */
+  completeSignup(me: Profile) {
+    this.patch({ loggedIn: true, onboarded: true, me })
+  }
+
+  toggleJoin(planId: string): 'ok' | 'unverified' {
+    const st = this.state()
+    if (!st.joinedPlans.includes(planId) && !st.me.verified) return 'unverified'
     this.patch((s) => {
       const joined = s.joinedPlans.includes(planId)
       return {
@@ -394,6 +410,7 @@ export class AppStore {
         ),
       }
     })
+    return 'ok'
   }
 
   createPlan(p: Omit<Plan, 'id' | 'hostId' | 'attendees'>) {
