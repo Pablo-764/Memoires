@@ -31,7 +31,7 @@ Si el trabajo se interrumpe, se retoma desde el primer `[ ]` de esta lista.
 - [x] Pestañas como segmentado con indicador deslizante
 - [x] Avatar con anillo de intención y sello de verificación
 - [x] Estados vacíos con la constelación y una acción
-- [x] Limpieza: `sidebar`, `ascii-art`, `inflado`, `polaroid-board`, `navbar`, `tab-bar`, `theme-segmented`, `thread`, `discover-graph` e `intent-constellation`
+- [x] Limpieza: `sidebar`, `ascii-art`, `inflado`, `polaroid-board`, `navbar`, `tab-bar`, `theme-segmented`, `thread` y `discover-graph`
 
 ### F2: portada
 - [x] Héroe a pantalla completa como constelación viva (cursor con inercia, nebulosas por número real de personas)
