@@ -2,7 +2,7 @@ import { Injectable, computed, effect, signal } from '@angular/core'
 import { BOT_CONNECTIONS } from '../datos/bots'
 import { AUTO_REPLIES, PEOPLE, PLANS, SEED_MESSAGES, SEED_REPORTS, type Message, type Plan, type Report } from '../datos/mock'
 import type { Intent } from '../modelos/intents'
-import { DEFAULT_FILTERS, countWords, type Filters } from '../utilidades/matching'
+import { DEFAULT_FILTERS, type Filters } from '../utilidades/matching'
 import type { Gender, IntentPrefs } from '../modelos/plan-formats'
 import { TIERS, type DecorationKey, type Tier } from '../modelos/plans'
 import type { Etapa, PlanPropuesto } from '../utilidades/etapas'
@@ -43,8 +43,13 @@ interface State {
   onboarded: boolean
   me: Profile
   tier: Tier
-  matchesUsed: number
-  wordsUsed: number
+  // "Me interesa" usados hoy (se reinicia cada día) e hilos dorados de la semana
+  likesToday: number
+  likesDay: string
+  goldenUsed: number
+  goldenWeek: string
+  // Hilos dorados enviados (aparecen primero en la bandeja de la otra persona)
+  golden?: string[]
   decisions: Record<string, 'like' | 'pass'>
   connections: string[]
   messages: Record<string, Message[]>
@@ -64,6 +69,13 @@ interface State {
 }
 
 const KEY = 'afin-demo-v1'
+
+const dayKey = (d = new Date()) => d.toISOString().slice(0, 10)
+function weekKey(d = new Date()) {
+  const monday = new Date(d)
+  monday.setDate(d.getDate() - ((d.getDay() + 6) % 7))
+  return dayKey(monday)
+}
 
 const EMPTY_ME: Profile = {
   name: '',
@@ -124,8 +136,10 @@ const INITIAL: State = {
   onboarded: false,
   me: EMPTY_ME,
   tier: 'free',
-  matchesUsed: 0,
-  wordsUsed: 0,
+  likesToday: 0,
+  likesDay: '',
+  goldenUsed: 0,
+  goldenWeek: '',
   decisions: { p3: 'like' },
   connections: ['p3', 'p2', ...BOT_CONNECTIONS],
   messages: SEED_MESSAGES,
@@ -184,8 +198,12 @@ export class AppStore {
   readonly onboarded = computed(() => this.state().onboarded)
   readonly me = computed(() => this.state().me)
   readonly tier = computed(() => this.state().tier)
-  readonly matchesUsed = computed(() => this.state().matchesUsed)
-  readonly wordsUsed = computed(() => this.state().wordsUsed)
+  // Los contadores solo valen para el día (o la semana) en que se guardaron
+  readonly likesToday = computed(() => (this.state().likesDay === dayKey() ? this.state().likesToday : 0))
+  readonly goldenUsed = computed(() => (this.state().goldenWeek === weekKey() ? this.state().goldenUsed : 0))
+  readonly likesLeft = computed(() => Math.max(0, TIERS[this.state().tier].likesPerDay - this.likesToday()))
+  readonly goldenLeft = computed(() => Math.max(0, TIERS[this.state().tier].goldenPerWeek - this.goldenUsed()))
+  readonly golden = computed(() => this.state().golden ?? [])
   readonly decisions = computed(() => this.state().decisions)
   readonly connections = computed(() => this.state().connections)
   readonly messages = computed(() => this.state().messages)
@@ -277,14 +295,32 @@ export class AppStore {
       this.patch({ decisions: { ...s.decisions, [id]: 'pass' } })
       return 'passed'
     }
-    if (s.matchesUsed >= TIERS[s.tier].weeklyMatches) return 'limit'
+    if (this.likesLeft() <= 0) return 'limit'
     const mutual = !!PEOPLE.find((p) => p.id === id)?.likesYou
     this.patch({
       decisions: { ...s.decisions, [id]: 'like' },
-      matchesUsed: s.matchesUsed + 1,
+      likesToday: this.likesToday() + 1,
+      likesDay: dayKey(),
       connections: mutual && !s.connections.includes(id) ? [id, ...s.connections] : s.connections,
     })
     return mutual ? 'match' : 'liked'
+  }
+
+  /**
+   * "Me interesa" a algo concreto (una foto o una pregunta) con comentario opcional,
+   * como en Hinge: si el interés es mutuo, el comentario llega como primer mensaje.
+   * Con golden, es un hilo dorado: comentario obligatorio y aparece primero (no obliga a responder).
+   */
+  likeWith(id: string, about: string, comment: string, golden = false): 'match' | 'liked' | 'passed' | 'limit' | 'no-golden' {
+    if (golden && this.goldenLeft() <= 0) return 'no-golden'
+    const r = this.decide(id, 'like')
+    if (r === 'limit') return r
+    const text = comment.trim() ? `Sobre ${about}: ${comment.trim()}` : ''
+    this.patch((s) => ({
+      ...(golden ? { goldenUsed: this.goldenUsed() + 1, goldenWeek: weekKey(), golden: [...new Set([...(s.golden ?? []), id])] } : {}),
+      ...(r === 'match' && text ? { messages: { ...s.messages, [id]: [...(s.messages[id] ?? []), { id: crypto.randomUUID(), from: 'me', text, at: Date.now() }] } } : {}),
+    }))
+    return r
   }
 
   announceMatch(id: string) {
@@ -295,12 +331,11 @@ export class AppStore {
     this.lastMatch.set(null)
   }
 
-  sendMessage(id: string, text: string): 'sent' | 'limit' {
+  // Hablar con tus conexiones no tiene límite: no se cobra por conversar
+  sendMessage(id: string, text: string): 'sent' {
     const s = this.state()
-    const words = countWords(text)
-    if (s.wordsUsed + words > TIERS[s.tier].weeklyWords) return 'limit'
     const msg: Message = { id: crypto.randomUUID(), from: 'me', text, at: Date.now() }
-    this.patch({ wordsUsed: s.wordsUsed + words, messages: { ...s.messages, [id]: [...(s.messages[id] ?? []), msg] } })
+    this.patch({ messages: { ...s.messages, [id]: [...(s.messages[id] ?? []), msg] } })
     // Respuesta simulada para la demostración
     this.typing.set(id)
     window.setTimeout(() => {

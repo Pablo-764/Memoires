@@ -1,37 +1,63 @@
-<div class="grid gap-4 md:grid-cols-3">
+<div class="scale">
   @for (t of order; track t; let n = $index) {
     @let info = tiers[t];
-    @let isLuc = t === 'lucidite';
-    <article appReveal class="tier relative flex flex-col p-6" [class.is-lucidite]="isLuc" [class.is-current]="current() === t" [style.--i]="n">
-      <h3 class="text-xl">{{ info.name }}</h3>
-      <p class="mt-1 text-sm text-ink-2">{{ info.summary }}</p>
-      <p class="mt-5 flex items-baseline gap-1.5">
-        <span class="font-display text-5xl tabular-nums">{{ info.priceUsd === 0 ? 'Gratis' : '$' + info.priceUsd }}</span>
+    <article class="tier" [attr.data-tier]="t" [class.is-current]="current() === t" [style.--n]="n">
+      @if (t === 'grand') {
+        <p class="tier-tag">Recomendado</p>
+      }
+      <h3 class="text-xl font-extrabold">{{ info.name }}</h3>
+      <p class="mt-3 flex items-baseline gap-1.5">
+        <span class="font-display text-[3.25rem] tabular-nums">{{ info.priceUsd === 0 ? 'Gratis' : mxn.format(info.priceMxn) }}</span>
         @if (info.priceUsd > 0) {
-          <span class="text-sm text-ink-2">USD al mes ({{ mxn.format(info.priceMxn) }})</span>
+          <span class="text-sm text-ink-2">al mes, IVA incluido</span>
         }
       </p>
-      <ul class="mt-5 flex flex-1 flex-col gap-2.5 text-sm">
-        @for (f of rows(t); track f.text) {
-          <li class="flex gap-2.5">
-            <app-icon
-              [name]="f.ok ? 'check' : 'minus'"
-              [size]="17"
-              class="mt-0.5"
-              [class]="f.ok ? (isLuc ? 'text-lila' : 'text-tint-ink') : 'text-ink-3'"
-            />
-            <span class="text-ink-2">{{ f.text }}</span>
-          </li>
+      <p class="mt-2 text-sm text-ink-2">{{ info.summary }}</p>
+      <ul class="mt-4 flex flex-col gap-2 text-sm">
+        @for (d of destaca[t]; track d) {
+          <li class="flex gap-2"><app-icon name="check" [size]="16" class="mt-0.5 text-tint-ink" />{{ d }}</li>
         }
       </ul>
-      <button
-        class="btn mt-6 w-full"
-        [class]="t === 'grand' ? 'btn-primary' : 'btn-ghost'"
-        [disabled]="current() === t"
-        (click)="choose.emit(t)"
-      >
+      <button class="mt-6 w-full" [class]="t === 'grand' ? 'btn btn-primary' : 'btn btn-ghost'" [disabled]="current() === t" (click)="choose.emit(t)">
         {{ current() === t ? 'Tu plan actual' : ctaLabel()(t) }}
       </button>
     </article>
   }
 </div>
+
+@if (table()) {
+  <div class="compare-wrap">
+    <table class="compare">
+      <caption class="sr-only">Comparación completa de los planes</caption>
+      <thead>
+        <tr>
+          <th scope="col">Qué incluye</th>
+          @for (t of order; track t) {
+            <th scope="col">{{ tiers[t].name }}</th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @for (f of filas; track f.label) {
+          <tr>
+            <th scope="row">{{ f.label }}</th>
+            @for (t of order; track t) {
+              @let v = f.value(t);
+              <td>
+                @if (isBool(v)) {
+                  @if (v) {
+                    <app-icon name="check" [size]="17" class="text-tint-ink" /><span class="sr-only">Sí</span>
+                  } @else {
+                    <app-icon name="minus" [size]="17" class="text-ink-3" /><span class="sr-only">No</span>
+                  }
+                } @else {
+                  {{ v }}
+                }
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}

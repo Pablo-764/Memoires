@@ -1,0 +1,51 @@
+<div class="mx-auto max-w-2xl px-4 py-5 sm:px-6">
+  <div class="flex items-center justify-between">
+    <a routerLink="/"><app-logo /></a>
+    <button class="btn btn-ghost btn-sm" (click)="back()">Volver</button>
+  </div>
+
+  <app-seal class="mt-10" kind="safe" size="lg" />
+  <h1 class="font-display mt-4 text-[clamp(2.5rem,8vw,4rem)]">Términos de la suscripción</h1>
+  <p class="mt-3 text-lg text-ink-2">Lo mismo que ves antes de pagar, dicho sin letra chica.</p>
+
+  <div class="mt-8 flex flex-col gap-8">
+    <section>
+      <h2 class="text-xl font-extrabold">1. Qué compras</h2>
+      <p class="mt-2 text-ink-2">
+        Grand cuesta {{ grand }} y Lucidité {{ lucidite }} al mes, con IVA incluido. Compras herramientas (más “me interesa” al día, hilos
+        dorados, filtros, deshacer, modo viaje, incógnito, estilos) y visibilidad medida (impulsos de 30 minutos).
+      </p>
+    </section>
+    <section>
+      <h2 class="text-xl font-extrabold">2. Qué no compras</h2>
+      <p class="mt-2 text-ink-2">
+        Ningún plan garantiza matches, respuestas ni citas: dependen de que la otra persona también quiera. El orden de las sugerencias por
+        afinidad es el mismo para todos. Los perfiles impulsados se marcan “Impulsado” y nunca ocupan más de 1 de cada 10 sugerencias.
+      </p>
+    </section>
+    <section>
+      <h2 class="text-xl font-extrabold">3. Lo que sí garantizamos</h2>
+      <ul class="mt-2 flex list-disc flex-col gap-1.5 pl-5 text-ink-2">
+        @for (g of garantias; track g) {
+          <li>{{ g }}</li>
+        }
+      </ul>
+    </section>
+    <section>
+      <h2 class="text-xl font-extrabold">4. Lo que nunca se cobra</h2>
+      <ul class="mt-2 flex list-disc flex-col gap-1.5 pl-5 text-ink-2">
+        @for (g of gratis; track g) {
+          <li>{{ g }}</li>
+        }
+      </ul>
+    </section>
+    <section>
+      <h2 class="text-xl font-extrabold">5. Cobro, cancelación y reembolso</h2>
+      <p class="mt-2 text-ink-2">
+        El cobro es mensual y te avisamos 3 días antes. Cancelas en dos toques desde Tu plan, sin llamadas, y conservas lo pagado hasta el
+        fin del periodo. Si en los primeros 7 días no usaste nada de pago, te devolvemos todo con un toque.
+      </p>
+    </section>
+    <p class="text-sm text-ink-2">Documento de demostración del proyecto integrador: no hay cobros reales.</p>
+  </div>
+</div>

@@ -129,7 +129,7 @@ export class Discover {
     return s.sharedIntents.includes(preferred) ? preferred : s.sharedIntents[0]
   }
 
-  protected readonly canLike = () => this.store.matchesUsed() < this.limits().weeklyMatches
+  protected readonly canLike = () => this.store.likesLeft() > 0
 
   protected readonly onDecide = (id: string, d: 'like' | 'pass') => {
     const s = this.suggestions().find((x) => x.person.id === id)

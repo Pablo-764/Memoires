@@ -1,12 +1,36 @@
-<section class="enter rounded-(--radius-sheet) p-7 md:p-10" [class]="store.tier() === 'lucidite' ? 'bg-lila-wash' : 'bg-wash'">
-  <p class="text-sm text-ink-3">Tu plan actual</p>
-  <h1 class="font-display mt-2 text-[clamp(3rem,8vw,5.5rem)]">{{ info().name }}</h1>
-  <p class="mt-2 max-w-[56ch] text-ink-2">Los precios incluyen IVA y puedes cancelar cuando quieras desde esta misma página.</p>
-  <div class="meter-on-night mt-7 grid gap-5 sm:grid-cols-2">
-    <app-meter [used]="store.matchesUsed()" [total]="info().weeklyMatches" label="Matches esta semana" />
-    <app-meter [used]="store.wordsUsed()" [total]="info().weeklyWords" label="Palabras esta semana" />
+<header class="flex flex-wrap items-end justify-between gap-4">
+  <h1 class="page-title">Tu plan</h1>
+  <p class="max-w-[38ch] text-ink-2">Precios con IVA incluido. Te avisamos 3 días antes de cada cobro y cancelas en dos toques.</p>
+</header>
+
+<section class="sub-now mt-8" [class]="store.tier() === 'lucidite' ? 'bg-lila-wash' : 'bg-wash'" aria-labelledby="plan-actual">
+  <div>
+    <p class="font-mono text-xs uppercase tracking-wider text-ink-2">Plan actual</p>
+    <h2 id="plan-actual" class="font-display mt-1 text-[clamp(2.5rem,7vw,4.5rem)]">{{ info().name }}</h2>
   </div>
+  <div class="grid gap-5 sm:grid-cols-2">
+    <app-meter [used]="store.likesToday()" [total]="info().likesPerDay" label="“Me interesa” de hoy" />
+    <app-meter [used]="store.goldenUsed()" [total]="info().goldenPerWeek" label="Hilos dorados esta semana" />
+  </div>
+  @if (store.tier() !== 'free') {
+    <div class="flex flex-wrap items-center gap-3">
+      @if (cancelando()) {
+        <div class="sub-confirm swap-in" role="group" aria-label="Confirmar cancelación">
+          <span class="text-sm">¿Cancelar? Conservas {{ info().name }} hasta el fin del periodo pagado.</span>
+          <button class="btn btn-danger btn-sm" (click)="cancelar()">Sí, cancelar</button>
+          <button class="btn btn-ghost btn-sm" (click)="cancelando.set(false)">No</button>
+        </div>
+      } @else {
+        <button class="btn btn-ghost" (click)="cancelando.set(true)">Cancelar suscripción</button>
+        <button class="btn btn-ghost" (click)="reembolso()">Pedir reembolso (primeros 7 días)</button>
+      }
+    </div>
+  }
 </section>
+
+<div class="mt-10">
+  <app-que-compras />
+</div>
 
 <!-- Ver con Lucidité: el mismo perfil sin y con decoraciones, para ver el plan funcionando -->
 <section class="mt-8 grid items-center gap-6 md:grid-cols-[1fr_1.15fr]" aria-labelledby="ver-lucidite">
@@ -24,7 +48,7 @@
       <div class="px-5 pb-5">
         <app-avatar class="-mt-10 ring-4 ring-paper-2" [name]="myName()" [hue]="260" [size]="84" [photo]="store.me().photo" />
         <h3 class="font-display mt-2 text-[2rem]">{{ myName() }}</h3>
-        <p class="mt-1 text-sm text-ink-3">Así se ve tu perfil con el plan Gratuito.</p>
+        <p class="mt-1 text-sm text-ink-2">Así se ve tu perfil con el plan Gratuito.</p>
       </div>
     </article>
     <article class="luc-layer luc-deco" [attr.aria-hidden]="!showLuc()">
@@ -37,23 +61,47 @@
       <div class="px-5 pb-5">
         <app-avatar class="-mt-10 ring-4 ring-paper-2" [name]="myName()" [hue]="260" [size]="84" [frame]="luc.frame" [photo]="store.me().photo" />
         <h3 class="font-display mt-2 text-[2rem]" [style.color]="lucName?.color" [attr.data-name-fx]="lucName?.fx ?? null">{{ myName() }}</h3>
-        <p class="mt-1 text-sm text-ink-3">Con el tema {{ lucTheme.label }}, uno de los {{ totalStyles }} estilos.</p>
+        <p class="mt-1 text-sm text-ink-2">Con el tema {{ lucTheme.label }}, uno de los {{ totalStyles }} estilos.</p>
       </div>
     </article>
   </div>
 </section>
 
-<div class="mt-8">
-  <app-tier-cards [current]="store.tier()" [ctaLabel]="cta" (choose)="choose($event)" />
-</div>
+<section class="mt-16" aria-labelledby="niveles">
+  <h2 id="niveles" class="font-display text-[clamp(2.25rem,5vw,3.5rem)]">Herramientas por nivel</h2>
+  <div class="mt-12">
+    <app-tier-cards [current]="store.tier()" [ctaLabel]="cta" [table]="true" (choose)="choose($event)" />
+  </div>
+</section>
+
+<section class="mt-16 grid gap-10 md:grid-cols-2" aria-label="Garantías y lo que siempre es gratis">
+  <div>
+    <h2 class="text-xl font-extrabold">Lo que sí garantizamos</h2>
+    <ul class="sub-list">
+      @for (g of garantias; track g) {
+        <li><app-icon name="check" [size]="17" class="mt-0.5 shrink-0 text-tint-ink" />{{ g }}</li>
+      }
+    </ul>
+  </div>
+  <div>
+    <h2 class="text-xl font-extrabold">Nunca se cobra</h2>
+    <ul class="sub-list">
+      @for (g of gratis; track g) {
+        <li><app-icon name="shield-check" [size]="17" class="mt-0.5 shrink-0" />{{ g }}</li>
+      }
+    </ul>
+    <a routerLink="/terminos-suscripcion" class="btn btn-ghost mt-4">Leer los términos en lenguaje claro</a>
+  </div>
+</section>
 
 @if (checkout(); as c) {
   <app-modal [title]="'Suscribirte a ' + tiers[c].name" (closed)="closeCheckout()">
     <div class="flex items-baseline justify-between rounded-(--radius-field) bg-paper-2 p-4">
       <span class="font-medium">{{ tiers[c].name }}, cobro mensual</span>
-      <span class="text-2xl font-bold tabular-nums">${{ tiers[c].priceUsd }} USD</span>
+      <span class="text-2xl font-bold tabular-nums">{{ mxn.format(tiers[c].priceMxn) }}</span>
     </div>
-    <p class="mt-3 text-sm text-ink-3">Equivale a {{ mxn.format(tiers[c].priceMxn) }} con IVA incluido. Se renueva cada mes; cancelas en cualquier momento.</p>
+    <p class="mt-3 text-sm text-ink-2">{{ mxn.format(tiers[c].priceMxn) }} al mes con IVA incluido. Se renueva cada mes, te avisamos 3 días antes y cancelas en dos toques.</p>
+    <app-que-compras class="mt-5" />
     <div class="mt-6 flex flex-col gap-3">
       <button class="btn min-h-12 bg-paypal text-on-paypal" [disabled]="!!paying()" (click)="pay('paypal', c)">
         {{ paying() === 'paypal' ? 'Conectando con PayPal…' : 'Pagar con PayPal' }}
@@ -62,7 +110,7 @@
         {{ paying() === 'gpay' ? 'Conectando con Google Pay…' : 'Pagar con Google Pay' }}
       </button>
     </div>
-    <p class="mt-4 flex items-start gap-2 text-xs text-ink-3">
+    <p class="mt-4 flex items-start gap-2 text-xs text-ink-2">
       <app-icon name="shield-check" [size]="16" />
       mémoires nunca ve ni guarda los datos de tu tarjeta: el pago se realiza en PayPal o Google Pay. En esta demostración no se cobra nada.
     </p>
