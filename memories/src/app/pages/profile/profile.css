@@ -434,3 +434,11 @@
 @media (prefers-reduced-motion: reduce) {
   .reveal { animation: none; }
 }
+
+.faltan { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; margin-top: 0.25rem; font-size: 0.875rem; }
+.falta-mas { font-family: var(--font-mono, ui-monospace, monospace); color: var(--tint-ink); display: inline-block; }
+.ejes { display: grid; gap: 0.5rem; font-size: 0.75rem; color: var(--color-ink-2); max-width: 28rem; }
+.eje { display: grid; grid-template-columns: 6.5rem 1fr 6.5rem; align-items: center; gap: 0.5rem; }
+.eje-barra { position: relative; height: 2px; background: var(--color-line); }
+.eje-punto { position: absolute; top: 50%; width: 10px; height: 10px; border-radius: 50%; background: var(--tint); translate: -50% -50%; }
+.is-verified app-seal { color: var(--plan-ink); }

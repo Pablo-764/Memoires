@@ -17,7 +17,11 @@
           } @else if (liked()) {
             <span class="btn btn-soft cursor-default">Interés enviado</span>
           } @else {
-            <button class="btn btn-primary" (click)="like($event)"><app-icon name="heart" [size]="17" [filled]="true" /> Me interesa</button>
+            @if (store.verified()) {
+              <button class="btn btn-primary" (click)="like($event)"><app-icon name="heart" [size]="17" [filled]="true" /> Me interesa</button>
+            } @else {
+              <button class="btn btn-primary" (click)="verifyOpen.set(true)">Verifícate para conectar</button>
+            }
           }
         </div>
       </div>
@@ -151,4 +155,8 @@
     <h1 class="text-2xl">Este perfil no está disponible</h1>
     <a routerLink="/app/descubre" class="btn btn-primary mt-6">Volver a Descubre</a>
   </div>
+}
+
+@if (verifyOpen()) {
+  <app-verify-sheet (closed)="verifyOpen.set(false)" />
 }

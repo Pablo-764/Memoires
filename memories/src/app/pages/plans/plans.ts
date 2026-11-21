@@ -1,4 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common'
+import { VerifySheet } from '../../componentes/verify-sheet/verify-sheet'
 import { ApplicationRef, Component, DestroyRef, computed, inject, signal } from '@angular/core'
 import { RouterLink } from '@angular/router'
 import { AppStore } from '../../servicios/app-store'
@@ -24,12 +25,13 @@ import { Mando } from '../../servicios/mando'
 
 @Component({
   selector: 'app-plans',
-  imports: [NgTemplateOutlet, RouterLink, Avatar, ChoiceChip, Icon, IntentBadge, PillGroup, CreatePlanDialog, PlanMosaic],
+  imports: [NgTemplateOutlet, RouterLink, Avatar, ChoiceChip, Icon, IntentBadge, PillGroup, CreatePlanDialog, PlanMosaic, VerifySheet],
   styleUrl: './plans.css',
   templateUrl: './plans.html',
 })
 export class Plans {
   protected readonly store = inject(AppStore)
+  protected readonly verifyOpen = signal(false)
   private readonly appRef = inject(ApplicationRef)
   private readonly celebrate = inject(Celebrate)
   protected readonly intents = INTENTS
@@ -218,7 +220,7 @@ export class Plans {
 
   protected toggle(p: Plan, event: Event) {
     const joined = this.isJoined(p)
-    this.store.toggleJoin(p.id)
+    if (this.store.toggleJoin(p.id) === 'unverified') return void this.verifyOpen.set(true)
     if (!joined) this.celebrate.play(p.intent, { at: event.currentTarget as Element })
     this.store.toast(joined ? 'Saliste del plan' : `Te uniste a "${p.title}"`, joined ? 'info' : 'ok')
   }

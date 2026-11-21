@@ -16,3 +16,4 @@ class ObserverStub {
 globalThis.IntersectionObserver ??= ObserverStub as unknown as typeof IntersectionObserver
 globalThis.ResizeObserver ??= ObserverStub as unknown as typeof ResizeObserver
 Element.prototype.scrollIntoView ??= noop
+window.scrollTo = noop as typeof window.scrollTo

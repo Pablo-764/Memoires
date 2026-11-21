@@ -214,3 +214,5 @@
   .typing path { animation: none; }
   .bubble-in { transform: none; }
 }
+
+.sin-verificar { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap; padding: 0.75rem 1rem; border-radius: var(--radius-card); background: var(--wash); }

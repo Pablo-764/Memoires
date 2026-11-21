@@ -1,3 +1,4 @@
+import { VerifySheet } from '../../componentes/verify-sheet/verify-sheet'
 import { Component, DestroyRef, computed, effect, inject, signal, viewChildren } from '@angular/core'
 import { Router, RouterLink } from '@angular/router'
 import { AppStore } from '../../servicios/app-store'
@@ -31,7 +32,7 @@ function readMode(): 'mapa' | 'mazo' {
 
 @Component({
   selector: 'app-discover',
-  imports: [AffinityMap, Avatar, Seal, IntentBadge, ReportDialog, BlockDialog, RouterLink, ChoiceChip, Modal, Icon, SwipeCard, FiltersPanel],
+  imports: [AffinityMap, Avatar, Seal, IntentBadge, ReportDialog, BlockDialog, RouterLink, ChoiceChip, Modal, Icon, SwipeCard, FiltersPanel, VerifySheet],
   styleUrl: './discover.css',
   templateUrl: './discover.html',
   host: { '(document:keydown)': 'onKey($event)' },
@@ -63,6 +64,7 @@ export class Discover {
   })
   protected readonly filtersOpen = signal(false)
   protected readonly limitOpen = signal(false)
+  protected readonly verifyOpen = signal(false)
   protected readonly reportOpen = signal(false)
   protected readonly blockOpen = signal(false)
 
@@ -106,12 +108,12 @@ export class Discover {
       if (i !== 'any' && !this.store.me().intents.includes(i)) this.store.setFilters({ intent: 'any' })
     })
     // En celular, el botón central del dock dice "Me interesa" a la persona elegida
-    const quitar = this.mando.declarar({ label: 'Me interesa', run: () => this.decide('like') })
-    const destroyRef = inject(DestroyRef)
-    destroyRef.onDestroy(() => {
-      quitar()
-      this.store.backdropTone.set(null)
+    // Sin verificación no se conecta: el botón central lleva a verificarse
+    effect((onCleanup) => {
+      const label = this.store.verified() ? 'Me interesa' : 'Verifícate'
+      onCleanup(this.mando.declarar({ label, run: () => this.decide('like') }))
     })
+    inject(DestroyRef).onDestroy(() => this.store.backdropTone.set(null))
   }
 
   protected setMode(m: 'mapa' | 'mazo') {
@@ -138,6 +140,10 @@ export class Discover {
       this.limitOpen.set(true)
       return false
     }
+    if (r === 'unverified') {
+      this.verifyOpen.set(true)
+      return false
+    }
     if (r === 'liked') this.store.toast('Le avisaremos si también le interesa conocerte')
     if (r === 'match') this.celebrate.play(this.intentFor(s), { giant: true }).then(() => this.store.announceMatch(id))
     this.focusId.set(null)
@@ -152,6 +158,7 @@ export class Discover {
     const c = this.current()
     if (!c || this.leaving()) return
     if (this.mode() === 'mazo') return void this.cards()[0]?.fling(d)
+    if (d === 'like' && !this.store.verified()) return void this.verifyOpen.set(true)
     if (d === 'like' && !this.canLike()) return void this.limitOpen.set(true)
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
     this.leaving.set({ id: c.person.id, kind: d })
