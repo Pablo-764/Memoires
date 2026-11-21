@@ -10,7 +10,11 @@ export interface Filters {
   availability: Person['availability'] | 'any'
   language: string | 'any'
   verifiedOnly: boolean
+  /** Filtros marcados como innegociables: excluyen. Los demás solo ordenan. */
+  strict?: Partial<Record<FiltroAfinable, boolean>>
 }
+
+export type FiltroAfinable = 'age' | 'interests' | 'availability' | 'language' | 'verified'
 
 export const DEFAULT_FILTERS: Filters = {
   intent: 'any',
@@ -20,6 +24,7 @@ export const DEFAULT_FILTERS: Filters = {
   availability: 'any',
   language: 'any',
   verifiedOnly: false,
+  strict: {},
 }
 
 export interface Me {
@@ -35,12 +40,15 @@ export interface Suggestion {
   sharedIntents: Intent[]
   sharedInterests: string[]
   score: number
+  /** Filtros no innegociables que no cumple: ordena después de quien sí cumple. */
+  fallas?: number
 }
 
 /**
  * Árbol de decisión determinista:
  * 1. Filtros duros: bloqueados, suspendidos, ya decididos, otra ciudad, sin intención en común.
- * 2. Filtros del usuario (según su plan) y las preferencias de cada intención: cantidad, tipo y género de personas.
+ * 2. Filtros del usuario (según su plan): los innegociables excluyen; los demás solo ordenan
+ *    (quien no cumple va después de quien sí). Las preferencias de cada intención excluyen.
  * 3. Orden por puntaje: intereses en común (10 c/u), intenciones en común (5 c/u), perfil verificado (2).
  * El mismo input siempre produce el mismo orden.
  */
@@ -74,13 +82,16 @@ export function rankSuggestions(
     const sharedIntents = person.intents.filter((i) => myIntents.has(i))
     if (sharedIntents.length === 0) continue
     if (filters.intent !== 'any' && !sharedIntents.includes(filters.intent)) continue
-    if (person.age < filters.ageMin || person.age > filters.ageMax) continue
-    if (filters.availability !== 'any' && person.availability !== filters.availability && person.availability !== 'Cualquier día') continue
-    if (filters.language !== 'any' && !person.languages.includes(filters.language)) continue
-    if (filters.verifiedOnly && !person.verified) continue
-
     const sharedInterests = person.interests.filter((i) => myInterests.has(i))
-    if (sharedInterests.length < filters.minShared) continue
+    const falla: Record<FiltroAfinable, boolean> = {
+      age: person.age < filters.ageMin || person.age > filters.ageMax,
+      availability: filters.availability !== 'any' && person.availability !== filters.availability && person.availability !== 'Cualquier día',
+      language: filters.language !== 'any' && !person.languages.includes(filters.language),
+      verified: filters.verifiedOnly && !person.verified,
+      interests: sharedInterests.length < filters.minShared,
+    }
+    const fallas = (Object.keys(falla) as FiltroAfinable[]).filter((k) => falla[k])
+    if (fallas.some((k) => filters.strict?.[k])) continue
 
     // Cada intención en común aplica sus propias preferencias
     const validIntents = sharedIntents.filter((i) => fitsPrefs(person, i, me, sharedInterests.length))
@@ -88,10 +99,10 @@ export function rankSuggestions(
     if (filters.intent !== 'any' && !validIntents.includes(filters.intent)) continue
 
     const score = sharedInterests.length * 10 + validIntents.length * 5 + (person.verified ? 2 : 0)
-    out.push({ person, sharedIntents: validIntents, sharedInterests, score })
+    out.push({ person, sharedIntents: validIntents, sharedInterests, score, fallas: fallas.length })
   }
 
-  return out.sort((a, b) => b.score - a.score || a.person.id.localeCompare(b.person.id))
+  return out.sort((a, b) => (a.fallas ?? 0) - (b.fallas ?? 0) || b.score - a.score || a.person.id.localeCompare(b.person.id))
 }
 
 export function countWords(text: string) {
