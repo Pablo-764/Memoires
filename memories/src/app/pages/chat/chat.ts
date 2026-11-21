@@ -1,4 +1,6 @@
 import { VerifySheet } from '../../componentes/verify-sheet/verify-sheet'
+import { palabrasDelicadas } from '../../utilidades/cuidado'
+import { aperturasDe } from '../../modelos/aperturas'
 import { Component, DestroyRef, ElementRef, afterRenderEffect, computed, effect, inject, input, signal, untracked, viewChild } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { Router, RouterLink } from '@angular/router'
@@ -43,6 +45,13 @@ export class Chat {
   protected readonly hits = computed(() => this.thread().filter((m) => matches(m.text, this.query())).length)
 
   protected readonly text = signal('')
+  /** Palabras que pueden lastimar en el mensaje que se iba a enviar (pide confirmar). */
+  protected readonly delicadas = signal<string[]>([])
+  /** Imágenes que la persona decidió ver (llegan difuminadas). */
+  protected readonly vistas = signal<Set<string>>(new Set())
+  // Primeros pasos de la otra persona: se contestan con un toque
+  protected readonly aperturas = computed(() => aperturasDe(this.id()))
+  protected readonly verAperturas = computed(() => this.thread().filter((m) => m.from === 'me').length < 3)
   protected readonly words = computed(() => countWords(this.text()))
   protected readonly reportOpen = signal(false)
   protected readonly blockOpen = signal(false)
@@ -144,12 +153,28 @@ export class Chat {
     this.query.set('')
   }
 
-  protected submit() {
+  protected submit(force = false) {
     const body = this.text().trim()
     if (!body) return
+    if (!force) {
+      const d = palabrasDelicadas(body)
+      if (d.length) return void this.delicadas.set(d)
+    }
+    this.delicadas.set([])
     if (this.store.sendMessage(this.id(), body) === 'unverified') return void this.verifyOpen.set(true)
     this.text.set('')
     this.celebrate.play('send', { at: this.sendBtn()?.nativeElement })
+  }
+
+  protected verImagen(id: string) {
+    this.vistas.update((s) => new Set(s).add(id))
+  }
+
+  protected responder(q: string) {
+    this.text.set(`${q} `)
+    const el = this.msgBox()?.nativeElement
+    el?.focus()
+    el?.setSelectionRange(el.value.length, el.value.length)
   }
 
   protected onKeydown(e: KeyboardEvent) {
