@@ -1,4 +1,5 @@
 import { Component, inject, input } from '@angular/core'
+import { AppStore } from '../../servicios/app-store'
 import { Router, RouterLink } from '@angular/router'
 import { Mando } from '../../servicios/mando'
 import type { NavItem } from '../../modelos/navegacion'
@@ -20,6 +21,7 @@ export class Dock {
   readonly active = input.required<number>()
 
   protected readonly mando = inject(Mando)
+  protected readonly store = inject(AppStore)
   private readonly router = inject(Router)
 
   protected conectar() {

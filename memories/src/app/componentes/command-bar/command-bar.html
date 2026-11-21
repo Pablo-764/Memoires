@@ -22,6 +22,12 @@
       <kbd>{{ mac ? '⌘' : 'Ctrl' }} K</kbd>
     </button>
 
+    @if (!store.verified()) {
+      <button type="button" class="cmd-verif" (click)="mando.verificarAbierto.set(true)">
+        <span class="cmd-verif-dot" aria-hidden="true"></span> Sin verificar · <span class="underline underline-offset-2">Verifícate</span>
+      </button>
+    }
+
     <div class="relative">
       <button type="button" class="cmd-icon" [attr.aria-expanded]="menu() === 'avisos'" aria-haspopup="true" [attr.aria-label]="'Avisos, ' + avisos().length + ' nuevos'" (click)="toggle('avisos')">
         <app-icon name="bell" [size]="18" />

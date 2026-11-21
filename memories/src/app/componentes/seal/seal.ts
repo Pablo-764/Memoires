@@ -2,10 +2,11 @@ import { Component, computed, input } from '@angular/core'
 import { Icon } from '../icon/icon'
 import type { IconName } from '../icon/icons'
 
-export type SealKind = 'verified' | 'safe' | 'report' | 'block' | 'private'
+export type SealKind = 'verified' | 'id' | 'safe' | 'report' | 'block' | 'private'
 
 const ICON: Record<SealKind, IconName> = {
   verified: 'badge-check',
+  id: 'badge-check',
   safe: 'shield-check',
   report: 'flag',
   block: 'ban',

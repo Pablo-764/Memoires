@@ -34,6 +34,7 @@ export interface Profile {
   pronouns?: string
   zone?: string
   verified?: boolean // selfie con pose aleatoria (sello azul); obligatoria para conectar
+  idVerified?: boolean // identificación oficial (sello dorado); opcional, nunca requisito
   personality?: [number, number, number, number] // 4 ejes de -1 a 1 (test opcional)
   openers?: string[] // "Primeros pasos": 3 preguntas de apertura
   rulesAccepted?: boolean
@@ -413,6 +414,11 @@ export class AppStore {
   /** Verificación con selfie de pose aleatoria (simulada en la demo): gratis siempre. */
   verify() {
     this.patch((s) => ({ me: { ...s.me, verified: true } }))
+  }
+
+  /** Segundo nivel opcional: identificación oficial (simulada en la demo). */
+  verifyId() {
+    this.patch((s) => ({ me: { ...s.me, idVerified: true } }))
   }
 
   /** Registro de 13 pasos terminado: cuenta creada y perfil listo. */

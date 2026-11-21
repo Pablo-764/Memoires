@@ -90,7 +90,7 @@ Si el trabajo se interrumpe, se retoma desde el primer `[ ]` de esta lista.
 - [x] Registro de 13 pasos (una pregunta por pantalla, hilo de progreso, constelación de fondo, borrador que se conserva)
 - [x] Prompts por intención (3 en el registro)
 - [x] "Me interesa" a un prompt concreto con comentario que llega como primer mensaje
-- [ ] "Me interesa" a una foto concreta
+- [x] "Me interesa" a una foto concreta
 - [x] Tu hilo del día (gratis, con la razón)
 - [x] Hilo dorado (1 gratis por semana, comentario obligatorio, no obliga a responder)
 - [x] Filtros innegociables (sin marcar solo ordenan)
@@ -101,22 +101,22 @@ Si el trabajo se interrumpe, se retoma desde el primer `[ ]` de esta lista.
 - [x] "Qué compras y qué no" antes de pagar
 - [x] Garantías medibles y cancelación en 2 toques
 - [x] `/terminos-suscripcion`
-- [ ] Marca "Impulsado" y tope de 1 de cada 10 sugerencias
-- [ ] Guía de perfil con la frase de visibilidad gratuita
+- [x] Marca "Impulsado" y tope de 1 de cada 10 sugerencias
+- [x] Guía de perfil con la frase de visibilidad gratuita
 
 ### 4b: verificación obligatoria y perfil completo
 - [x] Sin verificar: no "me interesa", hilo dorado, comentario, chat ni unirse a planes
 - [x] "Verifícate para conectar" en la ficha de Descubre, la persona, el chat y los planes
 - [x] Selfie con pose aleatoria simulada, sello azul y confirmación
-- [ ] Texto "Nadie habla con perfiles falsos" en la verificación y en las reglas de la casa
-- [ ] Aviso fijo y discreto en la barra de mando (y el dock) hasta verificar
-- [ ] Identificación oficial opcional con sello dorado
-- [ ] `matching` excluye a los no verificados de las sugerencias de otros
+- [x] Texto "Nadie habla con perfiles falsos" en la verificación y en las reglas de la casa
+- [x] Aviso fijo y discreto en la barra de mando (y el dock) hasta verificar
+- [x] Identificación oficial opcional con sello dorado
+- [x] `matching` excluye a los no verificados de las sugerencias de otros
 - [x] Registro: la selfie se puede saltar y el resumen dice que sin verificar no se conecta
 - [x] Puntaje 0 a 100 con los pesos de la tabla
 - [x] Anillo con lo que falta y cuánto sube ("+10 %")
-- [ ] Peso de completitud en el orden de sugerencias (0.6 / 1 / 1.25), igual para quien paga
-- [ ] Solo perfiles con 80 % o más entran a "Tu hilo del día" de otros
+- [x] Peso de completitud en el orden de sugerencias (0.6 / 1 / 1.25), igual para quien paga
+- [x] Solo perfiles con 80 % o más entran a "Tu hilo del día" de otros
 - [x] Frase de visibilidad gratuita en "Qué compras y qué no"
 
 ### Pruebas pedidas
@@ -126,10 +126,10 @@ Si el trabajo se interrumpe, se retoma desde el primer `[ ]` de esta lista.
 - [x] "Qué compras y qué no" visible antes de pagar
 - [x] Cancelación en 2 pasos
 - [x] Sin verificar no puede dar "me interesa", chatear ni unirse a planes; tras verificar, sí
-- [ ] Un no verificado no aparece en sugerencias de otros
-- [ ] Bordes del puntaje: 49, 50, 79 y 80 %
-- [ ] El orden de sugerencias aplica los pesos
-- [ ] Quien paga no recibe el peso de completitud sin completar su perfil
+- [x] Un no verificado no aparece en sugerencias de otros
+- [x] Bordes del puntaje: 49, 50, 79 y 80 %
+- [x] El orden de sugerencias aplica los pesos
+- [x] Quien paga no recibe el peso de completitud sin completar su perfil
 
 ### P2 (si hay tiempo)
 - [ ] Planes con fecha, lugar seguro y cupo; recordatorio

@@ -91,6 +91,7 @@ export class Profile {
   protected readonly visibilidad = computed(() => textoVisibilidad(this.completo()))
   protected readonly ejes = EJES
   protected readonly verifyOpen = signal(false)
+  protected readonly idOpen = signal(false)
   protected readonly testOpen = signal(false)
 
   protected irAPieza(f: { key: string; paso: Paso }) {
