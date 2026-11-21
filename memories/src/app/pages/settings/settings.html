@@ -1,50 +1,137 @@
-<div class="stagger max-w-3xl">
-  <h1 class="font-display text-[clamp(2.75rem,6vw,4rem)]">Ajustes</h1>
+<div class="ajustes">
+  <header class="ajustes-cab">
+    <h1 class="page-title">Ajustes</h1>
+    <p class="mt-2 max-w-[52ch] text-ink-2">Cada opción dice qué cambia. Tu seguridad no depende de tu plan: viene incluida para todas las personas.</p>
+  </header>
 
-  <section class="settings-row mt-8">
-    <h2>Apariencia</h2>
-    <div>
-      <p class="text-sm text-ink-2">Elige el modo claro, el nocturno, o que siga la configuración de tu dispositivo.</p>
-      <div class="mt-4 flex flex-wrap gap-2" role="group" aria-label="Tema">
+  <nav class="ajustes-indice" aria-label="Secciones de ajustes">
+    @for (s of secciones; track s.id) {
+      <a [href]="'#' + s.id" (click)="ir($event, s.id)">{{ s.label }}</a>
+    }
+  </nav>
+
+  <div class="ajustes-bloques">
+    <!-- Quién puede verte -->
+    <section id="visibilidad" class="bloque" aria-labelledby="visibilidad-t">
+      <div class="bloque-cab">
+        <app-seal kind="private" size="md" />
+        <div>
+          <h2 id="visibilidad-t">Quién puede verte</h2>
+          <p class="efecto" aria-live="polite">{{ efectoVisibilidad() }}</p>
+        </div>
+      </div>
+      <div class="opciones" role="radiogroup" aria-label="Quién puede verte">
+        @for (o of visibilidades; track o.value) {
+          <label class="opcion" [class.is-on]="a().quienVe === o.value">
+            <input type="radio" name="quienVe" [value]="o.value" [checked]="a().quienVe === o.value" (change)="store.setAjustes({ quienVe: o.value })" />
+            <span><strong>{{ o.label }}</strong><span class="block text-sm text-ink-2">{{ o.hint }}</span></span>
+          </label>
+        }
+      </div>
+      @if (!store.verified()) {
+        <p class="nota">Aún no te verificas: mientras tanto no apareces a nadie, elijas lo que elijas.</p>
+      }
+    </section>
+
+    <!-- Qué ven de ti -->
+    <section id="perfil" class="bloque" aria-labelledby="perfil-t">
+      <div class="bloque-cab">
+        <app-seal kind="safe" size="md" />
+        <div>
+          <h2 id="perfil-t">Qué ven de ti</h2>
+          <p class="efecto">Tu ubicación exacta nunca se guarda ni se muestra.</p>
+        </div>
+      </div>
+      <ul class="interruptores">
+        <li>
+          <div><p class="font-semibold">Mostrar mi edad</p><p class="text-sm text-ink-2">{{ a().mostrarEdad ? 'Ven «' + store.me().name + ', ' + store.me().age + '».' : 'Ven solo tu nombre; el filtro de edad sigue funcionando.' }}</p></div>
+          <label class="switch"><input type="checkbox" aria-label="Mostrar mi edad" [checked]="a().mostrarEdad" (change)="store.setAjustes({ mostrarEdad: $any($event.target).checked })" /><span></span></label>
+        </li>
+        <li>
+          <div><p class="font-semibold">Mostrar mi zona</p><p class="text-sm text-ink-2">{{ a().mostrarZona ? 'Ven «' + store.me().city + (store.me().zone ? ', ' + store.me().zone : '') + '».' : 'Ven solo la ciudad.' }}</p></div>
+          <label class="switch"><input type="checkbox" aria-label="Mostrar mi zona" [checked]="a().mostrarZona" (change)="store.setAjustes({ mostrarZona: $any($event.target).checked })" /><span></span></label>
+        </li>
+        <li>
+          <div><p class="font-semibold">Avisos de leído</p><p class="text-sm text-ink-2">{{ a().leido ? 'Tus conexiones saben cuándo leíste su mensaje, y tú el de ellas.' : 'Nadie sabe cuándo lees; tú tampoco lo ves de los demás.' }}</p></div>
+          <label class="switch"><input type="checkbox" aria-label="Avisos de leído" [checked]="a().leido" (change)="store.setAjustes({ leido: $any($event.target).checked })" /><span></span></label>
+        </li>
+      </ul>
+      <p class="mt-4 text-sm">Personas bloqueadas: <strong>{{ store.blocked().length }}</strong>. Dejan de verte y no pueden escribirte. <a routerLink="/privacidad" class="link-soft font-semibold">Aviso de privacidad</a></p>
+    </section>
+
+    <!-- Avisos -->
+    <section id="avisos" class="bloque" aria-labelledby="avisos-t">
+      <div class="bloque-cab">
+        <span class="bloque-icono" aria-hidden="true"><app-icon name="bell" [size]="20" /></span>
+        <div>
+          <h2 id="avisos-t">Avisos</h2>
+          <p class="efecto">{{ efectoAvisos() }}</p>
+        </div>
+      </div>
+      <ul class="interruptores">
+        <li>
+          <div><p class="font-semibold">Conexiones nuevas</p><p class="text-sm text-ink-2">Cuando a alguien también le interesas.</p></div>
+          <label class="switch"><input type="checkbox" aria-label="Avisos de conexiones nuevas" [checked]="a().avisosConexion" (change)="store.setAjustes({ avisosConexion: $any($event.target).checked })" /><span></span></label>
+        </li>
+        <li>
+          <div><p class="font-semibold">Planes</p><p class="text-sm text-ink-2">Respuestas a tus propuestas y recordatorios el día del plan.</p></div>
+          <label class="switch"><input type="checkbox" aria-label="Avisos de planes" [checked]="a().avisosPlanes" (change)="store.setAjustes({ avisosPlanes: $any($event.target).checked })" /><span></span></label>
+        </li>
+        <li>
+          <div><p class="font-semibold">Resumen de la semana</p><p class="text-sm text-ink-2">Un correo los domingos con tus planes y conexiones. Nada más.</p></div>
+          <label class="switch"><input type="checkbox" aria-label="Resumen de la semana" [checked]="a().resumenSemanal" (change)="store.setAjustes({ resumenSemanal: $any($event.target).checked })" /><span></span></label>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Bienestar -->
+    <section id="bienestar" class="bloque" aria-labelledby="bienestar-t">
+      <div class="bloque-cab">
+        <span class="bloque-icono" aria-hidden="true"><app-icon name="moon" [size]="20" /></span>
+        <div>
+          <h2 id="bienestar-t">Bienestar</h2>
+          <p class="efecto">Te pediremos una pausa al pasar {{ store.limitMinutes() }} minutos en el día. Hoy llevas {{ store.minutesToday() }}.</p>
+        </div>
+      </div>
+      <div class="flex flex-wrap gap-2" role="group" aria-label="Tiempo antes de la pausa">
+        @for (m of limits; track m) {
+          <button appChip [selected]="store.limitMinutes() === m" (click)="store.setLimitMinutes(m)">{{ m }} min</button>
+        }
+      </div>
+      <button class="btn btn-ghost mt-4" (click)="store.triggerNudgeNow()">Ver el aviso de bienestar</button>
+    </section>
+
+    <!-- Apariencia -->
+    <section id="apariencia" class="bloque" aria-labelledby="apariencia-t">
+      <div class="bloque-cab">
+        <span class="bloque-icono" aria-hidden="true"><app-icon name="sun" [size]="20" /></span>
+        <div>
+          <h2 id="apariencia-t">Apariencia</h2>
+          <p class="efecto">{{ efectoTema() }}</p>
+        </div>
+      </div>
+      <div class="flex flex-wrap gap-2" role="group" aria-label="Tema">
         @for (o of themes; track o.value) {
           <button appChip [selected]="theme.choice() === o.value" (click)="theme.set(o.value, { x: $event.clientX, y: $event.clientY })">{{ o.label }}</button>
         }
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="settings-row">
-    <h2>Bienestar</h2>
-    <div>
-    <p class="text-sm text-ink-2">
-      Te avisaremos cuando pases este tiempo en mémoires durante el día. Hoy llevas {{ store.minutesToday() }} {{ store.minutesToday() === 1 ? 'minuto' : 'minutos' }}.
-    </p>
-    <div class="mt-4 flex flex-wrap gap-2">
-      @for (m of limits; track m) {
-        <button appChip [selected]="store.limitMinutes() === m" (click)="store.setLimitMinutes(m)">{{ m }} min</button>
-      }
-    </div>
-    <button class="btn btn-ghost mt-4" (click)="store.triggerNudgeNow()">Ver el aviso de bienestar</button>
-    </div>
-  </section>
-
-  <section class="settings-row">
-    <h2>Privacidad y seguridad</h2>
-    <ul class="flex flex-col gap-3 text-sm text-ink-2">
-      <li><app-seal kind="safe" label="Tu seguridad viene incluida en todos los planes" /></li>
-      <li>Personas bloqueadas: {{ store.blocked().length }}</li>
-      <li>Tu ubicación exacta nunca se guarda; solo tu ciudad.</li>
-      <li><a routerLink="/privacidad" class="link-soft font-semibold">Leer el aviso de privacidad</a></li>
-    </ul>
-  </section>
-
-  <section class="settings-row">
-    <h2>Cuenta</h2>
-    <div class="flex flex-col items-start gap-3">
-      <button class="btn btn-ghost" (click)="logout()"><app-icon name="log-out" [size]="18" /> Cerrar sesión</button>
-      <button class="btn text-danger" (click)="confirmDelete.set(true)"><app-icon name="trash-2" [size]="18" /> Eliminar mi cuenta</button>
-    </div>
-  </section>
+    <!-- Cuenta -->
+    <section id="cuenta" class="bloque" aria-labelledby="cuenta-t">
+      <div class="bloque-cab">
+        <span class="bloque-icono" aria-hidden="true"><app-icon name="user" [size]="20" /></span>
+        <div>
+          <h2 id="cuenta-t">Cuenta</h2>
+          <p class="efecto">{{ store.me().email }} · plan {{ tierName() }}. <a routerLink="/app/suscripcion" class="link-soft font-semibold">Ver tu plan</a></p>
+        </div>
+      </div>
+      <div class="flex flex-wrap gap-3">
+        <button class="btn btn-ghost" (click)="logout()"><app-icon name="log-out" [size]="18" /> Cerrar sesión</button>
+        <button class="btn text-danger" (click)="confirmDelete.set(true)"><app-icon name="trash-2" [size]="18" /> Eliminar mi cuenta</button>
+      </div>
+    </section>
+  </div>
 
   @if (confirmDelete()) {
     <app-modal title="Eliminar tu cuenta" (closed)="confirmDelete.set(false)">

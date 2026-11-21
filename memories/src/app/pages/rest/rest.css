@@ -1,0 +1,40 @@
+:host { display: block; }
+
+.descanso {
+  display: grid;
+  min-height: 100dvh;
+  place-items: center;
+  align-content: center;
+  gap: 1rem;
+  padding: 4.5rem 1.25rem 2rem;
+  text-align: center;
+  --tint: var(--plan-tint);
+  --tint-ink: var(--plan-ink);
+}
+.descanso-logo { position: absolute; top: 1.25rem; left: 1.25rem; }
+@media (min-width: 1024px) {
+  .descanso { grid-template-columns: 1fr 1fr; text-align: left; padding-inline: max(2rem, calc(50vw - 36rem)); }
+  .descanso-logo { left: max(2rem, calc(50vw - 36rem)); }
+}
+
+.escena { width: min(100%, 26rem); height: auto; overflow: visible; }
+.hilos path { fill: none; stroke: var(--tint); stroke-width: 1.4; stroke-linecap: round; stroke-dasharray: 1; opacity: 0.7; animation: trazar 2.4s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.hilos path + path { animation-delay: 0.4s; opacity: 0.4; }
+.estrella { fill: var(--tint); transform-box: fill-box; transform-origin: center; animation: respirar 4.8s ease-in-out infinite; }
+.polvo { fill: var(--color-ink-2); opacity: 0.35; animation: titilar 6s ease-in-out infinite; }
+.zzz text { font-family: var(--font-display); fill: var(--tint-ink); font-size: 18px; opacity: 0; animation: zz 4.5s ease-in-out infinite; }
+.zzz text:nth-child(2) { font-size: 22px; animation-delay: 0.6s; }
+.zzz text:nth-child(3) { font-size: 27px; animation-delay: 1.2s; }
+
+.eyebrow { font-family: var(--font-mono, ui-monospace, monospace); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--tint-ink); margin-bottom: 0.5rem; }
+.descanso-texto { max-width: 28rem; }
+
+@keyframes trazar { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes respirar { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(0.7); opacity: 0.6; } }
+@keyframes titilar { 0%, 100% { opacity: 0.15; } 50% { opacity: 0.5; } }
+@keyframes zz { 0% { opacity: 0; transform: translateY(6px); } 30%, 60% { opacity: 0.9; } 100% { opacity: 0; transform: translateY(-8px); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .hilos path, .estrella, .polvo, .zzz text { animation: none; }
+  .zzz text { opacity: 0.7; }
+}
