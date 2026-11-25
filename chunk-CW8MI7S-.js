@@ -1,0 +1,1 @@
+import{N as Ao,st as U}from"./main-4LPKTBLG.js";var o=`memoires-text-album`;function l(){try{return localStorage.getItem(o)===`1`}catch{return!1}}var n=class e{on=Ao(l());set(t){this.on.set(t);try{t?localStorage.setItem(o,`1`):localStorage.removeItem(o)}catch{}}static ɵfac=function(c){return new(c||e)};static ɵprov=U({token:e,factory:e.ɵfac,providedIn:`root`})};export{n as t};

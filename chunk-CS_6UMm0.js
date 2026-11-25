@@ -1,0 +1,1 @@
+function r(o,t){let c=window.matchMedia(`(prefers-reduced-motion: reduce)`).matches;if(!document.startViewTransition||c){t();return}let e=document.documentElement;e.classList.add(`vt-list`);let i=document.startViewTransition(()=>{t(),o.tick()}),n=()=>e.classList.remove(`vt-list`);i.finished.then(n,n),i.ready.catch(()=>{})}export{r as t};
