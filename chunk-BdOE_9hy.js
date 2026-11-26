@@ -1,0 +1,1 @@
+var r=[`¿Café o té para un primer plan?`,`¿Cuál es tu lugar favorito de la ciudad?`,`¿Qué fue lo último que te hizo reír?`,`¿Qué plan harías este fin de semana?`,`¿Qué serie recomiendas sin dudar?`,`¿Qué pasatiempo quieres aprender?`];function n(a){let t=[...a].reduce((e,u)=>e+u.charCodeAt(0),0);return[0,2,4].map(e=>r[(t+e)%r.length])}export{r as n,n as t};
