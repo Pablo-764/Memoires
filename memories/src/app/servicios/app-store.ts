@@ -298,15 +298,21 @@ export class AppStore {
     this.state.update((s) => ({ ...s, ...(typeof p === 'function' ? p(s) : p) }))
   }
 
-  login(email: string) {
+  login(email: string, profile?: Partial<Profile>, tier?: Tier) {
     this.patch((s) => ({
       loggedIn: true,
       onboarded: s.me.email === email ? s.onboarded : true,
-      me: s.me.email === email ? s.me : { ...DEMO_ME, email },
+      me: { ...(s.me.email === email ? s.me : DEMO_ME), ...profile, email },
+      ...(tier ? { tier } : {}),
     }))
   }
 
   logout() {
+    try {
+      sessionStorage.removeItem('memoires-api-token')
+    } catch {
+      /* almacenamiento de sesiÃ³n no disponible */
+    }
     this.patch({ loggedIn: false })
   }
 
@@ -422,8 +428,8 @@ export class AppStore {
   }
 
   /** Registro de 13 pasos terminado: cuenta creada y perfil listo. */
-  completeSignup(me: Profile) {
-    this.patch({ loggedIn: true, onboarded: true, me })
+  completeSignup(me: Profile, tier: Tier = 'free') {
+    this.patch({ loggedIn: true, onboarded: true, me, tier })
   }
 
   toggleJoin(planId: string): 'ok' | 'unverified' {

@@ -2,6 +2,7 @@ import { Component, DestroyRef, OnInit, computed, effect, inject, input, signal 
 import { FormsModule } from '@angular/forms'
 import { Router, RouterLink } from '@angular/router'
 import { AppStore, EMPTY_ME, type Profile } from '../../servicios/app-store'
+import { ApiError, BackendApi, type ApiSession } from '../../servicios/api'
 import { CITIES, INTENTS, INTENT_ORDER, type Intent } from '../../modelos/intents'
 import { GENDERS, GENDER_ORDER, EMPTY_PREFS, type Gender } from '../../modelos/plan-formats'
 import { fitImage } from '../../utilidades/image'
@@ -101,6 +102,7 @@ export class Signup implements OnInit {
 
   private readonly store = inject(AppStore)
   private readonly router = inject(Router)
+  private readonly api = inject(BackendApi)
 
   protected readonly b = signal<Borrador>(leer())
   protected readonly password = signal('')
@@ -294,7 +296,8 @@ export class Signup implements OnInit {
   }
 
   /** Paso 13: el hilo de la barra se anuda (momento firma) y se crea la cuenta. */
-  protected terminar() {
+  protected async terminar() {
+    if (this.anudando()) return
     const b = this.b()
     const perfil: Profile = {
       ...EMPTY_ME,
@@ -316,9 +319,23 @@ export class Signup implements OnInit {
       openers: b.aperturas,
       rulesAccepted: true,
     }
+    this.error.set('')
+    let session: ApiSession
+    try {
+      const contact = b.contacto.trim()
+      session = await this.api.post<ApiSession>('/auth/register', {
+        ...(contact.includes('@') ? { email: contact } : { phone: contact.replace(/[\s-]/g, '') }),
+        password: this.password(),
+        profile: { ...perfil, zone: b.zona, openers: b.aperturas, rulesAccepted: true },
+      })
+    } catch (error) {
+      this.error.set(error instanceof ApiError ? error.message : 'No se pudo crear la cuenta.')
+      return
+    }
+    this.api.setToken(session.token)
     this.anudando.set(true)
     const listo = () => {
-      this.store.completeSignup(perfil)
+      this.store.completeSignup({ ...perfil, ...session.perfil, email: session.usuario.email || session.usuario.phone || b.contacto } as Profile, session.usuario.tier)
       try {
         localStorage.removeItem(KEY)
       } catch {

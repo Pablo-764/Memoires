@@ -1,5 +1,8 @@
 # Dependencias
 node_modules/
+/backend/data/
+/respaldo/
+/Memoires-frontend/
 
 # Variables de entorno: nunca se suben, solo el ejemplo
 .env

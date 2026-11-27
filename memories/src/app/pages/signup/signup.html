@@ -30,6 +30,7 @@
 
   <main class="contenido" aria-live="polite">
     <form class="pantalla" (ngSubmit)="siguiente()" [attr.aria-labelledby]="'paso-' + paso()">
+      @if (error() && paso() !== 8) { <p class="text-sm text-danger mt-2" role="alert">{{ error() }}</p> }
       @switch (paso()) {
         @case (1) {
           <p class="eyebrow">Tu cuenta</p>
